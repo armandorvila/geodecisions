@@ -91,5 +91,3 @@ open('http://localhost:' + config.server.listenPort + '/');
 });
 
 console.log('Geodecisions App Server - listening on port: ' + config.server.listenPort);
-secureServer.listen(config.server.securePort);
-console.log('Geodecisions App Server - listening on secure port: ' + config.server.securePort);
