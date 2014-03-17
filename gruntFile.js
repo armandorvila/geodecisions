@@ -7,13 +7,13 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    nodeunit: ['test/**/*.js'],
+    nodeunit: ['server/test/**/*.js'],
     watch: {
       files: '<config:lint.files>',
       tasks: 'default timestamp'
     },
     jshint: {
-      files: ['gruntFile.js', 'server.js','mongoConfig.js', 'app/**/*.js', 'test/**/*.js'],
+      files: ['gruntFile.js', 'server/server.js', 'server/src/**/*.js', 'server/test/**/*.js'],
       options: {
         curly: true,
         eqeqeq: true,
@@ -39,6 +39,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('supervise', function() {
     this.async();
-    require('supervisor').run(['server.js']);
+    require('supervisor').run(['server/server.js']);
   });
 };
