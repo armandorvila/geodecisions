@@ -40,8 +40,10 @@ app.get('/', routes.index);
 
 app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
-server.listen(config.server.listenPort, '0.0.0.0', 511, function() {
+var port = Number(process.env.PORT || 5000);
+
+server.listen(port, '0.0.0.0', 511, function() {
 
 });
 
-console.log('Geodecisions App Server - listening on port: ' + config.server.listenPort);
+console.log('Geodecisions App Server - listening on port: ' + port);
