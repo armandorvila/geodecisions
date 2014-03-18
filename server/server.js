@@ -1,8 +1,7 @@
 var express = require('express');
 var fs = require('fs');
 var http = require('http');
-
-var mongoose = require('mongoose'); 	
+var mongoose = require('mongoose');
 var mongoProxy = require('./src/mongo/mongoProxy');
 var config = require('./config.js');
 

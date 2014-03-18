@@ -35,7 +35,7 @@ angular.module('services.users', []).factory('usersService', function($http) {
 
 	return {
 		getUsers : function($scope) {
-			var usersPromise = $http.get('http://localhost:5000/users/get');
+			var usersPromise = $http.get('/users/get');
 			usersPromise.then(function(response) {
 				$scope.users = response.data;
 			
