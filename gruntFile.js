@@ -16,7 +16,7 @@ module.exports = function(grunt) {
 
 	/* ********************* Register required tasks******************* */
 	grunt.registerTask('default',
-			[ 'jshint', 'build', 'nodeunit', 'karma:unit' ]);
+			[ 'jshint', 'build', 'nodeunit']); //'karma:unit'
 	
 	grunt.registerTask('build', [ 'clean', 'html2js', 'concat', 'recess:build',
 			'copy:assets' ]);
@@ -62,8 +62,7 @@ module.exports = function(grunt) {
 					scenarios : [ 'client/test/**/*.scenario.js' ],
 					html : [ 'client/src/index.html' ],
 					tpl : {
-						app : [ 'client/src/app/**/*.tpl.html' ],
-						common : [ 'client/src/common/**/*.tpl.html' ]
+						app : [ 'client/src/app/**/*.tpl.html' ]
 					},
 					less : [ 'client/src/less/stylesheet.less' ], // recess:build
 																	// doesn't
@@ -90,6 +89,7 @@ module.exports = function(grunt) {
 						undef : false,
 						boss : true,
 						eqnull : true,
+						smarttabs: true,
 						globals : {
 							require : false,
 							__dirname : false,
@@ -133,14 +133,6 @@ module.exports = function(grunt) {
 						src : [ '<%= src.tpl.app %>' ],
 						dest : '<%= distdir %>/templates/app.js',
 						module : 'templates.app'
-					},
-					common : {
-						options : {
-							base : 'client/src/common'
-						},
-						src : [ '<%= src.tpl.common %>' ],
-						dest : '<%= distdir %>/templates/common.js',
-						module : 'templates.common'
 					}
 				},
 
@@ -159,13 +151,15 @@ module.exports = function(grunt) {
 							process : true
 						}
 					},
-
+					bootstrap : {
+						src : [ 'client/vendor/angular-ui/bootstrap/*.js' ],
+						dest : '<%= distdir %>/bootstrap.js'
+					},
 					angular : {
 						src : [ 'client/vendor/angular/angular.js',
 								'client/vendor/angular/angular-route.js' ],
 						dest : '<%= distdir %>/angular.js'
 					},
-
 					jquery : {
 						src : [ 'client/vendor/jquery/*.js' ],
 						dest : '<%= distdir %>/jquery.js'
@@ -208,19 +202,16 @@ module.exports = function(grunt) {
 						}
 					}
 				},
-
 				watch : {
 					all : {
-						files : [ '<%= src.js %>', '<%= src.specs %>',
-								'<%= src.lessWatch %>', '<%= src.tpl.app %>',
-								'<%= src.tpl.common %>', '<%= src.html %>' ],
-						tasks : [ 'default', 'timestamp' ]
+						files : ['gruntFile.js','<config:lint.files>', '<%= src.js %>', '<%= src.specs %>',
+								'<%= src.lessWatch %>', '<%= src.tpl.app %>', '<%= src.html %>' ],
+						tasks : [ 'default', 'timestamp']
 					},
 					build : {
-						files : [ '<%= src.js %>', '<%= src.specs %>',
-								'<%= src.lessWatch %>', '<%= src.tpl.app %>',
-								'<%= src.tpl.common %>', '<%= src.html %>' ],
-						tasks : [ 'build', 'timestamp' ]
+						files : [ 'gruntFile.js','<config:lint.files>','<%= src.js %>', '<%= src.specs %>',
+								'<%= src.lessWatch %>', '<%= src.tpl.app %>', '<%= src.html %>' ],
+						tasks : [ 'build', 'timestamp']
 					}
 				}
 			});
@@ -229,9 +220,9 @@ module.exports = function(grunt) {
 		grunt.log.subhead(Date());
 	});
 
-	grunt.registerTask('supervise', function() {
+	grunt.registerTask('startApp', function() {
 		this.async();
-		require('supervisor').run([ 'server/server.js' ]);
+		require('supervisor').run([ 'server/server.js']);
 	});
 
 };

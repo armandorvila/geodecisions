@@ -1,12 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-ng-app="app">
 <head>
-<meta charset="UTF-8">
-<title>Geodecisions</title>
+<link rel="stylesheet" type="text/css"
+	href="/static/geodecisions.css" />
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript" src="/static/angular.js"></script>
+<script type="text/javascript" src="/static/bootstrap.js"></script>
+<script type="text/javascript"
+	src="/static/geodecisions.js"></script>
 </head>
-<body>
 
-<h1>Hi, we are building a MEAN</h1>
+<body data-ng-controller="AppCtrl" class="container">
+
+<header class=".text-center">
+	<h1>Hello, {{name}}!</h1>
+	Say hello to:
+	<input type="text" data-ng-model="name">
+	<a class="brand" data-ng-click="home()">Say hello</a>
+</header>
+
+
+<section data-ng-controller="UsersCtrl" class=".text-center">
+
+	<ul>
+		<li data-ng-repeat="user in users">{{user.name}}
+			{{user.lastname}}</li>
+	</ul>
+
+	<hr>
+	there is : {{usersNum}} users
+
+	<div class="usersForm">
+		<div class="row">
+		    <input type="text" data-ng-model="newUser.name">
+		</div>
+		<div class="row">
+		    <input type="text" data-ng-model="newUser.lastname">
+		</div>
+		<div class="row">
+			<textarea data-ng-model="newUser.description">{{newUser.description}}</textarea>
+		</div>
+		<div class="row">
+			<button data-ng-click="createUser()">Send</button>
+			<button data-ng-click="clear()">Clear</button>
+		</div>
+	</div>
+	
+</section>
+
+	<footer data-ng-init="footer = 'Geodecisions'">
+		<p>{{footer}}</p>
+	</footer>
 
 </body>
 </html>

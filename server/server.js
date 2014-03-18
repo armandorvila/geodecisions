@@ -1,9 +1,8 @@
+var express = require('express');
 var fs = require('fs');
-
 var http = require('http');
 
-var express = require('express');
-
+var mongoose = require('mongoose'); 	
 var mongoProxy = require('./src/mongo/mongoProxy');
 var config = require('./config.js');
 
@@ -35,14 +34,17 @@ app.use(passport.session());                                // Use Passport's se
 app.use(xsrf);                                            // Add XSRF checks to the request
 
 
-require('./src/routes/static').addRoutes(app, config);
+require('./src/routes/users').addRoutes(app, config);
 require('./src/routes/home').addRoutes(app, config);
+require('./src/routes/static').addRoutes(app, config);
 
 app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
-var port = Number(process.env.PORT || 5000);
 
-server.listen(port, '0.0.0.0', 511, function() {
-	console.log('Geodecisions App Server - listening on port: ' + port);
+mongoose.connect(config.mongo.url); 
+mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+
+server.listen(config.server.port, '0.0.0.0', 511, function() {
+	console.log('Geodecisions App Server - listening on port: ' + config.server.port);
 });
 

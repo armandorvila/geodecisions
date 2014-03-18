@@ -1,52 +1,51 @@
-angular.module('templates.app', ['header.tpl.html', 'notifications.tpl.html']);
+angular.module('app', ['ngRoute', 'controllers.users']);
 
-angular.module("header.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("header.tpl.html",
-    "<div class=\"navbar\" ng-controller=\"HeaderCtrl\">\n" +
-    "    <div class=\"navbar-inner\">\n" +
-    "        <a class=\"brand\" ng-click=\"home()\">AScrum</a>\n" +
-    "        <ul class=\"nav\">\n" +
-    "            <li ng-class=\"{active:isNavbarActive('projectsinfo')}\"><a href=\"/projectsinfo\">Current Projects</a></li>\n" +
-    "        </ul>\n" +
-    "\n" +
-    "        <ul class=\"nav\" ng-show=\"isAuthenticated()\">\n" +
-    "            <li ng-class=\"{active:isNavbarActive('projects')}\"><a href=\"/projects\">My Projects</a></li>\n" +
-    "            <li class=\"dropdown\" ng-class=\"{active:isNavbarActive('admin'), open:isAdminOpen}\" ng-show=\"isAdmin()\">\n" +
-    "                <a id=\"adminmenu\" role=\"button\" class=\"dropdown-toggle\" ng-click=\"isAdminOpen=!isAdminOpen\">Admin<b class=\"caret\"></b></a>\n" +
-    "                <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"adminmenu\">\n" +
-    "                    <li><a tabindex=\"-1\" href=\"/admin/projects\" ng-click=\"isAdminOpen=false\">Manage Projects</a></li>\n" +
-    "                    <li><a tabindex=\"-1\" href=\"/admin/users\" ng-click=\"isAdminOpen=false\">Manage Users</a></li>\n" +
-    "                </ul>\n" +
-    "            </li>\n" +
-    "        </ul>\n" +
-    "        <ul class=\"nav pull-right\" ng-show=\"hasPendingRequests()\">\n" +
-    "            <li class=\"divider-vertical\"></li>\n" +
-    "            <li><a href=\"#\"><img src=\"/static/img/spinner.gif\"></a></li>\n" +
-    "        </ul>\n" +
-    "        <login-toolbar></login-toolbar>\n" +
-    "    </div>\n" +
-    "    <div>\n" +
-    "        <ul class=\"breadcrumb\">\n" +
-    "            <li ng-repeat=\"breadcrumb in breadcrumbs.getAll()\">\n" +
-    "                <span class=\"divider\">/</span>\n" +
-    "                <ng-switch on=\"$last\">\n" +
-    "                    <span ng-switch-when=\"true\">{{breadcrumb.name}}</span>\n" +
-    "                    <span ng-switch-default><a href=\"{{breadcrumb.path}}\">{{breadcrumb.name}}</a></span>\n" +
-    "                </ng-switch>\n" +
-    "            </li>\n" +
-    "        </ul>\n" +
-    "    </div>\n" +
-    "</div>");
+
+angular.module('app').config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+	  $locationProvider.html5Mode(true);
+	  $routeProvider.otherwise({redirectTo:'/projectsinfo'});
 }]);
 
-angular.module("notifications.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("notifications.tpl.html",
-    "<div ng-class=\"['alert', 'alert-'+notification.type]\" ng-repeat=\"notification in notifications.getCurrent()\">\n" +
-    "    <button class=\"close\" ng-click=\"removeNotification(notification)\">x</button>\n" +
-    "    {{notification.message}}\n" +
-    "</div>\n" +
-    "");
+
+angular.module('app').controller('AppCtrl', ['$scope', function($scope) {
+	
+	$scope.name = "Armando";
+	
+	$scope.home = function () {
+		alert("Hi " + $scope.name);
+	  };
+
 }]);
 
-angular.module('templates.common', []);
+
+
+angular.module('controllers.users', ['services.users'])
+.controller('UsersCtrl',['$scope','usersService', function($scope, usersService) {
+
+					$scope.createUser = function() {
+						alert("New User :" + $scope.newUser.name + ' ' + $scope.newUser.lastname);
+					};
+					
+					$scope.usersNum= 100;
+					usersService.getUsers($scope);
+					
+} ]);
+
+angular.module('services.users', []).factory('usersService', function($http) {
+
+	return {
+		getUsers : function($scope) {
+			var usersPromise = $http.get('http://localhost:5000/users/get');
+			usersPromise.then(function(response) {
+				$scope.users = response.data;
+			
+			}, function(response) {
+				alert('Something went wrong getting users');
+				throw new Error('Something went wrong getting users');
+			});
+		}
+	};
+});
+
+angular.module('templates.app', []);
 
