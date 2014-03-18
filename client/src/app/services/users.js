@@ -2,7 +2,7 @@ angular.module('services.users', []).factory('usersService', function($http) {
 
 	return {
 		getUsers : function($scope) {
-			var usersPromise = $http.get('http://geodecisions.herokuapp.com/users/get');
+			var usersPromise = $http.get('/users/get');
 			usersPromise.then(function(response) {
 				$scope.users = response.data;
 			
