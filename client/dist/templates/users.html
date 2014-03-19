@@ -1,0 +1,27 @@
+<section class=".text-center">
+
+		<ul>
+			<li data-ng-repeat="user in users">{{user.name}}
+				{{user.lastname}}</li>
+		</ul>
+
+		<hr>
+		there is : {{usersNum}} users
+
+		<div class="usersForm">
+			<div class="row">
+				<input type="text" data-ng-model="newUser.name">
+			</div>
+			<div class="row">
+				<input type="text" data-ng-model="newUser.lastname">
+			</div>
+			<div class="row">
+				<textarea data-ng-model="newUser.description">{{newUser.description}}</textarea>
+			</div>
+			<div class="row">
+				<button data-ng-click="createUser()">Send</button>
+				<button data-ng-click="clear()">Clear</button>
+			</div>
+		</div>
+
+	</section>

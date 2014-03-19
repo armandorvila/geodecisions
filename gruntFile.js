@@ -12,17 +12,16 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-recess');
 	grunt.loadNpmTasks('grunt-karma');
-	grunt.loadNpmTasks('grunt-html2js');
 
 	/* ********************* Register required tasks******************* */
 	grunt.registerTask('default',
 			[ 'jshint', 'build', 'nodeunit']); //'karma:unit'
 	
-	grunt.registerTask('build', [ 'clean', 'html2js', 'concat', 'recess:build',
-			'copy:assets' ]);
+	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build',
+			'copy']);
 	
-	grunt.registerTask('release', [ 'clean', 'html2js', 'uglify', 'jshint',
-			'karma:unit', 'concat:index', 'recess:min', 'copy:assets' ]);
+	grunt.registerTask('release', [ 'clean', 'uglify', 'jshint',
+			'karma:unit', 'concat:index', 'recess:min', 'copy']);
 	
 	grunt.registerTask('test-watch', [ 'karma:watch' ]);
 
@@ -61,15 +60,8 @@ module.exports = function(grunt) {
 					specs : [ 'client/test/**/*.spec.js' ],
 					scenarios : [ 'client/test/**/*.scenario.js' ],
 					html : [ 'client/src/index.html' ],
-					tpl : {
-						app : [ 'client/src/app/**/*.tpl.html' ]
-					},
-					less : [ 'client/src/less/stylesheet.less' ], // recess:build
-																	// doesn't
-																	// accept **
-																	// in its
-																	// file
-																	// patterns
+					templates : [ 'client/src/app/templates/*.html'],
+					less : [ 'client/src/less/stylesheet.less' ],
 					lessWatch : [ 'client/src/less/**/*.less' ]
 				},
 
@@ -105,12 +97,20 @@ module.exports = function(grunt) {
 				copy : {
 					assets : {
 						files : [ {
-							dest : '<%= distdir %>',
+							dest : '<%= distdir %>/resources',
 							src : '**',
 							expand : true,
-							cwd : 'client/src/assets/'
+							cwd : 'client/src/assets'
 						} ]
-					}
+					},
+					templates : {
+					files : [ {
+						dest : '<%= distdir %>/templates',
+						src : '**',
+						expand : true,
+						cwd : 'client/src/app/templates'
+					} ]
+					}	
 				},
 
 				karma : {
@@ -125,24 +125,13 @@ module.exports = function(grunt) {
 					}
 				},
 
-				html2js : {
-					app : {
-						options : {
-							base : 'client/src/app'
-						},
-						src : [ '<%= src.tpl.app %>' ],
-						dest : '<%= distdir %>/templates/app.js',
-						module : 'templates.app'
-					}
-				},
-
 				concat : {
 					dist : {
 						options : {
 							banner : "<%= banner %>"
 						},
 						src : [ '<%= src.js %>', '<%= src.jsTpl %>' ],
-						dest : '<%= distdir %>/<%= pkg.name %>.js'
+						dest : '<%= distdir %>/resources/js/<%= pkg.name %>.js'
 					},
 					index : {
 						src : [ 'client/src/index.html' ],
@@ -153,16 +142,16 @@ module.exports = function(grunt) {
 					},
 					bootstrap : {
 						src : [ 'client/vendor/angular-ui/bootstrap/*.js' ],
-						dest : '<%= distdir %>/bootstrap.js'
+						dest : '<%= distdir %>/resources/js/bootstrap.js'
 					},
 					angular : {
 						src : [ 'client/vendor/angular/angular.js',
 								'client/vendor/angular/angular-route.js' ],
-						dest : '<%= distdir %>/angular.js'
+						dest : '<%= distdir %>/resources/js/angular.js'
 					},
 					jquery : {
 						src : [ 'client/vendor/jquery/*.js' ],
-						dest : '<%= distdir %>/jquery.js'
+						dest : '<%= distdir %>/resources/js/jquery.js'
 					}
 				},
 
@@ -172,22 +161,22 @@ module.exports = function(grunt) {
 							banner : "<%= banner %>"
 						},
 						src : [ '<%= src.js %>', '<%= src.jsTpl %>' ],
-						dest : '<%= distdir %>/<%= pkg.name %>.js'
+						dest : '<%= distdir %>/resources/js/<%= pkg.name %>.js'
 					},
 					angular : {
 						src : [ '<%= concat.angular.src %>' ],
-						dest : '<%= distdir %>/angular.js'
+						dest : '<%= distdir %>/resources/js/angular.js'
 					},
 					jquery : {
 						src : [ 'client/vendor/jquery/*.js' ],
-						dest : '<%= distdir %>/jquery.js'
+						dest : '<%= distdir %>/resources/js/jquery.js'
 					}
 				},
 
 				recess : {
 					build : {
 						files : {
-							'<%= distdir %>/<%= pkg.name %>.css' : [ '<%= src.less %>' ]
+							'<%= distdir %>/resources/css/<%= pkg.name %>.css' : [ '<%= src.less %>' ]
 						},
 						options : {
 							compile : true
@@ -195,7 +184,7 @@ module.exports = function(grunt) {
 					},
 					min : {
 						files : {
-							'<%= distdir %>/<%= pkg.name %>.css' : [ '<%= src.less %>' ]
+							'<%= distdir %>/resources/css/<%= pkg.name %>.css' : [ '<%= src.less %>' ]
 						},
 						options : {
 							compress : true
@@ -205,12 +194,12 @@ module.exports = function(grunt) {
 				watch : {
 					all : {
 						files : ['gruntFile.js','<config:lint.files>', '<%= src.js %>', '<%= src.specs %>',
-								'<%= src.lessWatch %>', '<%= src.tpl.app %>', '<%= src.html %>' ],
+								'<%= src.lessWatch %>', '<%= src.templates %>', '<%= src.html %>' ],
 						tasks : [ 'default', 'timestamp']
 					},
 					build : {
 						files : [ 'gruntFile.js','<config:lint.files>','<%= src.js %>', '<%= src.specs %>',
-								'<%= src.lessWatch %>', '<%= src.tpl.app %>', '<%= src.html %>' ],
+								'<%= src.lessWatch %>', '<%= src.templates %>', '<%= src.html %>' ],
 						tasks : [ 'build', 'timestamp']
 					}
 				}

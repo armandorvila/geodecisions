@@ -2,18 +2,14 @@ var express = require('express');
 
 exports.addRoutes = function(app, config) {
 	
-  console.log('Serving fav icon ..');
-	
   // Serve up the favicon
-  app.use(express.favicon(config.server.distFolder + '/favicon.ico'));
-
-  // First looks for a static file: index.html, css, images, etc.
+  app.use(express.favicon(config.server.distFolder + config.server.staticUrl + '/favicon.ico'));
   app.use(config.server.staticUrl, express.compress());
   
-  console.log('Serving ' + config.server.distFolder);
+  app.use(config.server.staticUrl, express.static(config.server.distFolder + config.server.staticUrl));
+  app.use(config.server.templatesUrl, express.static(config.server.distFolder + config.server.templatesUrl));
   
-  app.use(config.server.staticUrl, express.static(config.server.distFolder));
   app.use(config.server.staticUrl, function(req, res, next) {
-    res.send(404); // If we get here then the request for a static file is invalid
+    res.send(404);
   });
 };

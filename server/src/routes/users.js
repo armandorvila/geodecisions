@@ -20,6 +20,3 @@ exports.addRoutes = function(app, config) {
 
 	});
 };
-
-//var users = [{name :'Armando',lastname:'Ramírez'}, 
-//		     {name:'Juan', lastname: 'Río'}];	
