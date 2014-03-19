@@ -1,7 +1,9 @@
 angular.module('app', 
 ['ngRoute',
  'controllers.users',
- 'controllers.projects']);
+ 'controllers.projects', 'directives.numbers']);
+
+//TODO directives dosen't work
 
 angular.module('app').config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 	  $locationProvider.html5Mode(true);
@@ -10,6 +12,10 @@ angular.module('app').config(['$routeProvider', '$locationProvider', function ($
         templateUrl: '/templates/login.html',
         controller: 'UserLoginCtrl'
       }).
+      when('/signup', {
+          templateUrl: '/templates/signup.html',
+          controller: 'UserSingupCtrl'
+        }).
       when('/users', {
           templateUrl: '/templates/users.html',
           controller: 'UsersListCtrl'
@@ -27,7 +33,7 @@ angular.module('app').config(['$routeProvider', '$locationProvider', function ($
       });
 }]);
 
-angular.module('app').controller('AppCtrl', ['$scope', function($scope) {
+angular.module('app').controller('AppCtrl', ['$scope', function($scope,$location) {
 	
 	$scope.home = function () {
 		 $location.path('/');
@@ -39,6 +45,6 @@ angular.module('app').controller('AppCtrl', ['$scope', function($scope) {
 	 
 	 $scope.$on('$routeChangeError', function(event, current, previous, rejection){
 		    i18nNotifications.pushForCurrentRoute('errors.route.changeError', 'error', {}, {rejection: rejection});
-		  });
+	 });
 	  
 }]);

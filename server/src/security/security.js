@@ -1,6 +1,6 @@
 var express = require('express');
 var passport = require('passport');
-var MongoStrategy = require('../mongo/mongoStrategy');
+var MongoStrategy = require('./mongoStrategy');
 
 var app = express();
 

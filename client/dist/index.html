@@ -25,15 +25,15 @@
 				<li data-ng-show="isAuthenticated()"><a href="#">User name</a></li>
 				
 				<li data-ng-show="isAuthenticated()" class="logout">
-					<form class="navbar-form">
-						<button class="btn logout" data-ng-click="logout()">Log out</button>
-					</form>
+					<a href="/logout">Log out</a>
 				</li>
 				
 				<li data-ng-hide="isAuthenticated()" class="login">
-					<form class="navbar-form">
-						<a href="login">Log in</a>
-					</form>
+						<a href="/signup">Sign up</a>
+				</li>
+				
+				<li data-ng-hide="isAuthenticated()" class="login">
+						<a href="/login">Log in</a>
 				</li>
 			</ul>
 
@@ -41,10 +41,6 @@
 	</header>
 	
 	<div data-ng-view class="container-fluid"></div>
-
-	<footer data-ng-init="footer = 'Geodecisions'">
-		<p>{{footer}}</p>
-	</footer>
 
 </body>
 </html>

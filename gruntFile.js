@@ -209,7 +209,7 @@ module.exports = function(grunt) {
 		grunt.log.subhead(Date());
 	});
 
-	grunt.registerTask('startApp', function() {
+	grunt.registerTask('start', function() {
 		this.async();
 		require('supervisor').run([ 'server/server.js']);
 	});

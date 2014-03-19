@@ -5,14 +5,17 @@ var config = require('./config.js');
 
 var app = express();
 
+require('./src/routes/static').addRoutes(app, config);
+
 app.use(express.logger());                                  
 app.use(express.bodyParser());                              
 app.use(express.cookieParser(config.server.cookieSecret)); 
 app.use(express.cookieSession());
 app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
-require('./src/routes/static').addRoutes(app, config);
 require('./src/routes/users').addRoutes(app, config);
+require('./src/routes/projects').addRoutes(app, config);
+
 require('./src/routes/home').addRoutes(app, config);
 
 
