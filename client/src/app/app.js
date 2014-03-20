@@ -3,40 +3,56 @@ angular.module('app',
  'controllers.users',
  'controllers.projects', 'directives.numbers']);
 
-//TODO directives dosen't work
+//TODO directives dosen't work, fix it
 
 angular.module('app').config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 	  $locationProvider.html5Mode(true);
 	  $routeProvider.
-	  when('/login', {
-        templateUrl: '/templates/login.html',
-        controller: 'UserLoginCtrl'
-      }).
       when('/signup', {
           templateUrl: '/templates/signup.html',
           controller: 'UserSingupCtrl'
         }).
+      when('/home', {
+            templateUrl: '/templates/home.html',
+            controller: 'UsersListCtrl'
+      }).
       when('/users', {
           templateUrl: '/templates/users.html',
           controller: 'UsersListCtrl'
         }).
       when('/projects', {
           templateUrl: '/templates/projects.html',
-          controller: 'ProjectsCtrl'
+          controller: 'AppCtrl'
         }).
       when('/projects/:projectId', {
         templateUrl: 'templates/projct-detail.html',
         controller: 'ProjectDetailCtrl'
       }).
       otherwise({
-        redirectTo: '/projects'
+        redirectTo: '/home'
       });
 }]);
 
 angular.module('app').controller('AppCtrl', ['$scope', function($scope,$location) {
 	
+	$scope.homeActive =  true;
+	$scope.projectsActive =  false;
+	$scope.usersActive =  false;
+	
 	$scope.home = function () {
-		 $location.path('/');
+		$scope.homeActive =  true;
+		$scope.projectsActive =  false;
+		$scope.usersActive =  false;
+	};
+	$scope.projects = function () {
+		$scope.homeActive =  false;
+		$scope.projectsActive =  true;
+		$scope.usersActive =  false;
+	};
+     $scope.users = function () {
+		$scope.homeActive =  false;
+		$scope.projectsActive =  false;
+		$scope.usersActive =  true;
 	 };
 	 
 	 $scope.isAuthenticated = function () {

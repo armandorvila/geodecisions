@@ -1,46 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" data-ng-app="app">
 <head>
-<link rel="stylesheet" type="text/css" href="/resources/css/geodecisions.css" />
+<link rel="stylesheet" type="text/css"
+	href="/resources/css/geodecisions.css" />
 <script type="text/javascript" src="/resources/js/jquery.js"></script>
 <script type="text/javascript" src="/resources/js/angular.js"></script>
 <script type="text/javascript" src="/resources/js/bootstrap.js"></script>
-<script type="text/javascript" src="/resources/js/geodecisions.js"></script>
+<script type="text/javascript"
+	src="/resources/js/geodecisions.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body data-ng-controller="AppCtrl" class="container">
 
-	<header class=".text-center">
-		<div class="navbar-inner">
-			<a data-ng-click="home()">Geodecisions</a>
+	<header>
+		<div class="navbar navbar-inverse">
+			<div class="navbar-inner">
 
-			<ul class="nav">
-				<li><a href="/projects">My Projects</a></li>
-				<li><a href="/users">Users</a></li>
-			</ul>
+				<ul class="nav">
+					<li class="navbar-text" data-ng-class="{active:homeActive}"><a href="/home" data-ng-click="home()">Home</a></li>
+					<li class="divider-vertical navbar-text"></li>
+					<li class="navbar-text" data-ng-class="{active:projectsActive}"><a href="/projects" data-ng-click="projects()">Processes</a></li>
+					<li class="divider-vertical navbar-text"></li>
+					<li class="navbar-text" data-ng-class="{active:usersActive}"><a href="/users" data-ng-click="users()">Users</a></li>
+					<li class="divider-vertical navbar-text"></li>
+				</ul>
 
-			<ul class="nav pull-right">
-				<li class="divider-vertical"></li>
+				<form class="navbar-search pull-left navbar-text">
+					<input type="text" class="search-query" placeholder="Search">
+				</form>
 				
-				<li data-ng-show="isAuthenticated()"><a href="#">User name</a></li>
-				
-				<li data-ng-show="isAuthenticated()" class="logout">
-					<a href="/logout">Log out</a>
-				</li>
-				
-				<li data-ng-hide="isAuthenticated()" class="login">
-						<a href="/signup">Sign up</a>
-				</li>
-				
-				<li data-ng-hide="isAuthenticated()" class="login">
-						<a href="/login">Log in</a>
-				</li>
-			</ul>
+				<span class="pull-right"> 
+					<a class="brand navbar-text" href="/home" data-ng-click="home()">Geodecisions</a>
+				</span>
+			</div>
 
 		</div>
 	</header>
-	
-	<div data-ng-view class="container-fluid"></div>
 
+	<div data-ng-view class="container"></div>
 </body>
 </html>
