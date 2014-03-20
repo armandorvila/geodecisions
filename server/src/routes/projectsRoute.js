@@ -1,5 +1,5 @@
 var express = require('express');
-var Project = require('../models/projects');
+var Project = require('../models/projectsModel');
 
 exports.addRoutes = function(app, config) {
 

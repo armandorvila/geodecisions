@@ -5,7 +5,7 @@ var config = require('./config.js');
 
 var app = express();
 
-require('./src/routes/static').addRoutes(app, config);
+require('./src/routes/staticsRoute').addRoutes(app, config);
 
 app.use(express.logger());                                  
 app.use(express.bodyParser());                              
@@ -13,10 +13,10 @@ app.use(express.cookieParser(config.server.cookieSecret));
 app.use(express.cookieSession());
 app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
-require('./src/routes/users').addRoutes(app, config);
-require('./src/routes/projects').addRoutes(app, config);
+require('./src/routes/usersRoute').addRoutes(app, config);
+require('./src/routes/projectsRoute').addRoutes(app, config);
 
-require('./src/routes/home').addRoutes(app, config);
+require('./src/routes/homeRoute').addRoutes(app, config);
 
 
 mongoose.connect(config.mongo.url); 

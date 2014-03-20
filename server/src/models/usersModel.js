@@ -5,4 +5,4 @@ module.exports = mongoose.model('User', {
 	lastname : String,
 	email : String,
 	password: String
-}, 'geodecisions.users');
+}, 'geodecisions_users');
