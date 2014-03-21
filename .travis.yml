@@ -10,4 +10,7 @@
   - cd server
   - npm install --quiet
 
- script: grunt travis
+ script: grunt
+ 
+ after_script: grunt coveralls
+ 
