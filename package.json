@@ -43,6 +43,8 @@
     "rewire": "~1.0.3",
 	"supervisor": "~0.4.1",
 	"grunt-contrib-nodeunit": "~0.1.2",
-	"mongodb-fs" : "~0.0.12"
+	"mongodb-fs" : "~0.0.12",
+	"grunt-supervisor" : "~0.1.1",
+	"grunt-coveralls" : "~0.3.0"
   }
 }

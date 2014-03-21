@@ -5,13 +5,22 @@ module.exports = {
 		  port: 27027, 
 		  mocks: { 
 			  fakedb : {
-					geodecisions_users : [ {
-						name : 'John',
-						lastname : 'Doe'
-					}, {
+					geodecisions_users : [{
 						name : 'Forrest',
-						lastname : 'Gump'
-					} ]
+						lastname : 'Gump',
+						email : 'forrest@geodecisions.com'
+					},
+					{
+						name : 'Armando',
+						lastname : 'Jaleo',
+						email : 'armando@geodecisions.com'
+					},
+					{
+						name : 'Kevin',
+						lastname : 'Stuart',
+						email : 'stuart@geodecisions.com'
+					}
+					]
 				}
 		  },
 		 

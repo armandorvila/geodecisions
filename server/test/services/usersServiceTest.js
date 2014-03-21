@@ -26,12 +26,13 @@ module.exports = {
 	findUsers : function(test) {
 		console.log(' Test - UsersService.findUsers');
 		
-		test.expect(3);
+		test.expect(4);
 
 		usersService.findUsers(function(err,result) {
 			test.ok(result);
 			test.ok(result[0]);
-			test.equal(result[0].name, 'John');
+			test.equal(result[0].name, 'Forrest');
+			test.equal(result[0].email, 'forrest@geodecisions.com');
 			console.log('Got users ' + result);
 			test.done();
 		});
@@ -40,11 +41,27 @@ module.exports = {
 	findByName : function(test) {
 		console.log(' Test - UsersService.findByName');
 		
-		test.expect(3);
-		usersService.findByName('Forrest', function(result) {
+		test.expect(4);
+		usersService.findByName('Forrest', function(err,result) {
 			test.ok(result);
 			test.ok(result.name);
 			test.equal(result.name, 'Forrest');
+			test.equal(result.email, 'forrest@geodecisions.com');
+			console.log('Got user ' + result);
+			test.done();
+		});
+
+	},
+	
+	findByEmail : function(test) {
+		console.log(' Test - UsersService.findByEmail');
+		
+		test.expect(4);
+		usersService.findByEmail('forrest@geodecisions.com', function(err,result) {
+			test.ok(result);
+			test.ok(result.name);
+			test.equal(result.name, 'Forrest');
+			test.equal(result.email, 'forrest@geodecisions.com');
 			console.log('Got user ' + result);
 			test.done();
 		});

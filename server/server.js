@@ -1,7 +1,10 @@
 var express = require('express');
 var http = require('http');
 var mongoose = require('mongoose');
+var passport = require("passport");
 var config = require('./config.js');
+
+require('./src/security/passportConfig')(passport);
 
 var app = express();
 
@@ -12,6 +15,13 @@ app.use(express.bodyParser());
 app.use(express.cookieParser(config.server.cookieSecret)); 
 app.use(express.cookieSession());
 app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+
 
 require('./src/routes/usersRoute').addRoutes(app, config);
 require('./src/routes/projectsRoute').addRoutes(app, config);

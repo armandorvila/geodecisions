@@ -12,19 +12,21 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-recess');
 	grunt.loadNpmTasks('grunt-karma');
+	grunt.loadNpmTasks( "grunt-supervisor" );
+	grunt.loadNpmTasks('grunt-coveralls');
 
 	/* ********************* Register required tasks******************* */
-	grunt.registerTask('default',
-			[ 'jshint', 'build', 'nodeunit']); //'karma:unit'
-	
-	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build',
-			'copy']);
-	
-	grunt.registerTask('release', [ 'clean', 'uglify', 'jshint',
-			'karma:unit', 'concat:index', 'recess:min', 'copy']);
-	
+	grunt.registerTask('default',[ 'jshint', 'build', 'nodeunit']); 
+	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build','copy']);
+	grunt.registerTask('release', [ 'clean', 'uglify', 'jshint', 'karma:unit', 'concat:index', 'recess:min', 'copy']);
+	grunt.registerTask('coveralls', [ 'coveralls']);
 	grunt.registerTask('test-watch', [ 'karma:watch' ]);
-
+	grunt.registerTask('start', ['supervisor']);
+	
+	grunt.registerTask('timestamp', function() {
+		grunt.log.subhead(Date());
+	});
+	
 	grunt.registerTask('timestamp', function() {
 		grunt.log.subhead(Date());
 	});
@@ -47,7 +49,6 @@ module.exports = function(grunt) {
 	 * 8-uglify, 9-watch, 10-recess
 	 */
 	grunt.initConfig({
-
 				distdir : 'client/dist',
 
 				pkg : grunt.file.readJSON('package.json'),
@@ -64,7 +65,6 @@ module.exports = function(grunt) {
 					less : [ 'client/src/less/stylesheet.less' ],
 					lessWatch : [ 'client/src/less/**/*.less' ]
 				},
-
 				jshint : {
 					files : [ 'gruntFile.js', 'server/server.js',
 							'server/src/**/*.js', 'server/test/**/*.js',
@@ -91,7 +91,25 @@ module.exports = function(grunt) {
 						}
 					}
 				},
-
+				supervisor: {
+					  target: {
+					    script: "server/server.js",
+					    options: {
+					      args: ["dev"],
+					      watch: ["server/src"],
+					      ignore: ["server/test"],
+					      pollInterval: 500,
+					      extensions: [ "js" ],
+					      exec: "node",
+					      debug: false,
+					      debugBrk: false,
+					      harmony: false,
+					      noRestartOn: "exit",
+					      forceWatch: true,
+					      quiet: true
+					    }
+					  }
+					},
 				clean : [ '<%= distdir %>/*' ],
 
 				copy : {
@@ -172,7 +190,6 @@ module.exports = function(grunt) {
 						dest : '<%= distdir %>/resources/js/jquery.js'
 					}
 				},
-
 				recess : {
 					build : {
 						files : {
@@ -202,16 +219,21 @@ module.exports = function(grunt) {
 								'<%= src.lessWatch %>', '<%= src.templates %>', '<%= src.html %>' ],
 						tasks : [ 'build', 'timestamp']
 					}
-				}
+				},
+				coveralls: {
+				    options: {
+				      // LCOV coverage file relevant to every target
+				      src: 'coverage-results/lcov.info',
+
+				      // When true, grunt-coveralls will only print a warning rather than
+				      // an error, to prevent CI builds from failing unnecessarily (e.g. if
+				      // coveralls.io is down). Optional, defaults to false.
+				      force: false
+				    },
+				    your_target: {
+				      // Target-specific LCOV coverage file
+				      src: 'coverage-results/extra-results-*.info'
+				    }
+				  }
 			});
-
-	grunt.registerTask('timestamp', function() {
-		grunt.log.subhead(Date());
-	});
-
-	grunt.registerTask('start', function() {
-		this.async();
-		require('supervisor').run([ 'server/server.js']);
-	});
-
 };

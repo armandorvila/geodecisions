@@ -1,7 +1,7 @@
 var User = require('../../src/models/usersModel');
 
 exports.findUsers = function(callback) {
-	console.log('Getting users');
+	console.log('Getting users at usersService.findUsers');
 	User.find(function(err, users) {
 		if (err) {
 			console.log(err);
@@ -23,12 +23,21 @@ exports.createUser = function(user, callback) {
 exports.findByName = function(nameToFind, callback) {
 	var criteria = JSON.parse(JSON.stringify({name : nameToFind}));
 	
-	User.findOne(criteria, 'name lastname', function(err, user) {
+	User.findOne(criteria, 'name lastname email', function(err, user) {
 		if (err) {
 			console.log('error');
-			return callback(err);
 		}
-		console.log(user);
-		callback(user);
+		callback(err,user);
+	});
+};
+
+exports.findByEmail = function(emailToFind, callback) {
+	var criteria = JSON.parse(JSON.stringify({email : emailToFind}));
+	
+	User.findOne(criteria, 'name lastname email password', function(err, user) {
+		if (err) {
+			console.log(err);
+		}
+		callback(err,user);
 	});
 };

@@ -1,69 +1,83 @@
-angular.module('app', 
-['ngRoute',
- 'controllers.users',
- 'controllers.projects', 'directives.numbers']);
+angular.module('app', [ 'ngRoute', 'controllers.users', 'controllers.projects',
+		'services.users', 'directives.numbers' ]);
 
-//TODO directives dosen't work, fix it
+// TODO directives dosen't work, fix it[
 
-angular.module('app').config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
-	  $locationProvider.html5Mode(true);
-	  $routeProvider.
-      when('/signup', {
-          templateUrl: '/templates/signup.html',
-          controller: 'UserSingupCtrl'
-        }).
-      when('/home', {
-            templateUrl: '/templates/home.html',
-            controller: 'UsersListCtrl'
-      }).
-      when('/users', {
-          templateUrl: '/templates/users.html',
-          controller: 'UsersListCtrl'
-        }).
-      when('/projects', {
-          templateUrl: '/templates/projects.html',
-          controller: 'AppCtrl'
-        }).
-      when('/projects/:projectId', {
-        templateUrl: 'templates/projct-detail.html',
-        controller: 'ProjectDetailCtrl'
-      }).
-      otherwise({
-        redirectTo: '/home'
-      });
-}]);
+angular.module('app').config(
+		['$routeProvider', '$locationProvider',
+				function($routeProvider, $locationProvider) {
+					$locationProvider.html5Mode(true);
+					$routeProvider.when('/signup', {
+						templateUrl : '/templates/signup.html',
+						controller : 'UserSingupCtrl'
+					}).when('/home', {
+						templateUrl : '/templates/home.html',
+						controller : 'AppCtrl'
+					}).when('/users', {
+						templateUrl : '/templates/users.html',
+						controller : 'UsersListCtrl'
+					}).when('/projects', {
+						templateUrl : '/templates/projects.html',
+						controller : 'ProjectsCtrl'
+					}).when('/projects/:projectId', {
+						templateUrl : 'templates/projct-detail.html',
+						controller : 'ProjectDetailCtrl'
+					}).otherwise({
+						redirectTo : '/home'
+					});
+				} ]);
 
-angular.module('app').controller('AppCtrl', ['$scope', function($scope,$location) {
-	
-	$scope.homeActive =  true;
-	$scope.projectsActive =  false;
-	$scope.usersActive =  false;
-	
-	$scope.home = function () {
-		$scope.homeActive =  true;
-		$scope.projectsActive =  false;
-		$scope.usersActive =  false;
-	};
-	$scope.projects = function () {
-		$scope.homeActive =  false;
-		$scope.projectsActive =  true;
-		$scope.usersActive =  false;
-	};
-     $scope.users = function () {
-		$scope.homeActive =  false;
-		$scope.projectsActive =  false;
-		$scope.usersActive =  true;
-	 };
-	 
-	 $scope.isAuthenticated = function () {
-		 return false;
-	 };
-	 
-	 $scope.$on('$routeChangeError', function(event, current, previous, rejection){
-		    i18nNotifications.pushForCurrentRoute('errors.route.changeError', 'error', {}, {rejection: rejection});
-	 });
-	  
-}]);
+angular.module('app').controller(
+		'AppCtrl',['$scope','usersService', function($scope, usersService, $location) {
+
+					$scope.homeActive = true;
+					$scope.projectsActive = false;
+					$scope.usersActive = false;
+
+					$scope.home = function() {
+						$scope.homeActive = true;
+						$scope.projectsActive = false;
+						$scope.usersActive = false;
+					};
+					$scope.projects = function() {
+						$scope.homeActive = false;
+						$scope.projectsActive = true;
+						$scope.usersActive = false;
+					};
+					$scope.users = function() {
+						$scope.homeActive = false;
+						$scope.projectsActive = false;
+						$scope.usersActive = true;
+					};
+
+					$scope.isAuthenticated = function() {
+						return usersService.isAuthenticated();
+					};
+
+					$scope.authError = null;
+					$scope.credentials = {};
+
+					$scope.login = function() {
+						if ($scope.credentials.email && $scope.credentials.password) {
+							usersService.login($scope.credentials.email, $scope.credentials.password, function(user) {
+										$scope.currentUser = user;
+							});
+						} else {
+							authError = 'username and password are empty.';
+						}
+					};
+
+					$scope.logout = function() {
+						usersService.logout(function() {
+							$location.path('/');
+						});
+					};
+
+					$scope.clearLogin = function() {
+						$scope.user = {};
+					};
+
+				} ]);
 var projects = angular.module('controllers.projects', ['services.projects' ,'services.users']);
 
 projects.controller('ProjectsCtrl',['$scope','usersService', 'projectsService', function($scope, usersService, projectsService) {
@@ -82,9 +96,9 @@ users.controller('UsersListCtrl', ['$scope','usersService',function($scope, user
 			$scope.usersNum = 100;
 			
 			$scope.handler = {
-					onError : function() {
-						alert('Something went wrong getting users');
-						throw new Error('Something went wrong getting users');
+					onError : function(response) {
+						console.log('Something went wrong getting users:' + response);
+						throw new Error('Something went wrong getting users' + response);
 					},
 					onSuccess : function(response) {
 						$scope.users = response.data;
@@ -189,31 +203,60 @@ angular.module('services.projects', []).factory('projectsService',
 angular.module('services.users', []).factory('usersService', function($http) {
 
 	return {
+		currentUser: null,
+		
 		getUsers : function(handler) {
 			var usersPromise = $http.get('/users/get');
 			usersPromise.then(function(response) {
 				handler.onSuccess(response);
-			
 			}, function(response) {
-				handler.onError();
+				handler.onError(response);
 			});
 		},
-		
-		create: function(userModel, handler){
+
+		create : function(userModel, handler) {
 			var user = {};
-			
+
 			user.name = userModel.name;
 			user.lastname = userModel.lastname;
 			user.email = userModel.email;
 			user.password = userModel.password;
-			
-			var usersPromise = $http.post('/users/create',user);
+
+			var usersPromise = $http.post('/users/create', user);
+
 			usersPromise.then(function(response) {
 				handler.onSuccess();
 			}, function(response) {
 				handler.onError();
 				throw new Error('Something went wrong creating user');
 			});
+		},
+
+		login : function(email, password, callback) {
+			var promise = $http.post('/login', {
+				email : email,
+				password : password
+			});
+
+			return promise.then(function(response) {
+				this.currentUser = response.data;
+				callback(this.currentUser);
+			});
+		},
+
+		logout : function(callback) {
+			$http.post('/logout').then(function() {
+				this.currentUser = null;
+				callback();
+			});
+		},
+
+		isAuthenticated : function() {
+			return !!this.currentUser;
+		},
+
+		getCurrentUser : function() {
+			return this.currentUser;
 		}
 	};
 });

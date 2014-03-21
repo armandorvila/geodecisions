@@ -33,7 +33,7 @@ module.exports = {
 			}
 			test.ok(users);
 			test.ok(users[0]);
-			test.equal(users[0].name, 'John');
+			test.equal(users[0].name, 'Forrest');
 			test.done();
 		});
 	},
@@ -42,13 +42,13 @@ module.exports = {
 		console.log(' Test - UsersModel.findOne');
 
 		User.findOne({
-			'name' : 'John'
+			'name' : 'Armando'
 		}, 'name lastname', function(err, user) {
 			if (err) {
 				throw new Error(err);
 			}
 			test.ok(user);
-			test.equal(user.name, 'John');
+			test.equal(user.name, 'Armando');
 			test.done();
 		});
 	},
