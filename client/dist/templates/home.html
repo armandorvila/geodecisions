@@ -1,6 +1,6 @@
 <section class="container">
 
-	<h1>Welcome to Geodecisions</h1>
+	<h1>Welcome to Geodecisions - Continuous deployed</h1>
 
 	<article class="row span8">
 		<p>Geodecisions is a tool intended to help managers in their
@@ -10,31 +10,7 @@
 
 	</article>
 
-	<article class="row">
-		<form name="form" novalidate class="form-horizontal span4">
-
-			<div class="modal-header">
-				<h4>Please enter your login details</h4>
-			</div>
-			
-			 <div class="alert alert-error" data-ng-show="authError">
-            	{{authError}}
-       		 </div>
-
-			<div class="modal-body">
-				<label>E-mail</label> <input name="login" type="email"
-					data-ng-model="credentials.email" required autofocus> <label>Password</label>
-				<input name="pass" type="password" data-ng-model="credentials.password"
-					required>
-			</div>
-
-			<div class="modal-footer">
-				<button class="btn btn-primary login" data-ng-click="login()"
-					data-ng-disabled='form.$invalid'>Sign in</button>
-				<button class="btn clear" data-ng-click="clearLogin()">Clear</button>
-			</div>
-		</form>
-	</article>
+	<article class="row" data-ng-include="'templates/login-form.html'" data-ng-hide="isAuthenticated()"></article>
 	
 	<article class="row">
 		<p class="span8"> User loged as {{currentUser.name}} </p>
