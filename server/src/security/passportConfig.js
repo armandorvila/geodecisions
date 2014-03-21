@@ -17,8 +17,8 @@ module.exports = function(passport) {
 	passport.use(new LocalStrategy({
 		usernameField : 'email',
 		passwordField : 'password'
-	}, 
-	
+	},
+
 	function(email, password, done) {
 		console.log('Starting pssport authentication for' + email);
 		usersService.findByEmail(email, function(err, user) {
@@ -28,17 +28,24 @@ module.exports = function(passport) {
 			}
 			if (!user) {
 				console.log('No user found with email ' + email);
-				return done(null, false, { message : 'Incorrect email.'});
+				return done(null, false, {
+					message : 'Incorrect email.'
+				});
 			}
-			
+
 			if (password === user.password) {
 				console.log('User logued ' + user.email);
-				return done(null, user);
-			}
-			else {
+
+				var userCookie = {
+					id : user.id,
+					email : user.email
+				};
+
+				return done(null, userCookie);
+			} else {
 				console.log('Incorrect password');
 				done(null, false, {
-				message : 'Incorrect password'
+					message : 'Incorrect password'
 				});
 			}
 		});

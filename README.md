@@ -6,13 +6,10 @@
 
 [![Coverage Status](https://coveralls.io/repos/armandorvila/geodecisions/badge.png)](https://coveralls.io/r/armandorvila/geodecisions)
 
-
-https://www.codeship.io/projects/852bd0a0-934f-0131-1cc0-36aa00e17550/status
-
 geodecsions
 ===========
 
-Web system which gives support to carry out making decision processes focused in a geographic target.
+Web system which gives support to carry out making decision processes focused on a geographic target.
 
 If your question is something like where I should .... ? Geodecisions give you a table on which take 
 your decisions. 

@@ -40,6 +40,10 @@ exports.addRoutes = function(app, config) {
 		
 		
 	});
+	
+	app.get('/currentUser', function(req, res) {
+		
+	});
 
 	app.get('/logout', function(req, res) {
 		req.logout();
