@@ -16,8 +16,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-coveralls');
 
 	/* ********************* Register required tasks******************* */
-	grunt.registerTask('default',[ 'jshint', 'build', 'nodeunit']); 
-	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build','copy']);
+	grunt.registerTask('default',[ 'build', 'release']); 
+	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build','copy', 'jshint','nodeunit',]);
 	grunt.registerTask('release', [ 'clean', 'uglify', 'jshint', 'karma:unit', 'concat:index', 'recess:min', 'copy']);
 	grunt.registerTask('coveralls', ['coveralls']);
 	grunt.registerTask('test-watch', [ 'karma:watch' ]);
