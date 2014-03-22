@@ -5,7 +5,6 @@ var RedisStore = require('connect-redis')(express);
  * session.use must be called after prior passport
  */
 exports.use = function(app, config) {
-	
 	console.log('Loading Express session midleware');
 	
 	app.use(express.session({
