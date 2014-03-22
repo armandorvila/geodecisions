@@ -1,5 +1,4 @@
 var path = require('path');
-var util = require('util');
 
 module.exports = {
 		  port: 27027, 

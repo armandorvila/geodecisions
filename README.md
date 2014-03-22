@@ -4,7 +4,7 @@
 [![Dependencies](https://david-dm.org/armandorvila/geodecisions.png)](https://david-dm.org/armandorvila/geodecisions)
 [![devDependency Status](https://david-dm.org/armandorvila/geodecisions/dev-status.png)](https://david-dm.org/armandorvila/geodecisions#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/armandorvila/geodecisions/badge.png)](https://coveralls.io/r/armandorvila/geodecisions)
-
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/armandorvila/geodecisions/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 geodecsions
 ===========
 
