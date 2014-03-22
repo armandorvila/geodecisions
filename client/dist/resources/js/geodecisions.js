@@ -1,1 +1,242 @@
-angular.module("app",["ngRoute","controllers.users","controllers.proceses","services.users"]),angular.module("app").config(["$routeProvider","$locationProvider",function(a,b){b.html5Mode(!0),a.when("/signup",{templateUrl:"/templates/signup.html",controller:"UserSingupCtrl"}).when("/home",{templateUrl:"/templates/home.html",controller:"AppCtrl"}).when("/login",{templateUrl:"/templates/login.html",controller:"AppCtrl"}).when("/users",{templateUrl:"/templates/users.html",controller:"UsersListCtrl"}).when("/proceses",{templateUrl:"/templates/proceses.html",controller:"ProcesesCtrl"}).when("/pricing",{templateUrl:"/templates/pricing.html",controller:"AppCtrl"}).when("/about",{templateUrl:"/templates/about.html",controller:"AppCtrl"}).when("/projects/:projectId",{templateUrl:"templates/process-detail.html",controller:"ProcessDetailCtrl"}).otherwise({redirectTo:"/home"})}]),angular.module("app").run(["$rootScope","usersService","$location",function(a,b,c){a.$on("$routeChangeSuccess",function(d,e){a.currentUser||b.loadCurrentUser(function(){"/pricing"!==e.originalPath&&"/about"!==e.originalPath&&"/signup"!==e.originalPath&&c.path("/login")})})}]),angular.module("app").controller("AppCtrl",["$scope","usersService","$rootScope","$location",function(a,b,c,d){a.isAuthenticated=function(){return!!c.currentUser},a.authError=null,a.credentials={},a.login=function(){a.credentials.email&&a.credentials.password?b.login(a.credentials.email,a.credentials.password,function(){d.path("/home")},function(){d.path("/login")}):authError="username and password are empty."},a.logout=function(){b.logout(function(){d.path("/")})},a.clearLogin=function(){a.credentials={},alert()}}]);var projects=angular.module("controllers.proceses",["services.projects","services.users"]);projects.controller("ProcesesCtrl",["$scope","usersService","projectsService",function(){}]),projects.controller("ProcessDetailCtrl",["$scope","usersService","projetsService",function(){}]);var users=angular.module("controllers.users",["services.users"]);users.controller("UsersListCtrl",["$scope","usersService",function(a,b){a.usersNum=100,a.handler={onError:function(a){throw console.log("Something went wrong getting users:"+a),new Error("Something went wrong getting users"+a)},onSuccess:function(b){a.users=b.data}},b.getUsers(a.handler)}]),users.controller("UserLoginCtrl",["$scope","usersService",function(a){a.login=function(){alert("Login User :"+a.user.email)}}]),users.controller("UserSingupCtrl",["$scope","usersService",function(a,b){a.handler={onError:function(){a.signupError="Error creating user"},onSuccess:function(){a.signupSuccess="User created",$location.path("/")}},a.signup=function(){a.user.password===a.user.confirmPassword?b.create(a.user,a.handler):a.signupError="Passwords must be equals"},a.clear=function(){a.user={}},a.cancel=function(){$location.path("/")}}]),users.controller("UserLogoutController",["$scope","usersService",function(a){a.login=function(){alert("New User :")}}]),angular.module("services.projects",[]).factory("projectsService",function(){return{}}),angular.module("services.users",[]).factory("usersService",function(a,b){return{getUsers:function(b){var c=a.get("/users/get");c.then(function(a){b.onSuccess(a)},function(a){b.onError(a)})},create:function(b,c){var d={};d.name=b.name,d.lastname=b.lastname,d.email=b.email,d.password=b.password;var e=a.post("/users/new",d);e.then(function(){c.onSuccess()},function(){throw c.onError(),new Error("Something went wrong creating user")})},login:function(c,d,e,f){var g=a.post("/users/login",{email:c,password:d});return g.then(function(a){b.currentUser=a.data,a.data?e():f()})},logout:function(c){a.post("/users/logout").then(function(){b.currentUser=null,c()})},loadCurrentUser:function(c){a.get("/users/current").then(function(a){a.data&&a.data.user!==!1?b.currentUser=a.data:c()},function(){console.log("Error getting current user")})}}});
+angular.module('app', [ 'ngRoute', 'controllers.users', 'controllers.proceses',
+	'services.users' ]);
+
+angular.module('app').config(
+	[ '$routeProvider', '$locationProvider',
+		function($routeProvider, $locationProvider) {
+		    $locationProvider.html5Mode(true);
+
+		    $routeProvider.when('/signup', {
+			templateUrl : '/templates/signup.html',
+			controller : 'UserSingupCtrl'
+		    }).when('/home', {
+			templateUrl : '/templates/home.html',
+			controller : 'AppCtrl'
+		    }).when('/login', {
+			templateUrl : '/templates/login.html',
+			controller : 'AppCtrl'
+		    }).when('/users', {
+			templateUrl : '/templates/users.html',
+			controller : 'UsersListCtrl'
+		    }).when('/proceses', {
+			templateUrl : '/templates/proceses.html',
+			controller : 'ProcesesCtrl'
+		    }).when('/pricing', {
+			templateUrl : '/templates/pricing.html',
+			controller : 'AppCtrl'
+		    }).when('/about', {
+			templateUrl : '/templates/about.html',
+			controller : 'AppCtrl'
+		    })
+		    .when('/projects/:projectId', {
+			templateUrl : 'templates/process-detail.html',
+			controller : 'ProcessDetailCtrl'
+		    }).otherwise({
+			redirectTo : '/home'
+		    });
+		} ]);
+
+angular.module('app').run(['$rootScope','usersService','$location', function($rootScope, usersService, $location) {
+		    $rootScope.$on('$routeChangeSuccess', function(event, current, previous, rejection) {
+			if (!$rootScope.currentUser) {
+			    usersService.loadCurrentUser(function() {
+				if(current.originalPath !== '/pricing' &&
+					current.originalPath !== '/about' && 
+					current.originalPath !== '/signup'){ 
+				    $location.path('/login'); }
+			    });
+			}
+		    });}]);
+
+angular.module('app').controller('AppCtrl',[
+		'$scope',
+		'usersService',
+		'$rootScope',
+		'$location',
+		function($scope, usersService, $rootScope, $location) {
+		    
+		    $scope.isAuthenticated = function() {
+			return !!$rootScope.currentUser;
+		    };
+
+		    $scope.authError = null;
+		    $scope.credentials = {};
+
+		    $scope.login = function() {
+			if ($scope.credentials.email && $scope.credentials.password) {
+			    usersService.login($scope.credentials.email,
+				    $scope.credentials.password, function() {
+					$location.path('/home');
+				    }, function() {
+					$location.path('/login');
+				    });
+			} else {
+			    authError = 'username and password are empty.';
+			}
+		    };
+
+		    $scope.logout = function() {
+			usersService.logout(function() {
+			    $location.path('/');
+			});
+		    };
+
+		    $scope.clearLogin = function() {
+			$scope.credentials = {};
+			alert();
+		    };
+
+		} ]);
+var projects = angular.module('controllers.proceses', ['services.projects' ,'services.users']);
+
+projects.controller('ProcesesCtrl',['$scope','usersService', 'projectsService', function($scope, usersService, projectsService) {
+
+					
+}]);
+
+projects.controller('ProcessDetailCtrl',['$scope','usersService', 'projetsService', function($scope, usersService, projectsService) {
+
+	
+}]);
+var users = angular.module('controllers.users', [ 'services.users' ]);
+
+users.controller('UsersListCtrl', ['$scope','usersService',function($scope, usersService) {
+			
+			$scope.usersNum = 100;
+			
+			$scope.handler = {
+					onError : function(response) {
+						console.log('Something went wrong getting users:' + response);
+						throw new Error('Something went wrong getting users' + response);
+					},
+					onSuccess : function(response) {
+						$scope.users = response.data;
+					}
+				};
+			
+			usersService.getUsers($scope.handler);
+		} ]);
+
+users.controller('UserLoginCtrl', [ '$scope', 'usersService',
+		function($scope, $location, usersService) {
+
+			$scope.login = function() {
+				alert("Login User :" + $scope.user.email);
+			};
+
+		} ]);
+
+users.controller('UserSingupCtrl', [ '$scope', 'usersService',
+		function($scope, usersService) {
+
+			$scope.handler = {
+				onError : function() {
+					$scope.signupError = 'Error creating user';
+				},
+				onSuccess : function() {
+					$scope.signupSuccess = 'User created';
+					$location.path('/');
+				}
+			};
+
+			$scope.signup = function() {
+				if ($scope.user.password === $scope.user.confirmPassword) {
+					usersService.create($scope.user, $scope.handler);
+				} else {
+					$scope.signupError = 'Passwords must be equals';
+				}
+			};
+
+			$scope.clear = function() {
+				$scope.user = {};
+			};
+
+			$scope.cancel = function() {
+				$location.path('/');
+			};
+
+		} ]);
+
+users.controller('UserLogoutController', [ '$scope', 'usersService',
+		function($scope, usersService) {
+
+			$scope.login = function() {
+				alert("New User :");
+			};
+
+		} ]);
+angular.module('services.projects', []).factory('projectsService',
+		function($http) {
+
+			return {};
+		});
+
+angular.module('services.users', []).factory('usersService',
+	function($http, $rootScope) {
+
+	    return {
+		getUsers : function(handler) {
+		    var usersPromise = $http.get('/users/get');
+		    usersPromise.then(function(response) {
+			handler.onSuccess(response);
+		    }, function(response) {
+			handler.onError(response);
+		    });
+		},
+
+		create : function(userModel, handler) {
+		    var user = {};
+
+		    user.name = userModel.name;
+		    user.lastname = userModel.lastname;
+		    user.email = userModel.email;
+		    user.password = userModel.password;
+
+		    var usersPromise = $http.post('/users/new', user);
+
+		    usersPromise.then(function(response) {
+			handler.onSuccess();
+		    }, function(response) {
+			handler.onError();
+			throw new Error('Something went wrong creating user');
+		    });
+		},
+
+		login : function(email, password, goToHome, goToLogin) {
+		    var promise = $http.post('/users/login', {
+			email : email,
+			password : password
+		    });
+
+		    return promise.then(function(response) {
+			$rootScope.currentUser = response.data;
+			if(response.data){
+			    goToHome();
+			}
+			else {
+			    goToLogin();
+			}
+		    });
+		},
+
+		logout : function(callback) {
+		    $http.post('/users/logout').then(function() {
+			$rootScope.currentUser = null;
+			callback();
+		    });
+		},
+
+		loadCurrentUser : function(goToLogin) {
+		    $http.get('/users/current').then(function(response) {
+			if (response.data && response.data.user !== false) {
+			    $rootScope.currentUser = response.data;
+			}
+			else {
+			    goToLogin();
+			}
+		    }, function(response) {
+			console.log('Error getting current user');
+		    });
+		}
+	    };
+	});

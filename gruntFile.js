@@ -16,17 +16,12 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-coveralls');
 
 	/* ********************* Register required tasks******************* */
-	grunt.registerTask('default',[ 'build', 'release']); 
-	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build','copy', 'jshint','nodeunit',]);
-	grunt.registerTask('release', [ 'clean', 'uglify', 'jshint', 'karma:unit', 'concat:index', 'recess:min', 'copy']);
+	grunt.registerTask('default',['build', 'release']); 
+	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build','copy','jshint', 'nodeunit']);
+	grunt.registerTask('release', [ 'clean','uglify',  'concat', 'jshint', 'karma:unit', 'concat:index','recess:min', 'copy']);
 	grunt.registerTask('coveralls', ['coveralls']);
 	grunt.registerTask('test-watch', [ 'karma:watch' ]);
 	grunt.registerTask('start', ['supervisor']);
-	
-	grunt.registerTask('timestamp', function() {
-		grunt.log.subhead(Date());
-	});
-	
 	grunt.registerTask('timestamp', function() {
 		grunt.log.subhead(Date());
 	});
@@ -212,7 +207,7 @@ module.exports = function(grunt) {
 					all : {
 						files : ['gruntFile.js','<config:lint.files>', '<%= src.js %>', '<%= src.specs %>',
 								'<%= src.lessWatch %>', '<%= src.templates %>', '<%= src.html %>' ],
-						tasks : [ 'default', 'timestamp']
+						tasks : [ 'build', 'timestamp']
 					},
 					build : {
 						files : [ 'gruntFile.js','<config:lint.files>','<%= src.js %>', '<%= src.specs %>',
