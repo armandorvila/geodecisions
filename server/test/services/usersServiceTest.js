@@ -15,7 +15,7 @@ module.exports = {
 		mongodbFs.start(function(err) {
 			mongoose.connect('mongodb://localhost:27027/fakedb', {
 				server : {
-					poolSize : 1
+					poolSize : 3
 				}
 			}, function(err) {
 				callback();

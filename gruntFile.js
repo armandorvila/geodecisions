@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('default',[ 'jshint', 'build', 'nodeunit']); 
 	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build','copy']);
 	grunt.registerTask('release', [ 'clean', 'uglify', 'jshint', 'karma:unit', 'concat:index', 'recess:min', 'copy']);
-	grunt.registerTask('coveralls', [ 'coveralls']);
+	grunt.registerTask('coveralls', ['coveralls']);
 	grunt.registerTask('test-watch', [ 'karma:watch' ]);
 	grunt.registerTask('start', ['supervisor']);
 	
