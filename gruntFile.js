@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('default',['build', 'release']); 
 	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build','copy','jshint', 'nodeunit']);
 	grunt.registerTask('release', [ 'clean','uglify',  'concat', 'jshint', 'karma:unit', 'concat:index','recess:min', 'copy']);
-	grunt.registerTask('coveralls', ['coveralls']);
+	grunt.registerTask('coverage', ['coveralls']);
 	grunt.registerTask('test-watch', [ 'karma:watch' ]);
 	grunt.registerTask('start', ['supervisor']);
 	grunt.registerTask('timestamp', function() {
@@ -218,16 +218,8 @@ module.exports = function(grunt) {
 				coveralls: {
 				    options: {
 				      // LCOV coverage file relevant to every target
-				      src: 'coverage-results/lcov.info',
-
-				      // When true, grunt-coveralls will only print a warning rather than
-				      // an error, to prevent CI builds from failing unnecessarily (e.g. if
-				      // coveralls.io is down). Optional, defaults to false.
+				      src: 'server/test/lcov.info',
 				      force: true
-				    },
-				    your_target: {
-				      // Target-specific LCOV coverage file
-				      src: 'coverage-results/extra-results-*.info'
 				    }
 				  }
 			});

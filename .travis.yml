@@ -10,5 +10,6 @@
 
  script: grunt
  
- after_script: grunt coveralls
+ after_script: 
+  - grunt coverage
  

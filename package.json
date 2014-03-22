@@ -28,7 +28,8 @@
     "open": "0.0.4",
     "passport": "0.2.0",
     "passport-local": "^1.0.0",
-    "request": "2.34.0"
+    "request": "2.34.0",
+    "coveralls": "^2.10.0"
   },
   "devDependencies": {
     "grunt": "~0.4.0",
