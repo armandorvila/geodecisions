@@ -3,6 +3,7 @@
 [![Codeship Build Status](https://www.codeship.io/projects/de6fb440-dea9-0130-e7d9-122ca7ee39d3/status)](https://www.codeship.io/projects/5622)
 [![Coverage Status](https://coveralls.io/repos/armandorvila/geodecisions/badge.png)](https://coveralls.io/r/armandorvila/geodecisions)
 [![Dependencies](https://david-dm.org/armandorvila/geodecisions.png)](https://david-dm.org/armandorvila/geodecisions)
+[![devDependency Status](https://david-dm.org/armandorvila/geodecisions/dev-status.png)](https://david-dm.org/armandorvila/geodecisions#info=devDependencies)
 
 geodecsions
 ===========
