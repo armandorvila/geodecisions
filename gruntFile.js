@@ -14,12 +14,13 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks( "grunt-supervisor" );
 	grunt.loadNpmTasks('grunt-coveralls');
+	grunt.loadNpmTasks("grunt-jscoverage");
 
 	/* ********************* Register required tasks******************* */
 	grunt.registerTask('default',['build', 'release']); 
 	grunt.registerTask('build', [ 'clean', 'concat', 'recess:build','copy','jshint', 'nodeunit']);
 	grunt.registerTask('release', [ 'clean','uglify',  'concat', 'jshint', 'karma:unit', 'concat:index','recess:min', 'copy']);
-	grunt.registerTask('coverage', ['coveralls']);
+	grunt.registerTask('coverage', ['jscoverage:server','coveralls:server']);
 	grunt.registerTask('test-watch', [ 'karma:watch' ]);
 	grunt.registerTask('start', ['supervisor']);
 	grunt.registerTask('timestamp', function() {
@@ -217,10 +218,27 @@ module.exports = function(grunt) {
 				},
 				coveralls: {
 				    options: {
-				      // LCOV coverage file relevant to every target
-				      src: 'server/test/lcov.info',
 				      force: true
+				    },
+				    server: {
+					 src: 'server-coverage/test/lcov.info'
+				    },
+				    client: {
+					 src: 'client-coverage/test/lcov.info'
 				    }
-				  }
+				  },
+				  jscoverage: {
+				      server: {
+				        src: 'server',
+				        dest: 'server-coverage'
+				      },
+				      client: {
+				        src: 'client',
+				        dest: 'client-coverage'
+				      },
+				      options: {
+				      }
+				    }
+				  
 			});
 };

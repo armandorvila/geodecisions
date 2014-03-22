@@ -47,6 +47,8 @@
     "grunt-supervisor": "~0.1.1",
     "mongodb-fs": "~0.0.12",
     "rewire": "2.0.0",
-    "supervisor": "0.5.7"
+    "supervisor": "0.5.7",
+    "jscoverage": "^0.3.8",
+    "grunt-jscoverage": "^0.1.0"
   }
 }
