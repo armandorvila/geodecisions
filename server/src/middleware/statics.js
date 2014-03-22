@@ -1,8 +1,12 @@
 var express = require('express');
 
-exports.addRoutes = function(app, config) {
+/**
+ * statics must be called prior all middleware.
+ */
+exports.use = function(app, config) {
 	
-  // Serve up the favicon
+  console.log('Loading Express static midleware');
+	
   app.use(express.favicon(config.server.distFolder + config.server.staticUrl + '/favicon.ico'));
   app.use(config.server.staticUrl, express.compress());
   

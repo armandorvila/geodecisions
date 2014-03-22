@@ -96,7 +96,7 @@ module.exports = function(grunt) {
 					    script: "server/server.js",
 					    options: {
 					      args: ["dev"],
-					      watch: ["server/src"],
+					      watch: ['server' , 'server/src'],
 					      ignore: ["server/test"],
 					      pollInterval: 500,
 					      extensions: [ "js" ],

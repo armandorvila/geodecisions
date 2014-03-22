@@ -19,11 +19,13 @@
 			<div class="navbar-inner">
 
 				<ul class="nav">
-					<li class="navbar-text" data-ng-class="{active:homeActive}"><a href="/home" data-ng-click="home()">Home</a></li>
+					<li class="navbar-text"><a href="/home">Home</a></li>
 					<li class="divider-vertical navbar-text"></li>
-					<li class="navbar-text" data-ng-class="{active:projectsActive}"><a href="/projects" data-ng-click="projects()">Processes</a></li>
+					<li class="navbar-text"><a href="/proceses" data-ng-show="isAuthenticated()">Processes</a></li>
+					<li class="navbar-text"><a href="/pricing" data-ng-hide="isAuthenticated()">Pricing</a></li>
 					<li class="divider-vertical navbar-text"></li>
-					<li class="navbar-text" data-ng-class="{active:usersActive}"><a href="/users" data-ng-click="users()">Users</a></li>
+					<li class="navbar-text"><a href="/users" data-ng-show="isAuthenticated()">Users</a></li>
+					<li class="navbar-text"><a href="/about" data-ng-hide="isAuthenticated()">About</a></li>
 					<li class="divider-vertical navbar-text"></li>
 				</ul>
 
@@ -40,5 +42,9 @@
 	</header>
 
 	<div data-ng-view class="container"></div>
+	
+	<footer>
+		<a href="signup" data-ng-hide="isAuthenticated()">Sign up</a>
+	</footer>
 </body>
 </html>

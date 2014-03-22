@@ -1,8 +1,11 @@
 var express = require('express');
-var usersService = require('../services/usersService');
 var passport = require("passport");
+var usersService = require('../services/usersService');
+
 
 exports.addRoutes = function(app, config) {
+	
+	console.log('Loading route for users rest services');
 
 	app.get('/users/get', function(req, res, next) {
 
@@ -13,7 +16,6 @@ exports.addRoutes = function(app, config) {
 				res.send(err);
 			} else {
 				res.json(result);
-				res.end();
 			}
 		});
 	});
@@ -30,22 +32,33 @@ exports.addRoutes = function(app, config) {
 			}
 		});
 	});
-
-	app.post("/login", function(req, res, next) {
-		
-		return passport.authenticate('local', function(err, user) {
-			res.json(user);
-			res.end();
-		})(req, res, next);
-		
-		
-	});
 	
-	app.get('/currentUser', function(req, res) {
-		
+	app.post("/users/login", function(req, res, next) {
+		return passport.authenticate('local', function(err, user) {
+			console.log(' User ' + user.name + 'logued.');
+
+			req.login(user, function(err) {
+				if (err) {
+					return next(err);
+				}
+				console.log('User well stored in session');
+				return res.json(user);
+			});
+		})(req, res, next);
+
 	});
 
-	app.get('/logout', function(req, res) {
+	app.get('/users/current', function(req, res) {
+		if (req.user) {
+			res.json(req.user);
+		} else {
+			console.log('Not current user in req');
+			res.json({user: false});
+		}
+
+	});
+
+	app.get('/users/logout', function(req, res) {
 		req.logout();
 		res.redirect('/home');
 	});

@@ -1,52 +1,34 @@
 var express = require('express');
 var http = require('http');
 var mongoose = require('mongoose');
-var passport = require("passport");
 var config = require('./config.js');
-var RedisStore = require('connect-redis')(express);
 
-require('./src/security/passportConfig')(passport);
+//Express framework middle ware configuration
+var statics = require('./src/middleware/statics');
+var request = require('./src/middleware/request');
+var session = require('./src/middleware/session');
+var passport = require('./src/middleware/passport');
+var tracer = require('./src/middleware/tracer');
+var router = require('./src/middleware/router');
 
+console.log('---------- Middleware imported ----------');
 
 var app = express();
 
-require('./src/routes/staticsRoute').addRoutes(app, config);
+statics.use(app, config);
+request.use(app, config);
+session.use(app, config);
+passport.use(app, config);
+tracer.use(app, config);
+router.use(app, config);
 
-app.use(express.logger());                                  
-app.use(express.bodyParser());                              
-app.use(express.cookieParser(config.server.cookieSecret)); 
-//app.use(express.cookieSession());
-app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+console.log('----------- Middleware loaded ----------');
 
-app.use(express.session({ 
-	  secret: "y0urR4nd0mT0k3n", 
-	  store : new RedisStore({ 
-	    host : config.redis.host, 
-	    port : config.redis.port, 
-	    user : config.redis.user, 
-	    pass : config.redis.pass 
-	  }),
-	  cookie : {
-	    maxAge : 604800 // one week
-	  }
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-
-
-
-require('./src/routes/usersRoute').addRoutes(app, config);
-require('./src/routes/projectsRoute').addRoutes(app, config);
-
-require('./src/routes/homeRoute').addRoutes(app, config);
-
-
-mongoose.connect(config.mongo.url); 
+mongoose.connect(config.mongo.url);
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
-http.createServer(app).listen(config.server.port, '0.0.0.0', 511, function() {
-	console.log('Geodecisions App Server - listening on port: ' + config.server.port);
-});
+console.log('----------- Mongo db connection ready ----------');
+
+http.createServer(app).listen(config.server.port, '0.0.0.0',511, function() {
+			console.log('Geodecisions App Server - listening on port: ' + config.server.port); 
+			});
