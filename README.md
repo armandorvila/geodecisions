@@ -12,5 +12,5 @@ geodecsions
 
 Web system which gives support to carry out making decision processes focused on a geographic target.
 
-If your question is something like where I should .... ? Geodecisions give you a table on which take 
+If your question is something like where I should .... ? Geodecisions gives you a table on which take 
 your decisions. 
