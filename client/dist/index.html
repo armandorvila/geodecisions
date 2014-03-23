@@ -9,7 +9,7 @@
 <script type="text/javascript"
 	src="/resources/js/geodecisions.js"></script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body data-ng-controller="AppCtrl" class="fluid-container"
@@ -20,7 +20,8 @@
 		<div class="navbar-inner">
 			
 			<div class="fluid-container" style="padding-left:2%">
-				<a class="brand navbar-text" href="/home" data-ng-click="home()">Geodecisions</a>
+				<a class="brand navbar-text" data-ng-show="isAuthenticated()" href="/home" data-ng-click="home()">Geodecisions</a>
+				<a class="brand navbar-text" data-ng-hide="isAuthenticated()" href="/login" data-ng-click="home()">Geodecisions</a>
 			</div>
 			
 			<div class="fluid-container offset1">
