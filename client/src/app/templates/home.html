@@ -1,10 +1,20 @@
 
-	<!-- <div class="row" data-ng-include="'templates/welcome-article.html'"></div> -->
-
-	<article>
-		<h2>Dashboard</h2>
-	</article>
-
-	<article class="row">
-		<p class="span8">User loged as {{currentUser}}</p>
-	</article>
+<div class="span3" style="margin-top: 2%;">
+	
+	<ul class="well nav nav-list affix-top">
+		
+		<li data-ng-class="{active:selected==='latest'}"><a class="btn-link" data-ng-click="latest()">Latest</a></li>
+		<li class="divider lead"></li>
+		
+		<li data-ng-class="{active:selected==='favorites'}"><a class="btn-link" data-ng-click="favorites()">Favorites</a></li>
+		<li class="divider lead"></li>
+		
+		<li data-ng-class="{active:selected==='stream'}"><a class="btn-link" data-ng-click="stream()">Stream</a></li>
+		<li class="divider"></li>
+		
+		<li data-ng-class="{active:selected==='notifications'}"><a class="btn-link" data-ng-click="notifications()">Notifications</a></li>
+		<li class="divider lead"></li>
+		
+		<li data-ng-class="{active:selected==='settings'}"><a class="btn-link" data-ng-click="settings()">Settings</a></li>
+	</ul>
+</div>

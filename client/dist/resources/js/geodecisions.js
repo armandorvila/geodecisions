@@ -1,7 +1,7 @@
 angular.module('app', 
 ['ngRoute', 
  'controllers.users', 
- 'controllers.proceses', 
+ 'controllers.processes', 
  'controllers.about',
  'controllers.pricing', 
  'controllers.login',
@@ -30,9 +30,9 @@ angular.module('app').config(
                 templateUrl : '/templates/users.html',
                 controller : 'UsersListCtrl',
                 user: true
-            }).when('/proceses', {
-                templateUrl : '/templates/proceses.html',
-                controller : 'ProcesesCtrl',
+            }).when('/processes', {
+                templateUrl : '/templates/processes.html',
+                controller : 'ProcessesCtrl',
                 user: true
             }).when('/pricing', {
                 templateUrl : '/templates/pricing.html',
@@ -99,12 +99,35 @@ about.controller('AboutCtrl',['$scope','$rootScope', function($scope, $rootScope
     
 		
 }]);
-var dashboard = angular.module('controllers.dashboard', ['services.projects' ,'services.users']);
+var dashboard = angular.module('controllers.dashboard', ['services.processes', 'services.users']);
 
-dashboard.controller('DashboardCtrl',['$scope','usersService', 'projectsService', 
-                                    function($scope, usersService, projectsService) {
-
-					
+dashboard.controller('DashboardCtrl', ['$scope', 'usersService', 'processesService', '$rootScope',
+    function($scope, usersService, processesService, $rootScope) {
+        
+        $rootScope.subheader.title = 'Geodecisions Dashboard';
+        $rootScope.subheader.description = 'Check your latest and favorite processes and take a look to the latest decisions in the community.';
+   
+        $scope.selected='latest';
+        
+        $scope.latest = function(){
+            $scope.selected='latest';
+        };
+        
+        $scope.favorites = function(){
+            $scope.selected='favorites';
+        };
+        
+        $scope.stream = function(){
+            $scope.selected='stream';
+        };
+        
+        $scope.notifications = function(){
+            $scope.selected='notifications';
+        };
+        
+        $scope.settings = function(){
+            $scope.selected='settings';
+        };
 }]);
 var login = angular.module('controllers.login', ['services.users']);
 
@@ -157,17 +180,78 @@ pricing.controller('PricingCtrl',['$scope','$rootScope', function($scope , $root
     
 			
 }]);
-var projects = angular.module('controllers.proceses', ['services.projects' ,'services.users']);
+var projects = angular.module('controllers.processes', ['services.processes', 'services.users']);
 
-projects.controller('ProcesesCtrl',['$scope','usersService', 'projectsService', function($scope, usersService, projectsService) {
+projects
+        .controller(
+                'ProcessesCtrl',
+                [
+                    '$scope',
+                    'usersService',
+                    'processesService', '$rootScope',
+                    function($scope, usersService, processesService, $rootScope) {
+                        
+                        $rootScope.subheader.title = 'Making Decision Processes';
+                        $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
+                        
+                        $scope.selected = 'inProgress';
+                        
+                        $scope.inProgress = function() {
+                            $scope.selected = 'inProgress';
+                        };
+                        
+                        $scope.closed = function() {
+                            $scope.selected = 'closed';
+                        };
+                        
+                        $scope.all = function() {
+                            $scope.selected = 'all';
+                        };
+                        
+                        $scope.processes = [
+                            {
+                                name : 'Madrid car buying',
+                                description : 'I need buy a car in the city of Madrid, and I need a price reference also a litlle of infor about the enviorment.',
+                                factors : [{
+                                    id : 1,
+                                    name : 'enviorment'
+                                }, {
+                                    id : 2,
+                                    name : 'car industry'
+                                }],
+                                tags : [{
+                                    id : 1,
+                                    name : 'Cars'
+                                }, {
+                                    id : 2,
+                                    name : 'Enviorment'
+                                }]
+                            },
+                            {
+                                name : 'Madrid house selling',
+                                description : 'I need buy a car in the city of Madrid, and I need a price reference also a litlle of infor about the enviorment.',
+                                factors : [{
+                                    id : 1,
+                                    name : 'employment'
+                                }, {
+                                    id : 2,
+                                    name : 'demography'
+                                }],
+                                tags : [{
+                                    id : 1,
+                                    name : 'Houses'
+                                }, {
+                                    id : 2,
+                                    name : 'Selling'
+                                }]
+                            }];
+                        
+                    }]);
 
-					
-}]);
+projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService',
+    function($scope, usersService, processesService) {
 
-projects.controller('ProcessDetailCtrl',['$scope','usersService', 'projetsService', function($scope, usersService, projectsService) {
-
-	
-}]);
+    }]);
 var login = angular.module('controllers.signup', ['services.users']);
 
 login.controller('SingupCtrl', ['$scope', 'usersService', '$rootScope', '$location',
@@ -239,7 +323,7 @@ users.controller('UserLoginCtrl', ['$scope', 'usersService', function($scope, $l
     };
     
 }]);
-angular.module('services.projects', []).factory('projectsService',
+angular.module('services.processes', []).factory('processesService',
 		function($http) {
 
 			return {};

@@ -34,7 +34,7 @@
 							
 					<li class="divider-vertical navbar-text"></li>
 					
-					<li class="navbar-text"><a href="/proceses"
+					<li class="navbar-text"><a href="/processes"
 						data-ng-show="isAuthenticated()">Processes</a></li>
 					
 					<li class="navbar-text"><a href="/pricing"
@@ -43,7 +43,7 @@
 					<li class="divider-vertical navbar-text"></li>
 					
 					<li class="navbar-text"><a href="/users"
-						data-ng-show="isAuthenticated()">Users</a></li>
+						data-ng-show="isAuthenticated()">Factors</a></li>
 					
 					<li class="navbar-text"><a href="/about"
 						data-ng-hide="isAuthenticated()">About</a></li>
@@ -65,6 +65,7 @@
 		</div>
 	</div>
 
-	<section data-ng-view class="row"></section>
+	<div data-ng-include="'templates/subheader.html'"></div>
+	<section data-ng-view class="fluid-row offset2"></section>
 </body>
 </html>

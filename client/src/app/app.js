@@ -1,7 +1,7 @@
 angular.module('app', 
 ['ngRoute', 
  'controllers.users', 
- 'controllers.proceses', 
+ 'controllers.processes', 
  'controllers.about',
  'controllers.pricing', 
  'controllers.login',
@@ -30,9 +30,9 @@ angular.module('app').config(
                 templateUrl : '/templates/users.html',
                 controller : 'UsersListCtrl',
                 user: true
-            }).when('/proceses', {
-                templateUrl : '/templates/proceses.html',
-                controller : 'ProcesesCtrl',
+            }).when('/processes', {
+                templateUrl : '/templates/processes.html',
+                controller : 'ProcessesCtrl',
                 user: true
             }).when('/pricing', {
                 templateUrl : '/templates/pricing.html',
