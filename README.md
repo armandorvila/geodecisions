@@ -14,3 +14,7 @@ Web system which gives support to carry out making decision processes focused on
 
 If your question is something like where I should .... ? Geodecisions give you a table on which take 
 your decisions. 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/armandorvila/geodecisions/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
