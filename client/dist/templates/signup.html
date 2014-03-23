@@ -1,45 +1,82 @@
-<form name="form" novalidate class="login-form">
-    
-    <div class="modal-header">
-        <h4>Sign up</h4>
-    </div>
-    
-    <div class="modal-body">
-        <div class="alert alert-info">Please enter your user details</div>
-        
-        <label>Name</label>
-        <input name="name" type="text" data-ng-model="user.name" required data-ng-minlength="2" autofocus>
-        <span class="error" data-ng-show="form.name.$error.minlength">Too short!</span>
-        
-        <label>Lastname</label>
-        <input name="lastname" type="text" data-ng-model="user.lastname" data-ng-minlength="2" required autofocus>
-        <span class="error" data-ng-show="form.lastname.$error.minlength">Too short!</span>
-        
-        <label>E-mail</label>
-        <input name="email" type="email" data-ng-model="user.email" required data-ng-minlength="5" autofocus>
-     	 <span class="error" data-ng-show="form.email.$error.minlength">Too short!</span>
-     
-        <label>Password</label>
-        <input name="password" type="password" data-ng-model="user.password" required autofocus data-ng-minlength="4" data-ng-maxlength="10" >
-        <span class="error" data-ng-show="form.password.$error.minlength">Too short! Password must be between 4 and 10.</span>
-        
-         <label>Confirm Password</label>
-        <input name="confirmPassword" type="password" data-ng-model="user.confirmPassword" required autofocus data-ng-minlength="4" data-ng-maxlength="10">
-   		<span class="error" data-ng-show="form.confirmPassword.$error.minlength">Too short! Password must be between 4 and 10.</span>
-   		
-    </div>
-    
-     <div class="alert alert-success" data-ng-show="signupSuccess">
-            {{signupSuccess}}
-    </div>
-    
-     <div class="alert alert-error" data-ng-show="signupError">
-            {{signupError}}
-    </div>
-    
-    <div class="modal-footer">
-       <button class="btn btn-primary login" data-ng-click="signup()" data-ng-disabled='form.$invalid'>Sign up</button>
-        <button class="btn clear" data-ng-click="clear()">Clear</button>
-        <button class="btn btn-warning cancel" data-ng-click="cancel()">Cancel</button>
-    </div>
-</form>
+<div data-ng-include="'templates/subheader.html'"></div>
+
+<article class="row offset1 span6" style="margin-top: 2%;">
+
+	<form name="form" novalidate class="form-horizontal span6">
+
+		<div class="modal-header offset1">
+			<h4>Please enter your user details</h4>
+		</div>
+		
+		<div class="control-group">
+			<div class="alert alert-error" data-ng-show="signupError"
+				data-ng-bind="signupError"></div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputName">Name</label>
+			<div class="controls">
+				<input class="input-xlarge" name="inputName" type="text" data-ng-model="user.name"
+					required data-ng-minlength="2" autofocus>
+			</div>
+			<span class="error" data-ng-show="form.name.$error.minlength">Too
+				short!</span>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputLastname">Lastname</label>
+			<div class="controls">
+				<input class="input-xlarge" name="inputLastname" type="text"
+					data-ng-model="user.lastname" data-ng-minlength="2" required
+					autofocus>
+			</div>
+			<span class="error" data-ng-show="form.lastname.$error.minlength">Too
+				short!</span>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="emailLastname">E-mail</label>
+			<div class="controls">
+				<input class="input-xlarge" name="emailLastname" type="email" data-ng-model="user.email" required
+					data-ng-minlength="5" autofocus>
+			</div>
+			<span class="error" data-ng-show="form.email.$error.minlength">Too
+				short!</span>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputPassword">Password</label>
+
+			<div class="controls">
+				<input class="input-xlarge" name="inputPassword" type="password" data-ng-model="user.password"
+					required autofocus data-ng-minlength="4" data-ng-maxlength="10">
+			</div>
+			<span class="error" data-ng-show="form.password.$error.minlength">Too
+				short! Password must be between 4 and 10.</span>
+
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputConfirmPassword">Confirm Password</label>
+
+			<div class="controls">
+				<input class="input-xlarge" name="inputConfirmPassword" type="password"
+					data-ng-model="user.confirmPassword" required autofocus
+					data-ng-minlength="4" data-ng-maxlength="10">
+			</div>
+			<span class="error"
+				data-ng-show="form.confirmPassword.$error.minlength">Too
+				short! Password must be between 4 and 10.</span>
+		</div>
+
+		<div class="control-group">
+			<div class="controls">
+				<button class="btn btn-inverse login" data-ng-click="signup()"
+					data-ng-disabled='form.$invalid'>Sign up</button>
+				<button class="btn clear" data-ng-click="clear()">Clear</button>
+				<button class="btn btn-success cancel" data-ng-click="cancel()">Cancel</button>
+			</div>
+		</div>
+	</form>
+
+</article>

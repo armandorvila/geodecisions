@@ -1,40 +1,43 @@
-<section class="container">
 
-	<h1>Welcome to Geodecisions</h1>
+<div data-ng-include="'templates/subheader.html'"></div>
 
-	<article class="row span8">
-		<p>Geodecisions is a tool intended to help managers in their
-			decision making processes using geographic information adapted to their concrete processes.</p>
-		<p> Geodecisions is a pluggable system which evolving constinuosly in order to give support
-		to more and more kinds of decision making processes in a transparent way for users.</p>
-
-	</article>
-
-	<article class="row">
+<article class="row offset1 span6" style="margin-top:2%;">
 		
-			<form name="form" novalidate class="form-horizontal span4">
+	<form name="form" novalidate class="form-horizontal span6" >
 
-			<div class="modal-header">
-				<h4>Please enter your login details</h4>
+		<div class="modal-header offset1">
+			<h4>Please enter your login details</h4>
+		</div>
+
+		<div class="control-group">
+			<div class="alert alert-error" data-ng-show="authError">
+				{{authError}}</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">E-mail</label>
+			<div class="controls">
+				<input class="input-xlarge" type="email" id="inputEmail" placeholder="Email"
+					data-ng-model="credentials.email" required autofocus>
 			</div>
-			
-			 <div class="alert alert-error" data-ng-show="authError">
-            	{{authError}}
-       		 </div>
+		</div>
 
-			<div class="modal-body">
-				<label>E-mail</label> <input name="login" type="email"
-					data-ng-model="credentials.email" required autofocus> <label>Password</label>
-				<input name="pass" type="password" data-ng-model="credentials.password"
-					required>
+		<div class="control-group">
+			<label class="control-label" for="inputPassword">Password</label>
+			<div class="controls">
+				<input class="input-xlarge" type="password" id="inputPassword" placeholder="Password"
+					data-ng-model="credentials.password" required>
 			</div>
+		</div>
 
-			<div class="modal-footer">
-				<button class="btn btn-primary login" data-ng-click="login()"
+		<div class="control-group">
+			<div class="controls">
+				<button class="btn btn-inverse login" data-ng-click="login()"
 					data-ng-disabled='form.$invalid'>Sign in</button>
 				<button class="btn clear" data-ng-click="clearLogin()">Clear</button>
 			</div>
-		</form>
-		
-	</article>
-</section>
+		</div>
+
+	</form>
+
+</article>
