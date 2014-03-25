@@ -12,6 +12,7 @@ exports.findUsers = function(callback) {
 };
 
 exports.createUser = function(user, callback) {
+    //TODO validate email is unique
     new User(user).save(function(err) {
         if (err) {
             console.log('Error saving user :' + err);

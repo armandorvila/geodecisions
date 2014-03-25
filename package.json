@@ -46,9 +46,15 @@
     "grunt-recess": "0.6.0",
     "grunt-supervisor": "~0.1.1",
     "mongodb-fs": "~0.0.12",
-    "rewire": "2.0.0",
+    "supertest": "~0.9.0",
     "supervisor": "0.5.7",
     "jscoverage": "^0.3.8",
-    "grunt-jscoverage": "^0.1.0"
-  }
+    "jasmine-node": "1.14.2",
+    "coveralls": "^2.10.0",
+    "nodeunit": "^0.8.6"
+  },
+  "scripts": {
+      "test": "nodeunit test",
+      "coveralls": "jscoverage server/test  test-cov && nodeunit test-cov --reporter=lcov | coveralls"
+    }
 }

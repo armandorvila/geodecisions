@@ -1,16 +1,25 @@
 var mongoose = require('mongoose');
 
+var userSchema = mongoose.Schema({
+    _id : {
+        type : String,
+    },
+    name : {
+        type : String,
+        required : true
+    },
+    lastname : {
+        type : String,
+        required : true
+    },
+    email : {
+        type : String,
+        required : true,
+    },
+    password : {
+        type : String,
+        required : true
+    }
+});
 
-//var userSchema = mongoose.Schema({
-//	name : String,
-//	lastname : String,
-//	email : String,
-//	password: String
-//});
-
-module.exports = mongoose.model('User', {
-	name : String,
-	lastname : String,
-	email : String,
-	password: String
-}, 'geodecisions_users');
+module.exports = mongoose.model('User', userSchema , 'geodecisions_users');

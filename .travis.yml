@@ -11,5 +11,5 @@
  script: grunt
  
  after_script: 
-  - grunt coverage
+  - npm run coveralls
  

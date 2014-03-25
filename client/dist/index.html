@@ -5,67 +5,72 @@
 	href="/resources/css/geodecisions.css" />
 <script type="text/javascript" src="/resources/js/jquery.js"></script>
 <script type="text/javascript" src="/resources/js/angular.js"></script>
-<script type="text/javascript" src="/resources/js/bootstrap.js"></script>
 <script type="text/javascript"
 	src="/resources/js/geodecisions.js"></script>
+<script type="text/javascript" src="/resources/js/bootstrap.js"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body data-ng-controller="AppCtrl" class="fluid-container"
-	style="padding-top: 32px;">
+	style="padding-top: 2.35%;">
 
 
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
-			
-			<div class="fluid-container" style="padding-left:2%">
-				<a class="brand navbar-text" data-ng-show="isAuthenticated()" href="/home" data-ng-click="home()">Geodecisions</a>
-				<a class="brand navbar-text" data-ng-hide="isAuthenticated()" href="/login" data-ng-click="home()">Geodecisions</a>
+
+			<div class="fluid-container" style="padding-left: 2%">
+				<a class="brand navbar-text" data-ng-show="isAuthenticated()"
+					href="/home" data-ng-click="home()">Geodecisions</a> <a
+					class="brand navbar-text" data-ng-hide="isAuthenticated()"
+					href="/login" data-ng-click="home()">Geodecisions</a>
 			</div>
-			
+
 			<div class="fluid-container offset1">
 				<ul class="nav">
-					<li class="navbar-text" data-ng-show="isAuthenticated()"><a href="/home"><i
-							class="icon-home icon-white"></i>Home</a></li>
-					
-					<li class="navbar-text" data-ng-hide="isAuthenticated()"><a href="/login"><i
-							class="icon-home icon-white"></i>Home</a></li>		
-							
+					<li class="navbar-text" data-ng-show="isAuthenticated()"><a
+						href="/home"><i class="icon-home icon-white"></i>Home</a></li>
+
+					<li class="navbar-text" data-ng-hide="isAuthenticated()"><a
+						href="/login"><i class="icon-home icon-white"></i>Home</a></li>
+
 					<li class="divider-vertical navbar-text"></li>
-					
+
 					<li class="navbar-text"><a href="/processes"
 						data-ng-show="isAuthenticated()">Processes</a></li>
-					
+
 					<li class="navbar-text"><a href="/pricing"
 						data-ng-hide="isAuthenticated()">Pricing</a></li>
-					
+
 					<li class="divider-vertical navbar-text"></li>
-					
+
 					<li class="navbar-text"><a href="/users"
 						data-ng-show="isAuthenticated()">Factors</a></li>
-					
+
 					<li class="navbar-text"><a href="/about"
 						data-ng-hide="isAuthenticated()">About</a></li>
 				</ul>
 
-				<ul class="nav pull-right">
-					<li class="divider-vertical navbar-text"></li>
-					<li class="navbar-text"><a href="/signup"
-						data-ng-hide="isAuthenticated()"> Sign up</a></li>
-					<li class="navbar-text" data-ng-click="logout()"><a href="#"
-						data-ng-show="isAuthenticated()">Logout</a></li>
-					<li class="divider-vertical navbar-text"></li>
-				</ul>
-
-				<form class="navbar-search pull-right navbar-text">
-					<input type="text" class="search-query" placeholder="Search">
-				</form>
+				<div class="nav-collapse">
+					<ul class="nav pull-right">
+						<li class="navbar-text" data-ng-show="isAuthenticated()"><a
+							href="/home" data-ng-bind="currentUser.email"></a></li>
+						<li class="divider-vertical navbar-text"></li>
+						<li class="navbar-text"><a href="/signup"
+							data-ng-hide="isAuthenticated()"> Sign up</a></li>
+						<li class="navbar-text" data-ng-click="logout()"><a href="#"
+							data-ng-show="isAuthenticated()">Logout</a></li>
+						<li class="divider-vertical navbar-text"></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
 
 	<div data-ng-include="'templates/subheader.html'"></div>
-	<section data-ng-view class="fluid-row offset2"></section>
+	<section data-ng-view class="fluid-row"
+		data-ng-show="isAuthenticated()"></section>
+	<section data-ng-view class="fluid-row offset2"
+		data-ng-hide="isAuthenticated()"></section>
 </body>
 </html>
