@@ -72,12 +72,16 @@ module.exports = {
         console.log(' Test - UsersService.createUser');
         
         usersService.createUser({
+            _id : '43',
             name : 'Juan',
             lastname : 'Doe',
             email : 'doe@nodemola.com',
             password : 'doe@nodemola.com'
-        }, function(err) {});
+        }, function(err) {
+            
+        });
         test.done();
+        
     },
     
     tearDown : function(callback) {
