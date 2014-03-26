@@ -29,9 +29,7 @@
     "passport": "0.2.0",
     "passport-local": "^1.0.0",
     "request": "2.34.0",
-    "coveralls": "^2.10.0",
-    "grunt": "~0.4.0",
-    "grunt-cli": "~0.1.13",
+    "coveralls": "^2.10.0"
   },
   "devDependencies": {
     "grunt-contrib-clean": "0.5.0",
@@ -56,6 +54,6 @@
   },
   "scripts": {
       "test": "nodeunit test",
-      "coveralls": "jscoverage server/src server/src-cov && SET QUICKSORT_COV=1 && nodeunit server/test/services --reporter=lcov | coveralls",
+      "coveralls": "jscoverage server/src server/src-cov && SET QUICKSORT_COV=1 && nodeunit server/test/services --reporter=lcov | coveralls"
   }
 }
