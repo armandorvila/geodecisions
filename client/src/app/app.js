@@ -1,6 +1,7 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
     'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.dashboard',
-    'controllers.factors', 'controllers.admin', 'services.users', 'ui.bootstrap']);
+    'controllers.factors', 'controllers.admin', 'services.users', 'services.factors', 'services.tags',
+    'ui.bootstrap']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -61,7 +62,9 @@ angular.module('app').run(
                     
                     if (!$rootScope.currentUser && next.user) {
                         usersService.loadCurrentUser(function() {
-                            $location.path('/login'); // Exec                                                                                                                                                                                    // found
+                            $location.path('/login'); // Exec
+                                                                                                                                                                                                                        // //
+                                                                                                                                                                                                                        // found
                         }, function() {
                             if (!$rootScope.currentUser.admin && next.admin) {
                                 $location.path('/home');

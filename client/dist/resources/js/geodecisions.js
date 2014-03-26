@@ -1,6 +1,7 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
     'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.dashboard',
-    'controllers.factors', 'controllers.admin', 'services.users', 'ui.bootstrap']);
+    'controllers.factors', 'controllers.admin', 'services.users', 'services.factors', 'services.tags',
+    'ui.bootstrap']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -61,7 +62,9 @@ angular.module('app').run(
                     
                     if (!$rootScope.currentUser && next.user) {
                         usersService.loadCurrentUser(function() {
-                            $location.path('/login'); // Exec                                                                                                                                                                                    // found
+                            $location.path('/login'); // Exec
+                                                                                                                                                                                                                        // //
+                                                                                                                                                                                                                        // found
                         }, function() {
                             if (!$rootScope.currentUser.admin && next.admin) {
                                 $location.path('/home');
@@ -116,14 +119,13 @@ about.controller('AboutCtrl',['$scope','$rootScope', function($scope, $rootScope
 }]);
 var about = angular.module('controllers.admin', []);
 
-about.controller('AdminCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+about.controller('AdminCtrl', ['$scope', '$rootScope', '$location', function($scope, $rootScope, $location) {
     
     $rootScope.subheader.title = 'Geodecisions Admin';
     $rootScope.subheader.description = 'Explore all our current available decisions factors';
     
-    $scope.selected = 'factors';
-    $scope.select = function(li){
-        selected = li;
+    $scope.selected = function(){
+        return $location.hash() ? $location.hash() : 'factors';
     };
     
 }]);
@@ -157,14 +159,116 @@ dashboard.controller('DashboardCtrl', ['$scope', 'usersService', 'processesServi
             $scope.selected='settings';
         };
 }]);
-var about = angular.module('controllers.factors', []);
+var factors = angular.module('controllers.factors', ['services.factors']);
 
-about.controller('FactorsCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
-    
+factors.controller('FactorsCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
     $rootScope.subheader.title = 'Geodecisions Factors';
     $rootScope.subheader.description = 'Explore all our current available decisions factors';
-    
 }]);
+
+factors.controller('FactorsListCtrl', ['$scope', '$rootScope', 'factorsService',
+    function($scope, $rootScope, factorsService) {
+        
+        $scope.currentPage = 1;
+        $scope.itemsPerPage = 5;
+        
+        $scope.start = function(page) {
+            return (page * $scope.itemsPerPage) - ($scope.itemsPerPage - 1);
+        };
+        
+        $scope.end = function(page) {
+            return (page * $scope.itemsPerPage);
+        };
+        
+        $scope.setPage = function(pageNo) {
+            $scope.currentFactorsPage = pageNo;
+        };
+        
+        $scope.paginate = function(page){
+            console.log('Paginating for ' + $scope.start(page) + ' ' + $scope.end(page));
+
+            factorsService.getFactors($scope.start(page) , $scope.end(page), function(factors) {
+                $scope.factors = factors;
+            });
+        };
+        
+        factorsService.countFactors(function(factorsCount) {
+            $scope.totalItems = factorsCount;
+            $scope.paginate(1);
+        });
+        
+   
+    }]);
+
+function NewFactorModalCtrl($scope, $modalInstance, factorsService) {
+    
+    $scope.factor = {};
+    $scope.factor.layers = [];
+    $scope.newLayerModel = {};
+    
+    $scope.factorError = {};
+    $scope.layerError = {};
+    
+    $scope.addLayer = function(currentLayer) {
+        if ($scope.factor.layers.indexOf(currentLayer) !== -1) {
+            $scope.layerError.message = 'There is already one layer with such name';
+        } else {
+            $scope.newLayerModel.uri = '';
+            $scope.factor.layers.push(currentLayer);
+        }
+    };
+    
+    $scope.removeLayer = function(layer) {
+        var index = $scope.factor.layers.indexOf(layer);
+        $scope.factor.layers.splice(index, 1);
+    };
+    
+    $scope.ok = function() {
+        if ($scope.factor.layers.length === 0) {
+            $scope.factorError.message = 'You have to add at least one layer';
+        } else {
+            factorsService.createFactor($scope.factor, function() {
+                $scope.factorCreated = 'Factor created successfully';
+                $modalInstance.close($scope.factor);
+            }, function() {
+                $scope.factorError.message = 'Error creating factor';
+            });
+        }
+    };
+    
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+}
+
+factors.controller('NewFactorCtrl', ['$scope', '$rootScope', 'factorsService', '$modal', '$location',
+    function($scope, $rootScope, factorsService, $modal, $location) {
+        
+        $scope.opts = {
+            keyboard : true,
+            backdrop : false,
+            resolve : {
+                factorsService : function() {
+                    return factorsService;
+                }
+            },
+            templateUrl : '/templates/factors/newFactorDialog.html',
+            controller : NewFactorModalCtrl
+        };
+        
+        $scope.newFactorDialog = function() {
+            $modal.open($scope.opts).result.then(function(result) {
+                if (result) {
+                    alert('Factor ' + result.name + 'created succesfully');
+                    $location.path('/admin');
+                }
+            }, function() {
+                console.log('Modal dismissed at: ' + new Date());
+            });
+        };
+        
+    }]);
+
 var login = angular.module('controllers.login', ['services.users']);
 
 login.controller('LoginCtrl', [
@@ -250,43 +354,9 @@ projects
                             $scope.selected = 'all';
                         };
                         
-                        $scope.processes = [
-                            {
-                                name : 'Madrid car buying',
-                                description : 'I need buy a car in the city of Madrid, and I need a price reference also a litlle of infor about the enviorment.',
-                                factors : [{
-                                    id : 1,
-                                    name : 'enviorment'
-                                }, {
-                                    id : 2,
-                                    name : 'car industry'
-                                }],
-                                tags : [{
-                                    id : 1,
-                                    name : 'Cars'
-                                }, {
-                                    id : 2,
-                                    name : 'Enviorment'
-                                }]
-                            },
-                            {
-                                name : 'Madrid house selling',
-                                description : 'I need buy a car in the city of Madrid, and I need a price reference also a litlle of infor about the enviorment.',
-                                factors : [{
-                                    id : 1,
-                                    name : 'employment'
-                                }, {
-                                    id : 2,
-                                    name : 'demography'
-                                }],
-                                tags : [{
-                                    id : 1,
-                                    name : 'Houses'
-                                }, {
-                                    id : 2,
-                                    name : 'Selling'
-                                }]
-                            }];
+                        processesService.getProcesses(function(processes){
+                            $scope.processes = processes;
+                        });
                         
                     }]);
 
@@ -295,7 +365,7 @@ projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesSe
 
     }]);
 
-function ModalInstanceCtrl($scope, $modalInstance, factors) {
+function NewProcessFactorsCtrl($scope, $modalInstance, factors) {
     
     $scope.factors = factors;
     $scope.selectedFactors = ['Agricultura'];
@@ -320,20 +390,25 @@ function ModalInstanceCtrl($scope, $modalInstance, factors) {
     };
 }
 
-projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', '$http', '$location',
-    '$modal', function($scope, usersService, processesService, $http, $location, $modal) {
+projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', 'tagsService', '$http', '$location',
+    '$modal', function($scope, usersService, processesService, tagsService, $http, $location, $modal) {
         $scope.process = {};
         
-       // $scope.selectedFactors = ['Agricultura'];
         $scope.factors = ["Agricultura", "Ganadería", "Clima"];
+        $scope.selectedTags = [];
         
         $scope.selectedTag = undefined;
-        $scope.selectedTags = [];
-        $scope.tags = ["Comida", "Hambre", "What the fuck"];
+        $scope.selectedLocation =  undefined;
         
         $scope.addTag = function() {
             $scope.selectedTags.push($scope.selectedTag);
             $scope.selectedTag = undefined;
+        };
+        
+        $scope.addTagOnIntro = function($event) {
+            if($event.keyCode === 13){
+                $scope.addTag();
+            }
         };
         
         $scope.removeTag = function(tag) {
@@ -341,19 +416,12 @@ projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesServi
             $scope.selectedTags.splice(index, 1);
         };
         
-        $scope.getLocation = function(val) {
-            return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
-                params : {
-                    address : val,
-                    sensor : false
-                }
-            }).then(function(res) {
-                var addresses = [];
-                angular.forEach(res.data.results, function(item) {
-                    addresses.push(item.formatted_address);
-                });
-                return addresses;
-            });
+        $scope.getTags = function (val) {
+           return tagsService.getTags(val);
+        };
+        
+        $scope.getLocations = function(val) {            
+            return processesService.getLocations(val);
         };
         
         $scope.opts = {
@@ -364,8 +432,8 @@ projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesServi
                     return $scope.factors;
                 }
             },
-            templateUrl : 'myModalContent.html',
-            controller : 'ModalInstanceCtrl'
+            templateUrl : '/templates/processes/new-process-factors-dialog.html',
+            controller : NewProcessFactorsCtrl
         };
         
         $scope.continueToFactors = function() {
@@ -429,8 +497,16 @@ var users = angular.module('controllers.users', ['services.users']);
 
 users.controller('UsersListCtrl', ['$scope', 'usersService', function($scope, usersService) {
     
+    $scope.totalUsers = 0;
+    $scope.currentPage = 1;
+    
+    $scope.setPage = function (pageNo) {
+      $scope.currentPage = pageNo;
+    };
+
     usersService.getUsers(function(response) {
         $scope.users = response.data;
+        $scope.totalUsers = response.data.length;
     });
 }]);
 
@@ -441,22 +517,91 @@ users.controller('UserLoginCtrl', ['$scope', 'usersService', function($scope, $l
     };
     
 }]);
+angular.module('services.factors', []).factory('factorsService', function($http) {
+    
+    return {
+        
+        countFactors : function(callback) {
+            $http.get('/factors/count').then(function(response) {
+                callback(response.data);
+            }, function(response) {
+                console.log('Error counting factors ' + response);
+                throw new Error('Something went wrong counting factors' + response);
+            });
+        },
+        
+        getFactors : function(start, end, callback) {
+            $http.get('/factors/get/' + start + '/' + end).then(function(response) {
+                callback(response.data);
+            }, function(response) {
+                console.log('Error getting factors ' + response);
+                throw new Error('Something went wrong getting factors' + response);
+            });
+        },
+        
+        createFactor : function(factorModel, success, error) {
+            var factor = {
+                name : factorModel.name,
+                description : factorModel.description,
+                layers : factorModel.layers
+            };
+            
+            $http.post('/factors/create', factor).then(function(response) {
+                success();
+            }, function(response) {
+                error();
+                throw new Error('Something went wrong creating user');
+            });
+        }
+    };
+});
 
 angular.module('services.processes', []).factory('processesService', function($http) {
     
     return {
-        getLocations : function(val, callback){
-            promise = $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
+        getLocations : function(val) {
+            return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
                 params : {
                     address : val,
                     sensor : false
                 }
+            }).then(function(res) {
+                var addresses = [];
+                angular.forEach(res.data.results, function(item) {
+                    addresses.push(item.formatted_address);
+                });
+                return addresses;
             });
-            
-            return promise.then(function(res) {
-                callback(res.data.results);
+        },
+        
+        getProcesses : function(callback) {
+            $http.get('/processes/get').then(function(response) {
+                callback(response.data);
+            }, function(response) {
+                console.log('Error getting processes ' + response);
+                throw new Error('Something went wrong getting processes' + response);
             });
-        }
+        },
+    };
+});
+
+angular.module('services.tags', []).factory('tagsService', function($http) {
+    
+    return {
+        
+        getTags : function(term) {
+            return $http.get('/tags/get/' + term).then(function(response) {
+                var tags = [];
+                angular.forEach(response.data, function(item) {
+                    tags.push(item);
+                });
+                return tags;
+
+            }, function(response) {
+                console.log('Error getting tags ' + response);
+                throw new Error('Something went wrong getting tags' + response);
+            });
+        },
     };
 });
 

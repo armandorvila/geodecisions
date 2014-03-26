@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 
 var processSchema = new Schema({
     _id : {
-        type : String
+        type : String,
+        default: function () { return shortId.generate();}
     },
     name : {
         type : String,

@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
+var shortId = require('shortid');
 
 var userSchema = mongoose.Schema({
     _id : {
         type : String,
-        required : false
+        required : false,
+        default: function () { return shortId.generate();}
     },
     name : {
         type : String,

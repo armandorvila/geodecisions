@@ -7,9 +7,18 @@ var express = require('express');
 var route = require('../../src/routes/factorsRoute');
 
 var app = express();
+app.use(express.bodyParser());
+
 var config = require('../../config');
 
 route.addRoutes(app, config);
+
+var newFactor = {
+        name : 'Incendios',
+        description : 'Incendios decision factor',
+        layers : ['MADRID_PUBLIC_GIS_LAYER_CODE'],
+        scope : 'Local'
+    };
 
 module.exports = {
     
@@ -28,15 +37,27 @@ module.exports = {
         });
     },
     
-    getFactors : function(test) {
-        request(app).get('/factors/get').expect('Content-Type', /json/).expect(200).end(function(err, res) {
-            if (err) {
-                throw err;
-            }
-            test.ok(res);
-            test.done();
-        });
-    },
+//    createFactor: function(test){
+//        console.log('Testing create factor route');
+//   
+//        request(app).post('/factors/create').send(newFactor).expect('Content-Type', /json/).expect(200).end(function(err, res) {
+//            if (err) {
+//                throw err;
+//            }
+//            test.ok(res);
+//            test.done();
+//        });
+//    },
+    
+//    getFactors : function(test) {
+//        request(app).get('/factors/get/1/5').expect('Content-Type', /json/).expect(200).end(function(err, res) {
+//            if (err) {
+//                throw err;
+//            }
+//            test.ok(res);
+//            test.done();
+//        });
+//    },
     
     tearDown : function(callback) {
         mongodbFs.stop();

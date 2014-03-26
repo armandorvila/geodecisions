@@ -32,43 +32,9 @@ projects
                             $scope.selected = 'all';
                         };
                         
-                        $scope.processes = [
-                            {
-                                name : 'Madrid car buying',
-                                description : 'I need buy a car in the city of Madrid, and I need a price reference also a litlle of infor about the enviorment.',
-                                factors : [{
-                                    id : 1,
-                                    name : 'enviorment'
-                                }, {
-                                    id : 2,
-                                    name : 'car industry'
-                                }],
-                                tags : [{
-                                    id : 1,
-                                    name : 'Cars'
-                                }, {
-                                    id : 2,
-                                    name : 'Enviorment'
-                                }]
-                            },
-                            {
-                                name : 'Madrid house selling',
-                                description : 'I need buy a car in the city of Madrid, and I need a price reference also a litlle of infor about the enviorment.',
-                                factors : [{
-                                    id : 1,
-                                    name : 'employment'
-                                }, {
-                                    id : 2,
-                                    name : 'demography'
-                                }],
-                                tags : [{
-                                    id : 1,
-                                    name : 'Houses'
-                                }, {
-                                    id : 2,
-                                    name : 'Selling'
-                                }]
-                            }];
+                        processesService.getProcesses(function(processes){
+                            $scope.processes = processes;
+                        });
                         
                     }]);
 
@@ -77,7 +43,7 @@ projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesSe
 
     }]);
 
-function ModalInstanceCtrl($scope, $modalInstance, factors) {
+function NewProcessFactorsCtrl($scope, $modalInstance, factors) {
     
     $scope.factors = factors;
     $scope.selectedFactors = ['Agricultura'];
@@ -102,20 +68,25 @@ function ModalInstanceCtrl($scope, $modalInstance, factors) {
     };
 }
 
-projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', '$http', '$location',
-    '$modal', function($scope, usersService, processesService, $http, $location, $modal) {
+projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', 'tagsService', '$http', '$location',
+    '$modal', function($scope, usersService, processesService, tagsService, $http, $location, $modal) {
         $scope.process = {};
         
-       // $scope.selectedFactors = ['Agricultura'];
         $scope.factors = ["Agricultura", "Ganadería", "Clima"];
+        $scope.selectedTags = [];
         
         $scope.selectedTag = undefined;
-        $scope.selectedTags = [];
-        $scope.tags = ["Comida", "Hambre", "What the fuck"];
+        $scope.selectedLocation =  undefined;
         
         $scope.addTag = function() {
             $scope.selectedTags.push($scope.selectedTag);
             $scope.selectedTag = undefined;
+        };
+        
+        $scope.addTagOnIntro = function($event) {
+            if($event.keyCode === 13){
+                $scope.addTag();
+            }
         };
         
         $scope.removeTag = function(tag) {
@@ -123,19 +94,12 @@ projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesServi
             $scope.selectedTags.splice(index, 1);
         };
         
-        $scope.getLocation = function(val) {
-            return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
-                params : {
-                    address : val,
-                    sensor : false
-                }
-            }).then(function(res) {
-                var addresses = [];
-                angular.forEach(res.data.results, function(item) {
-                    addresses.push(item.formatted_address);
-                });
-                return addresses;
-            });
+        $scope.getTags = function (val) {
+           return tagsService.getTags(val);
+        };
+        
+        $scope.getLocations = function(val) {            
+            return processesService.getLocations(val);
         };
         
         $scope.opts = {
@@ -146,8 +110,8 @@ projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesServi
                     return $scope.factors;
                 }
             },
-            templateUrl : 'myModalContent.html',
-            controller : 'ModalInstanceCtrl'
+            templateUrl : '/templates/processes/new-process-factors-dialog.html',
+            controller : NewProcessFactorsCtrl
         };
         
         $scope.continueToFactors = function() {

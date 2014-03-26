@@ -41,19 +41,19 @@ module.exports = {
                 _id : '13',
                 name : 'Demography',
                 description : 'Demography decision factor',
-                layer : 'MADRID_PUBLIC_GIS_LAYER_CODE',
+                layers : ['MADRID_PUBLIC_GIS_LAYER_CODE'],
                 scope : 'Local'
             }, {
                 _id : '14',
                 name : 'Demography',
                 description : 'Demography decision factor',
-                layer : 'MADRID_PUBLIC_GIS_LAYER_CODE',
+                layers : ['MADRID_PUBLIC_GIS_LAYER_CODE'],
                 scope : 'Local'
             }, {
                 _id : '23',
                 name : 'Unemployment',
                 description : 'Unemployment decision factor',
-                layer : 'INEM_GIS_SYSTEM',
+                layers : ['INEM_GIS_SYSTEM'],
                 scope : 'National'
             }],
             geodecisions_processes : [{

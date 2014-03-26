@@ -1,27 +1,53 @@
 var Factor = require('../../src/models/factorsModel');
 
-exports.findFactors = function(callback) {
-    console.log('Getting all factors');
-    Factor.find(function(err, factors) {
+exports.findFactors = function(from, to, callback) {
+    console.log('Getting factors from ' + from + ' ' + to);
+    
+    var fromZero = from -1;
+    
+    Factor.find().sort({
+        name : 'asc'
+    }).limit(to - fromZero).skip(fromZero).exec(function(err, factors) {
+            if (err) {
+                console.log(err);
+            }
+            callback(err, factors);
+    });
+};
+
+exports.countFactors = function(callback) {
+    console.log('Counting all factors');
+    
+    Factor.count(function(err, count) {
         if (err) {
             console.log(err);
         }
-        callback(err, factors);
+        callback(err, count);
     });
 };
 
 exports.findFactorsByName = function(term, callback) {
     console.log('Getting factors by name ' + term);
     Factor.find({
-        name : new RegExp(term + '.*','i')
+        name : new RegExp(term + '.*', 'i')
     }, function(err, factors) {
         if (err) {
             throw new Error(err);
         }
-        callback(err,factors);
+        callback(err, factors);
     });
 };
 
-exports.createFactor = function(tag, callback) {
+exports.createFactor = function(factor, callback) {
+    // TODO validate factor name is unique
     
+    var newFactor = new Factor(factor);
+    console.log('Creating factor ' + newFactor._id);
+    
+    newFactor.save(function(err) {
+        if (err) {
+            console.log('Error creating factor :' + err);
+        }
+        callback(err);
+    });
 };

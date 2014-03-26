@@ -1,0 +1,40 @@
+<div class="row" data-ng-controller="FactorsListCtrl">
+		<div class="modal-header">
+			<h2 id="factors">Factors</h2>
+		</div>
+
+		<table class="table" style="margin-top: 4%;">
+			<thead>
+				<tr>
+					<td><strong>Name</strong></td>
+					<td><strong>Description</strong></td>
+					<td><strong>Actions</strong></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="factor in factors">
+					<td>{{factor.name}}</td>
+
+					<td>{{factor.description}}</td>
+
+					<td>
+						<div class="btn-group span1">
+							<a class="btn  btn-primary dropdown-toggle" data-toggle="dropdown" href="#"> <strong>
+									Options </strong> <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="btn-link">Modify</a></li>
+								<li><a class="btn-link">Disable</a></li>
+								<li><a class="btn-link">Delete</a></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="pagination btn-link offset1">
+			<pagination items-per-page="itemsPerPage" boundary-links="true" total-items="totalItems" max-size="7" page="currentPage"
+				class="pagination-sm" on-select-page="paginate(page)" previous-text="Prev" next-text="Next" first-text="First" last-text="Last"></pagination>
+		</div>
+</div>

@@ -1,5 +1,4 @@
 <article class="span8 offset1" style="margin-top: 2%;">
-
 	<form name="form" novalidate class="form-horizontal span8">
 
 		<div class="modal-header offset1">
@@ -36,9 +35,9 @@
 		<div class="control-group">
 			<label class="control-label" for="inputLocation">Location</label>
 			<div class="controls">
-				<input type="text" data-ng-model="asyncSelected"
+				<input type="text" data-ng-model="selectedLocation"
 					placeholder="Type your location"
-					data-typeahead="address for address in getLocation($viewValue) | filter:$viewValue"
+					data-typeahead="address for address in getLocations($viewValue) | filter:$viewValue"
 					data-typeahead-loading="loadingLocations" class="input-xlarge">
 				<i data-ng-show="loadingLocations"
 					class="glyphicon glyphicon-refresh"></i>
@@ -48,9 +47,9 @@
 		<div class="control-group">
 			<label class="control-label" for="inputPassword">Tags</label>
 			<div class="controls">
-				<input type="text" data-ng-model="selectedTag"
+				<input type="text" data-ng-model="selectedTag" data-ng-keypress="addTagOnIntro($event)"
 					data-typeahead-on-select="addTag()"
-					data-typeahead="tag for tag in tags | filter:$viewValue | limitTo:8"
+					data-typeahead="tag.name for tag in getTags($viewValue) | filter:$viewValue | limitTo:8"
 					class="input-xlarge">
 			</div>
 		</div>
@@ -72,41 +71,3 @@
 		</div>
 	</form>
 </article>
-
-
-<script type="text/ng-template" id="myModalContent.html">
-        <div class="modal-header">
-           <h4>Process factors</h4>
-        </div>
-        <div class="modal-body">
-           <div class="control-group" style="margin: 2%;">
-		
-				<div class="controls">
-				<input placeholder="Search" type="text"
-					data-ng-model="selectedFactor"
-					data-typeahead="factor for factor in factors | filter:$viewValue | limitTo:8"
-					class="input-xlarge search-query">
-
-					<button class="btn" data-ng-click="addFactor(selectedFactor)">Add</button>
-				</div>
-			</div>
-
-			<table class="table" style="margin-top: 2%;">
-			<thead>
-			</thead>
-			<tbody>
-				<tr data-ng-repeat="factor in selectedFactors">
-				<td data-ng-bind="factor"></td>
-				<td>Bla bla bla I am factor</td>
-				<td><a class="btn-link" data-ng-click="removeFactor(factor)">Quit
-						<i class="icon-remove btn-link"></i>
-				</a></td>
-			</tr>
-			</tbody>
-		</table>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
-</script>

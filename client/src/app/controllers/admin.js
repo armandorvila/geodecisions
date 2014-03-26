@@ -1,13 +1,12 @@
 var about = angular.module('controllers.admin', []);
 
-about.controller('AdminCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+about.controller('AdminCtrl', ['$scope', '$rootScope', '$location', function($scope, $rootScope, $location) {
     
     $rootScope.subheader.title = 'Geodecisions Admin';
     $rootScope.subheader.description = 'Explore all our current available decisions factors';
     
-    $scope.selected = 'factors';
-    $scope.select = function(li){
-        selected = li;
+    $scope.selected = function(){
+        return $location.hash() ? $location.hash() : 'factors';
     };
     
 }]);

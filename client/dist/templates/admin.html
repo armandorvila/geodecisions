@@ -1,28 +1,32 @@
-
 <div class="span2 offset1 staticmenu" style="margin-top: 6%;">
-
-	<ul class="well nav nav-list affix-top staticmenu">
-
-		<li data-ng-class="{active:selected==='factors'}"><a class="btn-link" href="#factors"
-			data-ng-link="select('factors')">Factors <i data-ng-show="selected==='factors'"
-				class="icon-chevron-right icon-white" style="float: right"></i></a></li>
+	<ul class="F nav nav-list affix-top staticmenu">
+		<li data-ng-class="{active:selected()==='factors'}"><a class="btn-link" href="#factors">Factors <i
+				data-ng-show="selected()==='factors'" class="icon-chevron-right icon-white" style="float: right"></i>
+		</a></li>
 		<li class="divider lead"></li>
 
-		<li data-ng-class="{active:selected==='users'}"><a class="btn-link" href="#users"
-			data-ng-link="select('users')">Users <i data-ng-show="selected==='users'"
-				class="icon-chevron-right icon-white" style="float: right"></i></a></li>
+		<li data-ng-class="{active:selected()==='users'}"><a class="btn-link" href="#users">Users <i
+				data-ng-show="selected()==='users'" class="icon-chevron-right icon-white" style="float: right"></i></a></li>
 		<li class="divider lead"></li>
+
+		<li data-ng-class="{active:selected()==='tags'}"><a class="btn-link" href="#tags">Tags <i
+				data-ng-show="selected()==='tags'" class="icon-chevron-right icon-white" style="float: right"></i></a></li>
 	</ul>
 </div>
 
-
 <article class="span8 offset1" style="margin-top: 2%;">
+	<div data-ng-include="'templates/factors/factorsList.html'"></div>
 
-	<h2 id="factors">Factors</h2>
-
-	<div class="well">
-		<p>Geodecisions drives your making decision processes relying on several GIS systems under the hood.</p>
-
+	<div class="row" data-ng-controller="NewFactorCtrl">
+		<div class="modal-header">
+			<h2 id="users">New Factors</h2>
+		</div>
+		<div class="span5" style="margin-top: 2%">
+			<p class="lead">
+				Create new decision factors
+				<button class="btn btn-primary btn-xlarge" data-ng-click="newFactorDialog()">New Factor</button>
+			</p>
+		</div>
 	</div>
 
 	<div class="row" data-ng-controller="UsersListCtrl">
@@ -35,20 +39,59 @@
 					<td><strong>Name</strong></td>
 					<td><strong>Lastname</strong></td>
 					<td><strong>E-Mail</strong></td>
+					<td><strong>Actions</strong></td>
 				</tr>
 			</thead>
 			<tbody>
-				<tr data-ng-repeat="user in users" class="btn-link">
+				<tr data-ng-repeat="user in users">
 					<td data-ng-show="user.admin"><i class="icon-wrench"></i> {{user.name}}</td>
 
 					<td data-ng-hide="user.admin"><i class="icon-user"></i> {{user.name}}</td>
 
 					<td data-ng-bind="user.lastname"></td>
 					<td data-ng-bind="user.email"></td>
+					<td>
+						<div class="btn-group span1">
+							<a class="btn  btn-primary dropdown-toggle" data-toggle="dropdown" href="#"> <strong>
+									Options </strong> <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="btn-link">Send mail</a></li>
+								<li><a class="btn-link">Modify</a></li>
+								<li><a class="btn-link">Delete</a></li>
+							</ul>
+						</div>
+					</td>
 				</tr>
 			</tbody>
 		</table>
 
+		<div class="pagination btn-link offset1">
+			<pagination boundary-links="true" total-items="totalUsers" max-size="7" page="currentPage"
+				class="pagination-sm" previous-text="Prev" next-text="Next" first-text="First" last-text="Last"></pagination>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="modal-header">
+			<h2 id="users">New Users</h2>
+		</div>
+
+		<div class="span5" style="margin-top: 2%">
+			<p class="lead">
+				Create new users
+				<button class="btn btn-primary btn-primary" data-ng-click="newFactor()">New User</button>
+			</p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="modal-header">
+			<h2 id="tags">Tags</h2>
+		</div>
+		<div>
+			<p>Create new tags in order to drive the users tagging activity.</p>
+		</div>
 	</div>
 
 </article>
