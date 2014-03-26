@@ -56,6 +56,6 @@
   "scripts": {
       "test": "nodeunit test",
       "coveralls": "jscoverage server/src server/src-cov && SET QUICKSORT_COV=1 && nodeunit server/test/services --reporter=lcov | coveralls",
-      "postinstall": "grunt release"    
+      "postinstall": "./node_modules/grunt/bin/grunt release"    
   }
 }
