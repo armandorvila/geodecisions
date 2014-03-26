@@ -2,10 +2,17 @@ var mongoose = require('mongoose');
 var mongodbFs = require('mongodb-fs');
 var dbconfig = require('../dbconfig');
 
-var Process = require('../../src/models/usersModel.js');
-var Process = require('../../src/models/factorsModel.js');
-var Process = require('../../src/models/tagsModel.js');
-var Process = require('../../src/models/processesModel.js');
+var User = process.env.QUICKSORT_COV ? require('../../src-cov/models/usersModel')
+        : require('../../src/models/usersModel');
+
+var Factor = process.env.QUICKSORT_COV ? require('../../src-cov/models/factorsModel')
+        : require('../../src/models/factorsModel');
+
+var Tag = process.env.QUICKSORT_COV ? require('../../src-cov/models/tagsModel')
+        : require('../../src/models/tagsModel');
+
+var Process = process.env.QUICKSORT_COV ? require('../../src-cov/models/processesModel')
+        : require('../../src/models/processesModel');
 
 module.exports = {
     

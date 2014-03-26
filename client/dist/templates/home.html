@@ -3,18 +3,18 @@
 	
 	<ul class="well nav nav-list affix-top">
 		
-		<li data-ng-class="{active:selected==='latest'}"><a class="btn-link" data-ng-click="latest()">Latest</a></li>
+		<li data-ng-class="{active:selected==='latest'}"><a class="btn-link" data-ng-click="latest()">Latest    <i data-ng-show="selected==='latest'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
 		<li class="divider lead"></li>
 		
-		<li data-ng-class="{active:selected==='favorites'}"><a class="btn-link" data-ng-click="favorites()">Favorites</a></li>
+		<li data-ng-class="{active:selected==='favorites'}"><a class="btn-link" data-ng-click="favorites()">Favorites    <i data-ng-show="selected==='favorites'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
 		<li class="divider lead"></li>
 		
-		<li data-ng-class="{active:selected==='stream'}"><a class="btn-link" data-ng-click="stream()">Stream</a></li>
+		<li data-ng-class="{active:selected==='stream'}"><a class="btn-link" data-ng-click="stream()">Stream    <i data-ng-show="selected==='stream'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
 		<li class="divider"></li>
 		
-		<li data-ng-class="{active:selected==='notifications'}"><a class="btn-link" data-ng-click="notifications()">Notifications</a></li>
+		<li data-ng-class="{active:selected==='notifications'}"><a class="btn-link" data-ng-click="notifications()">Notifications    <i data-ng-show="selected==='latest'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
 		<li class="divider lead"></li>
 		
-		<li data-ng-class="{active:selected==='settings'}"><a class="btn-link" data-ng-click="settings()">Settings</a></li>
+		<li data-ng-class="{active:selected==='settings'}"><a class="btn-link" data-ng-click="settings()">Settings    <i data-ng-show="selected==='settings'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
 	</ul>
 </div>

@@ -13,15 +13,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-recess');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks("grunt-supervisor");
-    // in
-    // use
-    grunt.loadNpmTasks('grunt-istanbul');
-    grunt.loadNpmTasks('grunt-env');
     
     /*
-                 * ********************* Register required
-                 * tasks*******************
-                 */
+     * ********************* Register required
+     * tasks*******************
+     */
     grunt.registerTask('default', ['build', 'release']);
     grunt.registerTask('build', ['clean', 'uglify', 'concat', 'recess:build', 'copy', 'jshint', 'nodeunit']);
     grunt.registerTask('refresh', ['clean', 'concat', 'recess:build', 'copy', 'jshint']);
@@ -58,7 +54,7 @@ module.exports = function(grunt) {
             options : {
                 reporter : 'junit',
                 reporterOptions : {
-                    output : 'test-results'
+                    output : 'server/test-results'
                 }
             }
         },
@@ -68,7 +64,7 @@ module.exports = function(grunt) {
             specs : ['client/test/**/*.spec.js'],
             scenarios : ['client/test/**/*.scenario.js'],
             html : ['client/src/index.html'],
-            templates : ['client/src/app/templates/*.html'],
+            templates : ['client/src/app/templates/**/*.html'],
             less : ['client/src/less/stylesheet.less'],
             lessWatch : ['client/src/less/**/*.less']
         },
@@ -121,10 +117,10 @@ module.exports = function(grunt) {
                 src : ['<%= distdir %>/*']
             },
             testcov : {
-                src : ['test-cov']
+                src : ['server/test-cov']
             },
             testresults : {
-                src : ['test-results']
+                src : ['server/test-results']
             }
         },
         copy : {
@@ -172,6 +168,10 @@ module.exports = function(grunt) {
                     process : true
                 }
             },
+            geodecisions : {
+                src : ['client/src/css/*.css'],
+                dest : '<%= distdir %>/resources/css/geodecisions-custom.css'
+            },
             bootstrap : {
                 src : ['client/vendor/bootstrap-js/*.js'],
                 dest : '<%= distdir %>/resources/js/bootstrap.js'
@@ -179,6 +179,18 @@ module.exports = function(grunt) {
             angular : {
                 src : ['client/vendor/angular/angular.js', 'client/vendor/angular/angular-route.js'],
                 dest : '<%= distdir %>/resources/js/angular.js'
+            },
+            angularui : {
+                src : ['client/vendor/angular-ui/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-ui.js'
+            },
+            angularanimate : {
+                src : ['client/vendor/angular-animate/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-animate.js'
+            },
+            angularsanitize : {
+                src : ['client/vendor/angular-sanitize/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-sanitize.js'
             },
             jquery : {
                 src : ['client/vendor/jquery/*.js'],
@@ -194,9 +206,25 @@ module.exports = function(grunt) {
                 src : ['<%= src.js %>', '<%= src.jsTpl %>'],
                 dest : '<%= distdir %>/resources/js/<%= pkg.name %>.js'
             },
+            geodecisions : {
+                src : ['client/src/css/*.css'],
+                dest : '<%= distdir %>/resources/css/geodecisions-custom.css'
+            },
             angular : {
                 src : ['<%= concat.angular.src %>'],
                 dest : '<%= distdir %>/resources/js/angular.js'
+            },
+            angularui : {
+                src : ['client/vendor/angular-ui/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-ui.js'
+            },
+            angularanimate : {
+                src : ['client/vendor/angular-animate/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-animate.js'
+            },
+            angularsanitize : {
+                src : ['client/vendor/angular-sanitize/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-sanitize.js'
             },
             jquery : {
                 src : ['client/vendor/jquery/*.js'],
@@ -224,7 +252,7 @@ module.exports = function(grunt) {
         watch : {
             all : {
                 files : ['gruntFile.js', '<config:lint.files>', '<%= src.js %>', '<%= src.specs %>',
-                    '<%= src.lessWatch %>', '<%= src.templates %>', '<%= src.html %>'],
+                    '<%= src.lessWatch %>', '<%= src.templates %>', 'client/src/css/*.css', '<%= src.html %>'],
                 tasks : ['refresh', 'timestamp']
             }
         },

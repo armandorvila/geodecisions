@@ -55,6 +55,6 @@
   },
   "scripts": {
       "test": "nodeunit test",
-      "coveralls": "jscoverage server/test  test-cov && nodeunit test-cov --reporter=lcov | coveralls"
+      "coveralls": "jscoverage server/src server/src-cov && SET QUICKSORT_COV=1 && nodeunit server/test/services --reporter=lcov | coveralls"
     }
 }

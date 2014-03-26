@@ -38,16 +38,6 @@ module.exports = {
         });
     },
     
-    getFactors2 : function(test) {
-        request(app).get('/factors/get').expect('Content-Type', /json/).expect(200).end(function(err, res) {
-            if (err) {
-                throw err;
-            }
-            test.ok(res);
-            test.done();
-        });
-    },
-    
     tearDown : function(callback) {
         mongodbFs.stop();
         mongoose.disconnect(callback);

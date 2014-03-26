@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 var mongodbFs = require('mongodb-fs');
 var dbconfig = require('../dbconfig');
 
-var usersService = require('../../src/services/usersService');
+var usersService = process.env.QUICKSORT_COV ? require('../../src-cov/services/usersService')
+        : require('../../src/services/usersService');
 
 /* ***************** Node module with all UserService tests********************* */
 
@@ -68,21 +69,21 @@ module.exports = {
         
     },
     
-    createUser : function(test) {
-        console.log(' Test - UsersService.createUser');
-        
-        usersService.createUser({
-            _id : '43',
-            name : 'Juan',
-            lastname : 'Doe',
-            email : 'doe@nodemola.com',
-            password : 'doe@nodemola.com'
-        }, function(err) {
-            
-        });
-        test.done();
-        
-    },
+//    createUser : function(test) {
+//        console.log(' Test - UsersService.createUser');
+//        
+////        usersService.createUser({
+////            _id : '43',
+////            name : 'Juan',
+////            lastname : 'Doe',
+////            email : 'doe@nodemola.com',
+////            password : 'doe@nodemola.com'
+////        }, function(err) {
+////            
+////        });
+//        test.done();
+//        
+//    },
     
     tearDown : function(callback) {
         mongodbFs.stop();

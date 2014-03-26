@@ -1,13 +1,6 @@
-angular.module('app', 
-['ngRoute', 
- 'controllers.users', 
- 'controllers.processes', 
- 'controllers.about',
- 'controllers.pricing', 
- 'controllers.login',
- 'controllers.signup', 
- 'controllers.dashboard', 
- 'services.users']);
+angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
+    'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.dashboard',
+    'services.users','ui.bootstrap']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -17,52 +10,61 @@ angular.module('app').config(
             $routeProvider.when('/signup', {
                 templateUrl : '/templates/signup.html',
                 controller : 'SingupCtrl',
-                user: false
+                user : false
             }).when('/home', {
                 templateUrl : '/templates/home.html',
                 controller : 'DashboardCtrl',
-                user: true
+                user : true
             }).when('/login', {
                 templateUrl : '/templates/login.html',
                 controller : 'LoginCtrl',
-                user: false
+                user : false
             }).when('/users', {
                 templateUrl : '/templates/users.html',
                 controller : 'UsersListCtrl',
-                user: true
+                user : true
             }).when('/processes', {
                 templateUrl : '/templates/processes.html',
                 controller : 'ProcessesCtrl',
-                user: true
+                user : true
+            }).when('/newProcess', {
+                templateUrl : '/templates/processes/new-process.html',
+                controller : 'NewProcessCtrl',
+                user : true
             }).when('/pricing', {
                 templateUrl : '/templates/pricing.html',
                 controller : 'PricingCtrl',
-                user: false
+                user : false
             }).when('/about', {
                 templateUrl : '/templates/about.html',
                 controller : 'AboutCtrl',
-                user: false
+                user : false
             }).when('/projects/:projectId', {
                 templateUrl : 'templates/process-detail.html',
                 controller : 'ProcessDetailCtrl',
-                user: true
+                user : true
             }).otherwise({
                 redirectTo : '/home'
             });
         }]);
 
 angular.module('app').run(
-        ['$rootScope', 'usersService', '$location', '$route', function($rootScope, usersService, $location, $route) {
-            
-            $rootScope.$on('$routeChangeStart', function(event, next, current) {
+        ['$rootScope', 'usersService', '$location', '$route',
+            function($rootScope, usersService, $location, $route) {
                 
-                if (!$rootScope.currentUser && next.user) {
-                    usersService.loadCurrentUser(function() {
-                         $location.path('/login'); // Exec if not user found 
-                    });
-                }
-            });
-        }]);
+                $rootScope.$on('$routeChangeStart', function(event, next, current) {
+                    
+                    if (!$rootScope.currentUser && next.user) {
+                        usersService.loadCurrentUser(function() {
+                            $location.path('/login'); // Exec
+                                                                                                                                                                                                                        // if
+                                                                                                                                                                                                                        // not
+                                                                                                                                                                                                                        // user
+                                                                                                                                                                                                                        // found
+                        });
+                    }
+                });
+            }]);
 
 angular
         .module('app')
@@ -77,17 +79,17 @@ angular
                         $rootScope.subheader = {};
                         $rootScope.subheader.title = 'Welcome to Geodecisions';
                         $rootScope.subheader.description = 'Geodecisions drives your decision making processes using geographic information.';
-                    
+
                         $scope.isAuthenticated = function() {
                             return !!$rootScope.currentUser;
                         };
                         
                         $scope.logout = function() {
-                            usersService.logout(function(){
+                            usersService.logout(function() {
                                 $location.path('/login');
                             });
                         };
-                    
+                        
                     }]);
 
 var about = angular.module('controllers.about', []);
@@ -188,13 +190,19 @@ projects
                 [
                     '$scope',
                     'usersService',
-                    'processesService', '$rootScope',
-                    function($scope, usersService, processesService, $rootScope) {
+                    'processesService',
+                    '$rootScope',
+                    '$location',
+                    function($scope, usersService, processesService, $rootScope, $location) {
                         
                         $rootScope.subheader.title = 'Making Decision Processes';
                         $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
                         
                         $scope.selected = 'inProgress';
+                        
+                        $scope.newProcess = function() {
+                            $location.path('/newProcess');
+                        };
                         
                         $scope.inProgress = function() {
                             $scope.selected = 'inProgress';
@@ -252,6 +260,92 @@ projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesSe
     function($scope, usersService, processesService) {
 
     }]);
+
+function ModalInstanceCtrl($scope, $modalInstance, factors) {
+    
+    $scope.factors = factors;
+    $scope.selectedFactors = ['Agricultura'];
+    $scope.selectedFactor = undefined;
+    
+    $scope.addFactor = function(selectedFactor) {
+        $scope.selectedFactors.push(selectedFactor);
+        $scope.selectedFactor = undefined;
+    };
+    
+    $scope.removeFactor = function(factor) {
+        var index = $scope.selectedFactors.indexOf(factor);
+        $scope.selectedFactors.splice(index, 1);
+    };
+    
+    $scope.ok = function() {
+        $modalInstance.close($scope.selectedFactors);
+    };
+    
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+}
+
+projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', '$http', '$location',
+    '$modal', function($scope, usersService, processesService, $http, $location, $modal) {
+        $scope.process = {};
+        
+       // $scope.selectedFactors = ['Agricultura'];
+        $scope.factors = ["Agricultura", "Ganadería", "Clima"];
+        
+        $scope.selectedTag = undefined;
+        $scope.selectedTags = [];
+        $scope.tags = ["Comida", "Hambre", "What the fuck"];
+        
+        $scope.addTag = function() {
+            $scope.selectedTags.push($scope.selectedTag);
+            $scope.selectedTag = undefined;
+        };
+        
+        $scope.removeTag = function(tag) {
+            var index = $scope.selectedTags.indexOf(tag);
+            $scope.selectedTags.splice(index, 1);
+        };
+        
+        $scope.getLocation = function(val) {
+            return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
+                params : {
+                    address : val,
+                    sensor : false
+                }
+            }).then(function(res) {
+                var addresses = [];
+                angular.forEach(res.data.results, function(item) {
+                    addresses.push(item.formatted_address);
+                });
+                return addresses;
+            });
+        };
+        
+        $scope.opts = {
+            keyboard : true,
+            backdrop : false,
+            resolve : {
+                factors : function() {
+                    return $scope.factors;
+                }
+            },
+            templateUrl : 'myModalContent.html',
+            controller : 'ModalInstanceCtrl'
+        };
+        
+        $scope.continueToFactors = function() {
+            $modal.open($scope.opts).result.then(function(result) {
+                if (result) {
+                    alert('dialog closed with result: ' + result);
+                }
+            }, function() {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+        
+    }]);
+
 var login = angular.module('controllers.signup', ['services.users']);
 
 login.controller('SingupCtrl', ['$scope', 'usersService', '$rootScope', '$location',
@@ -323,11 +417,23 @@ users.controller('UserLoginCtrl', ['$scope', 'usersService', function($scope, $l
     };
     
 }]);
-angular.module('services.processes', []).factory('processesService',
-		function($http) {
-
-			return {};
-		});
+angular.module('services.processes', []).factory('processesService', function($http) {
+    
+    return {
+        getLocations : function(val, callback){
+            promise = $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
+                params : {
+                    address : val,
+                    sensor : false
+                }
+            });
+            
+            return promise.then(function(res) {
+                callback(res.data.results);
+            });
+        }
+    };
+});
 
 angular.module('services.users', []).factory('usersService', function($http, $rootScope) {
     

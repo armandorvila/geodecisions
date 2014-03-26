@@ -38,8 +38,6 @@ module.exports = {
                 .get('/processes/get')
                 .expect('Content-Type', /json/)
                 .expect(200)
-                .expect(
-                        '[\n  {\n    "_id": "1",\n    "name": "New Business",\n    "description": "New Business",\n    "tags": [],\n    "factors": []\n  }\n]')
                 .end(function(err, res) {
                     if (err) {
                         throw err;
@@ -62,8 +60,6 @@ module.exports = {
                 .get('/processes/getByName/New Business')
                 .expect('Content-Type', /json/)
                 .expect(200)
-                .expect(
-                        '{\n  "_id": "1",\n  "name": "New Business",\n  "description": "New Business",\n  "user": {\n    "_id": "1",\n    "name": "Forrest",\n    "lastname": "Gump",\n    "email": "forrest@geodecisions.com"\n  },\n  "tags": [\n    {\n      "_id": "1",\n      "name": "Cars"\n    }\n  ],\n  "factors": [\n    {\n      "_id": "13",\n      "name": "Demography",\n      "description": "Demography decision factor",\n      "layer": "MADRID_PUBLIC_GIS_LAYER_CODE",\n      "scope": "Local"\n    },\n    {\n      "_id": "14",\n      "name": "Demography",\n      "description": "Demography decision factor",\n      "layer": "MADRID_PUBLIC_GIS_LAYER_CODE",\n      "scope": "Local"\n    }\n  ]\n}')
                 .end(function(err, res) {
                     if (err) {
                         throw err;
@@ -86,13 +82,11 @@ module.exports = {
                 .get('/processes/getById/1')
                 .expect('Content-Type', /json/)
                 .expect(200)
-                .expect(
-                        '{\n  "_id": "1",\n  "name": "New Business",\n  "description": "New Business",\n  "user": {\n    "_id": "1",\n    "name": "Forrest",\n    "lastname": "Gump",\n    "email": "forrest@geodecisions.com"\n  },\n  "tags": [\n    {\n      "_id": "1",\n      "name": "Cars"\n    }\n  ],\n  "factors": [\n    {\n      "_id": "13",\n      "name": "Demography",\n      "description": "Demography decision factor",\n      "layer": "MADRID_PUBLIC_GIS_LAYER_CODE",\n      "scope": "Local"\n    },\n    {\n      "_id": "14",\n      "name": "Demography",\n      "description": "Demography decision factor",\n      "layer": "MADRID_PUBLIC_GIS_LAYER_CODE",\n      "scope": "Local"\n    }\n  ]\n}')
                 .end(function(err, res) {
                     if (err) {
                         throw err;
                     }
-                    
+           
                     test.ok(res);
                     test.ok(res.body);
                     

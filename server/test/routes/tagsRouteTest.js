@@ -33,8 +33,6 @@ module.exports = {
                 .get('/tags/get/Ca')
                 .expect('Content-Type', /json/)
                 .expect(200)
-                .expect(
-                        '[\n  {\n    "_id": "1",\n    "name": "Cars"\n  },\n  {\n    "name": "Houses"\n  },\n  {\n    "_id": "3",\n    "name": "Banks"\n  },\n  {\n    "_id": "4",\n    "name": "Holidays"\n  }\n]')
                 .end(function(err, res) {
                     if (err) {
                         throw err;

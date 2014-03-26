@@ -1,0 +1,52 @@
+body {
+	padding-top: 2.35%;
+}
+
+.subhead {
+	padding: 3%;
+	background: linear-gradient(45deg, #020031 0%, #46a546 100%);
+	color: #fff;
+}
+
+.privateSubhead {
+	padding: 3%;
+	background: linear-gradient(45deg, #020031 0%, #46a546 100%);
+	color: #fff;
+}
+
+.subhead {
+		padding: 3%;
+		background: linear-gradient(45deg, #020031 0%, #46a546 100%);
+		color: #fff;
+	}
+	.privateSubhead {
+		padding: 3%;
+		background: linear-gradient(45deg, #020031 0%, #46a546 100%);
+		color: #fff;
+	}
+
+@media ( max-width : 979px) {
+	.subhead {
+		margin-top: -3%;
+	}
+	.privateSubhead {
+		
+	}
+}
+@media (max-width : 760px) {
+	.subhead {
+		margin-top: -5.5%;
+		margin-left: -8.5%;
+		margin-right: -8.5%;
+	}
+}
+@media ( max-width : 385px) {
+	.subhead {
+		margin-top: -10%;
+		margin-left: -8.5%;
+		margin-right: -8.5%;
+	}
+	.privateSubhead {
+		
+	}
+}

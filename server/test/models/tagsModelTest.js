@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 var mongodbFs = require('mongodb-fs');
 var dbconfig = require('../dbconfig');
 
-var Tag = require('../../src/models/tagsModel');
+var Tag = process.env.QUICKSORT_COV ? require('../../src-cov/models/tagsModel')
+        : require('../../src/models/tagsModel');
 
 module.exports = {
     

@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 var mongodbFs = require('mongodb-fs');
 var dbconfig = require('../dbconfig');
 
-var User = require('../../src/models/usersModel');
+var User = process.env.QUICKSORT_COV ? require('../../src-cov/models/usersModel')
+        : require('../../src/models/usersModel');
 
 module.exports = {
     
