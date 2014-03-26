@@ -1,0 +1,45 @@
+
+<article class="span8 offset2" style="margin-top: 2%;">
+
+	<div class="modal-header row">
+		<div class="span2">
+			<h4 class="heading4" data-ng-show="selected==='inProgress'">In progress</h4>
+			<h4 class="heading4" data-ng-show="selected==='closed'">Closed</h4>
+			<h4 class="heading4" data-ng-show="selected==='all'">All</h4>
+		</div>
+
+		<div class="btn-group span1">
+			<a class="btn  btn-primary dropdown-toggle" data-toggle="dropdown" href="#"> <strong> Change </strong>
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a class="btn-link" data-ng-click="inProgress()">In Progress</a></li>
+				<li><a class="btn-link" data-ng-click="closed()">Closed</a></li>
+				<li><a class="btn-link" data-ng-click="all()">All</a></li>
+			</ul>
+		</div>
+
+		<div class="span1 offset2">
+			<button class="btn btn-primary" data-ng-click="newProcess()">New</button>
+		</div>
+	</div>
+
+	<table class="table row" style="margin-top: 4%;">
+		<thead>
+			<tr>
+				<td><strong>Name</strong></td>
+				<td><strong>Description</strong></td>
+				<td><strong>Factors</strong></td>
+				<td><strong>Tags</strong></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="process in processes" class="btn-link">
+				<td data-ng-bind="process.name"></td>
+				<td data-ng-bind="process.description"></td>
+				<td data-ng-bind="process.name"><a data-ng-repeat="factor in process.factors"></a></td>
+				<td data-ng-bind="process.name"><span data-ng-repeat="tag in process.tags"></span></td>
+			</tr>
+		</tbody>
+	</table>
+</article>
