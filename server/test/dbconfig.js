@@ -16,7 +16,8 @@ module.exports = {
                 _id : '2',
                 name : 'Armando',
                 lastname : 'Jaleo',
-                email : 'armando@geodecisions.com'
+                email : 'armando@geodecisions.com',
+                admin : true    
             }, {
                 _id : '3',
                 name : 'Kevin',

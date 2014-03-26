@@ -1,6 +1,6 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
     'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.dashboard',
-    'services.users','ui.bootstrap']);
+    'controllers.factors', 'controllers.admin', 'services.users', 'ui.bootstrap']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -19,10 +19,15 @@ angular.module('app').config(
                 templateUrl : '/templates/login.html',
                 controller : 'LoginCtrl',
                 user : false
-            }).when('/users', {
-                templateUrl : '/templates/users.html',
-                controller : 'UsersListCtrl',
+            }).when('/factors', {
+                templateUrl : '/templates/factors.html',
+                controller : 'FactorsCtrl',
                 user : true
+            }).when('/admin', {
+                templateUrl : '/templates/admin.html',
+                controller : 'AdminCtrl',
+                user : true,
+                admin : true
             }).when('/processes', {
                 templateUrl : '/templates/processes.html',
                 controller : 'ProcessesCtrl',
@@ -56,13 +61,14 @@ angular.module('app').run(
                     
                     if (!$rootScope.currentUser && next.user) {
                         usersService.loadCurrentUser(function() {
-                            $location.path('/login'); // Exec
-                                                                                                                                                                                                                        // if
-                                                                                                                                                                                                                        // not
-                                                                                                                                                                                                                        // user
-                                                                                                                                                                                                                        // found
+                            $location.path('/login'); // Exec                                                                                                                                                                                    // found
+                        }, function() {
+                            if (!$rootScope.currentUser.admin && next.admin) {
+                                $location.path('/home');
+                            }
                         });
                     }
+                    
                 });
             }]);
 
@@ -79,9 +85,16 @@ angular
                         $rootScope.subheader = {};
                         $rootScope.subheader.title = 'Welcome to Geodecisions';
                         $rootScope.subheader.description = 'Geodecisions drives your decision making processes using geographic information.';
-
+                        
                         $scope.isAuthenticated = function() {
                             return !!$rootScope.currentUser;
+                        };
+                        
+                        $scope.isAdmin = function() {
+                            if (!$rootScope.currentUser) {
+                                return false;
+                            }
+                            return $rootScope.currentUser.admin;
                         };
                         
                         $scope.logout = function() {

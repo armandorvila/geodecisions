@@ -1,26 +1,32 @@
-<article class="span2" style="margin-top:6%;">
 
-	<ul class="well nav nav-list affix-top">
-		
-		<li data-ng-class="{active:selected==='inProgress'}"><a class="btn-link" data-ng-click="inProgress()">In progress</a></li>
-		<li class="divider lead"></li>
-		
-		<li data-ng-class="{active:selected==='closed'}"><a class="btn-link" data-ng-click="closed()">Closed</a></li>
-		<li class="divider lead"></li>
-		
-		<li data-ng-class="{active:selected==='all'}"><a class="btn-link" data-ng-click="all()">All</a></li>
-	</ul>
-</article>
+<article class="span8 offset2" style="margin-top: 2%;">
 
-<article class="span8" style="margin-top: 2%;">
-	<table class="table">
-		<caption class="lead" data-ng-show="selected==='inProgress'"><strong>Processes in progress</strong></caption>
-		<caption class="lead" data-ng-show="selected==='closed'"><strong>Closed processes</strong></caption>
-		<caption class="lead" data-ng-show="selected==='all'"><strong>All processes</strong></caption>
-		
+	<div class="modal-header row">
+		<div class="span2">
+			<h4 class="heading4" data-ng-show="selected==='inProgress'">In progress</h4>
+			<h4 class="heading4" data-ng-show="selected==='closed'">Closed</h4>
+			<h4 class="heading4" data-ng-show="selected==='all'">All</h4>
+		</div>
+
+		<div class="btn-group span1">
+			<a class="btn  btn-primary dropdown-toggle" data-toggle="dropdown" href="#"> <strong> Change </strong>
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a class="btn-link" data-ng-click="inProgress()">In Progress</a></li>
+				<li><a class="btn-link" data-ng-click="closed()">Closed</a></li>
+				<li><a class="btn-link" data-ng-click="all()">All</a></li>
+			</ul>
+		</div>
+
+		<div class="span1 offset2">
+			<button class="btn btn-primary" data-ng-click="newProcess()">New</button>
+		</div>
+	</div>
+
+	<table class="table row" style="margin-top: 4%;">
 		<thead>
 			<tr>
-				<td><strong>State</strong></td>
 				<td><strong>Name</strong></td>
 				<td><strong>Description</strong></td>
 				<td><strong>Factors</strong></td>
@@ -29,18 +35,11 @@
 		</thead>
 		<tbody>
 			<tr data-ng-repeat="process in processes" class="btn-link">
-				<td>State</td>
 				<td data-ng-bind="process.name"></td>
 				<td data-ng-bind="process.description"></td>
-				<td data-ng-bind="process.name"><a
-					data-ng-repeat="factor in process.factors"></a></td>
-				<td data-ng-bind="process.name"><span
-					data-ng-repeat="tag in process.tags"></span></td>
+				<td data-ng-bind="process.name"><a data-ng-repeat="factor in process.factors"></a></td>
+				<td data-ng-bind="process.name"><span data-ng-repeat="tag in process.tags"></span></td>
 			</tr>
 		</tbody>
 	</table>
-</article>
-
-<article class="offset1 span2" style="margin-top: 6%;">
-	<button class="btn btn-primary btn-large" type="button" data-ng-click="newProcess()"><i class="icon-list icon-white"></i> Start new</button>
 </article>

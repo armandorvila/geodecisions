@@ -26,7 +26,7 @@ exports.findByName = function(nameToFind, callback) {
         name : nameToFind
     }));
     
-    User.findOne(criteria, 'name lastname email', function(err, user) {
+    User.findOne(criteria, 'name lastname email admin', function(err, user) {
         if (err) {
             console.log('error');
         }
@@ -39,7 +39,7 @@ exports.findByEmail = function(emailToFind, callback) {
         email : emailToFind
     }));
     
-    User.findOne(criteria, 'name lastname email password', function(err, user) {
+    User.findOne(criteria, 'name lastname email admin password', function(err, user) {
         if (err) {
             console.log(err);
         }

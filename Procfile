@@ -1,1 +1,1 @@
-web: node server/server.js
+web: grunt release && node server/server.js

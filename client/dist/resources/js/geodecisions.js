@@ -1,6 +1,6 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
     'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.dashboard',
-    'services.users','ui.bootstrap']);
+    'controllers.factors', 'controllers.admin', 'services.users', 'ui.bootstrap']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -19,10 +19,15 @@ angular.module('app').config(
                 templateUrl : '/templates/login.html',
                 controller : 'LoginCtrl',
                 user : false
-            }).when('/users', {
-                templateUrl : '/templates/users.html',
-                controller : 'UsersListCtrl',
+            }).when('/factors', {
+                templateUrl : '/templates/factors.html',
+                controller : 'FactorsCtrl',
                 user : true
+            }).when('/admin', {
+                templateUrl : '/templates/admin.html',
+                controller : 'AdminCtrl',
+                user : true,
+                admin : true
             }).when('/processes', {
                 templateUrl : '/templates/processes.html',
                 controller : 'ProcessesCtrl',
@@ -56,13 +61,14 @@ angular.module('app').run(
                     
                     if (!$rootScope.currentUser && next.user) {
                         usersService.loadCurrentUser(function() {
-                            $location.path('/login'); // Exec
-                                                                                                                                                                                                                        // if
-                                                                                                                                                                                                                        // not
-                                                                                                                                                                                                                        // user
-                                                                                                                                                                                                                        // found
+                            $location.path('/login'); // Exec                                                                                                                                                                                    // found
+                        }, function() {
+                            if (!$rootScope.currentUser.admin && next.admin) {
+                                $location.path('/home');
+                            }
                         });
                     }
+                    
                 });
             }]);
 
@@ -79,9 +85,16 @@ angular
                         $rootScope.subheader = {};
                         $rootScope.subheader.title = 'Welcome to Geodecisions';
                         $rootScope.subheader.description = 'Geodecisions drives your decision making processes using geographic information.';
-
+                        
                         $scope.isAuthenticated = function() {
                             return !!$rootScope.currentUser;
+                        };
+                        
+                        $scope.isAdmin = function() {
+                            if (!$rootScope.currentUser) {
+                                return false;
+                            }
+                            return $rootScope.currentUser.admin;
                         };
                         
                         $scope.logout = function() {
@@ -100,6 +113,19 @@ about.controller('AboutCtrl',['$scope','$rootScope', function($scope, $rootScope
     $rootScope.subheader.description = 'What is Geodecisions intended for? Can I take advantage of Geodecisions?';
     
 		
+}]);
+var about = angular.module('controllers.admin', []);
+
+about.controller('AdminCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+    
+    $rootScope.subheader.title = 'Geodecisions Admin';
+    $rootScope.subheader.description = 'Explore all our current available decisions factors';
+    
+    $scope.selected = 'factors';
+    $scope.select = function(li){
+        selected = li;
+    };
+    
 }]);
 var dashboard = angular.module('controllers.dashboard', ['services.processes', 'services.users']);
 
@@ -130,6 +156,14 @@ dashboard.controller('DashboardCtrl', ['$scope', 'usersService', 'processesServi
         $scope.settings = function(){
             $scope.selected='settings';
         };
+}]);
+var about = angular.module('controllers.factors', []);
+
+about.controller('FactorsCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+    
+    $rootScope.subheader.title = 'Geodecisions Factors';
+    $rootScope.subheader.description = 'Explore all our current available decisions factors';
+    
 }]);
 var login = angular.module('controllers.login', ['services.users']);
 
@@ -395,19 +429,9 @@ var users = angular.module('controllers.users', ['services.users']);
 
 users.controller('UsersListCtrl', ['$scope', 'usersService', function($scope, usersService) {
     
-    $scope.usersNum = 100;
-    
-    $scope.handler = {
-        onError : function(response) {
-            console.log('Something went wrong getting users:' + response);
-            throw new Error('Something went wrong getting users' + response);
-        },
-        onSuccess : function(response) {
-            $scope.users = response.data;
-        }
-    };
-    
-    usersService.getUsers($scope.handler);
+    usersService.getUsers(function(response) {
+        $scope.users = response.data;
+    });
 }]);
 
 users.controller('UserLoginCtrl', ['$scope', 'usersService', function($scope, $location, usersService) {
@@ -417,6 +441,7 @@ users.controller('UserLoginCtrl', ['$scope', 'usersService', function($scope, $l
     };
     
 }]);
+
 angular.module('services.processes', []).factory('processesService', function($http) {
     
     return {
@@ -438,12 +463,12 @@ angular.module('services.processes', []).factory('processesService', function($h
 angular.module('services.users', []).factory('usersService', function($http, $rootScope) {
     
     return {
-        getUsers : function(handler) {
-            var usersPromise = $http.get('/users/get');
-            usersPromise.then(function(response) {
-                handler.onSuccess(response);
+        getUsers : function(callback) {
+            $http.get('/users/get').then(function(response) {
+                callback(response);
             }, function(response) {
-                handler.onError(response);
+                console.log('Error getting users ' + response);
+                throw new Error('Something went wrong getting users' + response);
             });
         },
         
@@ -487,10 +512,11 @@ angular.module('services.users', []).factory('usersService', function($http, $ro
             });
         },
         
-        loadCurrentUser : function(goToLogin) {
+        loadCurrentUser : function(goToLogin, checkAdmin) {
             $http.get('/users/current').then(function(response) {
                 if (response.data && response.data.user !== false) {
                     $rootScope.currentUser = response.data;
+                    checkAdmin();
                 } else {
                     goToLogin();
                 }

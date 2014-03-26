@@ -1,12 +1,12 @@
 angular.module('services.users', []).factory('usersService', function($http, $rootScope) {
     
     return {
-        getUsers : function(handler) {
-            var usersPromise = $http.get('/users/get');
-            usersPromise.then(function(response) {
-                handler.onSuccess(response);
+        getUsers : function(callback) {
+            $http.get('/users/get').then(function(response) {
+                callback(response);
             }, function(response) {
-                handler.onError(response);
+                console.log('Error getting users ' + response);
+                throw new Error('Something went wrong getting users' + response);
             });
         },
         
@@ -50,10 +50,11 @@ angular.module('services.users', []).factory('usersService', function($http, $ro
             });
         },
         
-        loadCurrentUser : function(goToLogin) {
+        loadCurrentUser : function(goToLogin, checkAdmin) {
             $http.get('/users/current').then(function(response) {
                 if (response.data && response.data.user !== false) {
                     $rootScope.currentUser = response.data;
+                    checkAdmin();
                 } else {
                     goToLogin();
                 }

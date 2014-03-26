@@ -1,0 +1,54 @@
+
+<div class="span2 offset1 staticmenu" style="margin-top: 6%;">
+
+	<ul class="well nav nav-list affix-top staticmenu">
+
+		<li data-ng-class="{active:selected==='factors'}"><a class="btn-link" href="#factors"
+			data-ng-link="select('factors')">Factors <i data-ng-show="selected==='factors'"
+				class="icon-chevron-right icon-white" style="float: right"></i></a></li>
+		<li class="divider lead"></li>
+
+		<li data-ng-class="{active:selected==='users'}"><a class="btn-link" href="#users"
+			data-ng-link="select('users')">Users <i data-ng-show="selected==='users'"
+				class="icon-chevron-right icon-white" style="float: right"></i></a></li>
+		<li class="divider lead"></li>
+	</ul>
+</div>
+
+
+<article class="span8 offset1" style="margin-top: 2%;">
+
+	<h2 id="factors">Factors</h2>
+
+	<div class="well">
+		<p>Geodecisions drives your making decision processes relying on several GIS systems under the hood.</p>
+
+	</div>
+
+	<div class="row" data-ng-controller="UsersListCtrl">
+		<div class="modal-header">
+			<h2 id="users">Users</h2>
+		</div>
+		<table class="table" style="margin-top: 4%;">
+			<thead>
+				<tr>
+					<td><strong>Name</strong></td>
+					<td><strong>Lastname</strong></td>
+					<td><strong>E-Mail</strong></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="user in users" class="btn-link">
+					<td data-ng-show="user.admin"><i class="icon-wrench"></i> {{user.name}}</td>
+
+					<td data-ng-hide="user.admin"><i class="icon-user"></i> {{user.name}}</td>
+
+					<td data-ng-bind="user.lastname"></td>
+					<td data-ng-bind="user.email"></td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+</article>

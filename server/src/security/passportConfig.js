@@ -5,7 +5,8 @@ var filterUser = function(user) {
     return {
         name : user.name,
         lastname : user.lastname,
-        email : user.email
+        email : user.email,
+        admin: user.admin
     };
 };
 
