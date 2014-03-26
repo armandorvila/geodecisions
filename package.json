@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "grunt": "~0.4.0",
+    "grunt-cli": "~0.1.13",
     "grunt-contrib-clean": "0.5.0",
     "grunt-contrib-concat": "0.3.0",
     "grunt-contrib-copy": "0.5.0",
@@ -56,6 +57,6 @@
   "scripts": {
       "test": "nodeunit test",
       "coveralls": "jscoverage server/src server/src-cov && SET QUICKSORT_COV=1 && nodeunit server/test/services --reporter=lcov | coveralls",
-      "postinstall": "grunt build"    
+      "postinstall": "./node_modules/.bin/grunt release"    
   }
 }

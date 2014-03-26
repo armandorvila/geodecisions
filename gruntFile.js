@@ -21,8 +21,7 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['build', 'release']);
     grunt.registerTask('build', ['clean', 'uglify', 'concat', 'recess:build', 'copy', 'jshint', 'nodeunit']);
     grunt.registerTask('refresh', ['clean', 'concat', 'recess:build', 'copy', 'jshint']);
-    grunt.registerTask('release', ['clean', 'uglify', 'concat', 'jshint', 'karma:unit', 'concat:index',
-        'recess:min', 'copy']);
+    grunt.registerTask('release', ['clean', 'uglify', 'concat', 'jshint', 'concat:index', 'recess:min', 'copy']);
     
     grunt.registerTask('test-watch', ['karma:watch']);
     grunt.registerTask('start', ['supervisor']);
