@@ -206,10 +206,6 @@ module.exports = function(grunt) {
                 src : ['<%= src.js %>', '<%= src.jsTpl %>'],
                 dest : '<%= distdir %>/resources/js/<%= pkg.name %>.js'
             },
-            geodecisions : {
-                src : ['client/src/css/*.css'],
-                dest : '<%= distdir %>/resources/css/geodecisions-custom.css'
-            },
             angular : {
                 src : ['<%= concat.angular.src %>'],
                 dest : '<%= distdir %>/resources/js/angular.js'
