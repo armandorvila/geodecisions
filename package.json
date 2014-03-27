@@ -27,6 +27,7 @@
     "mongoose": "3.8.8",
     "open": "0.0.4",
     "passport": "0.2.0",
+    "shortId": "2.0.0",
     "passport-local": "^1.0.0",
     "request": "2.34.0",
     "coveralls": "^2.10.0"
