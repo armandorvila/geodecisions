@@ -2,12 +2,12 @@ angular.module('services.factors', []).factory('factorsService', function($http)
     
     return {
         
-        countFactors : function(callback) {
-            $http.get('/factors/count').then(function(response) {
-                callback(response.data);
-            }, function(response) {
-                console.log('Error counting factors ' + response);
-                throw new Error('Something went wrong counting factors' + response);
+        countFactors : function() {
+            return $http.get('/factors/count').then(function(res) {
+                return response.data;
+            }, function(err) {
+                console.log('Error counting factors ' + err);
+                throw new Error('Something went wrong counting factors' + err);
             });
         },
         

@@ -31,8 +31,8 @@ factors.controller('FactorsListCtrl', ['$scope', '$rootScope', 'factorsService',
             });
         };
         
-        factorsService.countFactors(function(factorsCount) {
-            $scope.totalItems = factorsCount;
+        factorsService.countFactors().then(function(count) {
+            $scope.totalItems = count;
             $scope.paginate(1);
         });
         

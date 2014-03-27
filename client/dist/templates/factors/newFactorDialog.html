@@ -1,0 +1,57 @@
+<form name="form" novalidate>
+        <div class="modal-header">
+           <h4>New Decision Factor</h4>
+        </div>
+        <div class="modal-body">
+
+		<div class="control-group">
+			<div class="alert alert-error" data-ng-show="factorError.message"
+				data-ng-bind="factorError.message"></div>
+		</div>
+
+		<div class="control-group offset1">
+			<label class="control-label" for="inputName">Name</label>
+			<div class="controls">
+				<input class="input-xlarge" name="inputName" type="text"
+					data-ng-model="factor.name" required data-ng-minlength="4"
+					autofocus>
+			</div>
+		<span class="error" data-ng-show="form.inputName.$error.minlength">Too
+				short!</span>
+		</div>
+
+		<div class="control-group offset1">
+			<label class="control-label" for="inputDescription">Description</label>
+			<div class="controls">
+				<textarea class="input-xlarge" name="inputDescription"
+					data-ng-model="factor.description" rows="3" cols="12" required
+					autofocus data-ng-minlength="10"></textarea>
+			</div>
+		<span class="error" data-ng-show="form.inputDescription.$error.minlength">Too
+				short!</span>
+		</div>
+
+		<div class="control-group offset1">
+			<label class="control-label" for="layerName">WMS Layer</label>
+			<div class="controls">
+				<input class="input-xlarge" name="layerName" type="text"
+					data-ng-model="newLayerModel.uri" autofocus>
+			<button class="btn" data-ng-click="addLayer(newLayerModel.uri)">Add</button>
+			</div>
+		<div class="alert alert-error" data-ng-show="layerError.message"
+				data-ng-bind="layerError.message"></div>
+		</div>
+
+		<div class="control-group offset1">
+			<label class="control-label">Layers :</label>
+			<ul>
+				<li data-ng-repeat="layer in factor.layers">{{layer}}  <a class="btn-link" data-ng-click="removeLayer(layer)"><i class="icon-remove"></i></a></li>
+			</ul>
+		</div>
+		
+        </div>
+        <div class="modal-footer">
+            <button data-ng-disabled='form.$invalid' class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+</form>

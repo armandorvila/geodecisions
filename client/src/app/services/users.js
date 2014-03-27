@@ -1,9 +1,9 @@
 angular.module('services.users', []).factory('usersService', function($http, $rootScope) {
     
     return {
-        getUsers : function(callback) {
-            $http.get('/users/get').then(function(response) {
-                callback(response);
+        getUsers : function() {
+            return $http.get('/users/get').then(function(response) {
+                return response.data;
             }, function(response) {
                 console.log('Error getting users ' + response);
                 throw new Error('Something went wrong getting users' + response);
@@ -51,6 +51,7 @@ angular.module('services.users', []).factory('usersService', function($http, $ro
         },
         
         loadCurrentUser : function(goToLogin, checkAdmin) {
+            console.info('Calling server for currrent user');
             $http.get('/users/current').then(function(response) {
                 if (response.data && response.data.user !== false) {
                     $rootScope.currentUser = response.data;

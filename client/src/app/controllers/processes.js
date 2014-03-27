@@ -1,42 +1,34 @@
 var projects = angular.module('controllers.processes', ['services.processes', 'services.users']);
 
-projects
-        .controller(
-                'ProcessesCtrl',
-                [
-                    '$scope',
-                    'usersService',
-                    'processesService',
-                    '$rootScope',
-                    '$location',
-                    function($scope, usersService, processesService, $rootScope, $location) {
-                        
-                        $rootScope.subheader.title = 'Making Decision Processes';
-                        $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
-                        
-                        $scope.selected = 'inProgress';
-                        
-                        $scope.newProcess = function() {
-                            $location.path('/newProcess');
-                        };
-                        
-                        $scope.inProgress = function() {
-                            $scope.selected = 'inProgress';
-                        };
-                        
-                        $scope.closed = function() {
-                            $scope.selected = 'closed';
-                        };
-                        
-                        $scope.all = function() {
-                            $scope.selected = 'all';
-                        };
-                        
-                        processesService.getProcesses(function(processes){
-                            $scope.processes = processes;
-                        });
-                        
-                    }]);
+projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope',
+    '$location', function($scope, processesService, $rootScope, $location) {
+        
+        $rootScope.subheader.title = 'Making Decision Processes';
+        $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
+        
+        $scope.selected = 'inProgress';
+        
+        $scope.newProcess = function() {
+            $location.path('/newProcess');
+        };
+        
+        $scope.inProgress = function() {
+            $scope.selected = 'inProgress';
+        };
+        
+        $scope.closed = function() {
+            $scope.selected = 'closed';
+        };
+        
+        $scope.all = function() {
+            $scope.selected = 'all';
+        };
+        
+        processesService.getProcesses().then(function (processes){
+            $scope.processes = processes;
+        });
+   
+    }]);
 
 projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService',
     function($scope, usersService, processesService) {
@@ -68,15 +60,16 @@ function NewProcessFactorsCtrl($scope, $modalInstance, factors) {
     };
 }
 
-projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', 'tagsService', '$http', '$location',
-    '$modal', function($scope, usersService, processesService, tagsService, $http, $location, $modal) {
+projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', 'tagsService', '$http',
+    '$location', '$modal',
+    function($scope, usersService, processesService, tagsService, $http, $location, $modal) {
         $scope.process = {};
         
         $scope.factors = ["Agricultura", "Ganadería", "Clima"];
         $scope.selectedTags = [];
         
         $scope.selectedTag = undefined;
-        $scope.selectedLocation =  undefined;
+        $scope.selectedLocation = undefined;
         
         $scope.addTag = function() {
             $scope.selectedTags.push($scope.selectedTag);
@@ -84,7 +77,7 @@ projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesServi
         };
         
         $scope.addTagOnIntro = function($event) {
-            if($event.keyCode === 13){
+            if ($event.keyCode === 13) {
                 $scope.addTag();
             }
         };
@@ -94,11 +87,11 @@ projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesServi
             $scope.selectedTags.splice(index, 1);
         };
         
-        $scope.getTags = function (val) {
-           return tagsService.getTags(val);
+        $scope.getTags = function(val) {
+            return tagsService.getTags(val);
         };
         
-        $scope.getLocations = function(val) {            
+        $scope.getLocations = function(val) {
             return processesService.getLocations(val);
         };
         

@@ -2,7 +2,7 @@
   "name": "geodecisions",
   "version": "1.0.0-SNAPSHOT",
   "description": "geodecisions",
-  "main": "server/src/server.js",
+  "main": "server/server.js",
   "homepage": "https://github.com/armandorvila/geodecisions",
   "repository": {
     "type": "git",

@@ -1,0 +1,33 @@
+<div class="modal-header">
+	<h4>Process factors</h4>
+</div>
+
+<div class="modal-body">
+	<div class="control-group" style="margin:2%;">
+
+		<div class="controls">
+			<input placeholder="Search" type="text" data-ng-model="selectedFactor"
+				data-typeahead="factor for factor in factors | filter:$viewValue | limitTo:8"
+				class="input-xlarge search-query">
+
+			<button class="btn" data-ng-click="addFactor(selectedFactor)">Add</button>
+		</div>
+	</div>
+
+	<table class="table" style="margin-top: 2%;">
+		<thead>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="factor in selectedFactors">
+				<td data-ng-bind="factor"></td>
+				<td>Bla bla bla I am factor</td>
+				<td><a class="btn-link" data-ng-click="removeFactor(factor)">Quit <i class="icon-remove btn-link"></i>
+				</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()">OK</button>
+	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

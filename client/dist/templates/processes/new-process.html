@@ -37,7 +37,7 @@
 			<div class="controls">
 				<input type="text" data-ng-model="selectedLocation"
 					placeholder="Type your location"
-					data-typeahead="address for address in getLocations($viewValue) | filter:$viewValue"
+					data-typeahead="address.formatted_address for address in getLocations($viewValue) | filter:$viewValue"
 					data-typeahead-loading="loadingLocations" class="input-xlarge">
 				<i data-ng-show="loadingLocations"
 					class="glyphicon glyphicon-refresh"></i>

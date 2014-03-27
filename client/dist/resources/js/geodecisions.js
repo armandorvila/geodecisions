@@ -1,6 +1,6 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
     'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.dashboard',
-    'controllers.factors', 'controllers.admin', 'services.users', 'services.factors', 'services.tags',
+    'controllers.factors', 'controllers.admin', 'services.users','services.factors', 'services.tags',
     'ui.bootstrap']);
 
 angular.module('app').config(
@@ -192,8 +192,8 @@ factors.controller('FactorsListCtrl', ['$scope', '$rootScope', 'factorsService',
             });
         };
         
-        factorsService.countFactors(function(factorsCount) {
-            $scope.totalItems = factorsCount;
+        factorsService.countFactors().then(function(count) {
+            $scope.totalItems = count;
             $scope.paginate(1);
         });
         
@@ -322,43 +322,35 @@ pricing.controller('PricingCtrl',['$scope','$rootScope', function($scope , $root
 }]);
 var projects = angular.module('controllers.processes', ['services.processes', 'services.users']);
 
-projects
-        .controller(
-                'ProcessesCtrl',
-                [
-                    '$scope',
-                    'usersService',
-                    'processesService',
-                    '$rootScope',
-                    '$location',
-                    function($scope, usersService, processesService, $rootScope, $location) {
-                        
-                        $rootScope.subheader.title = 'Making Decision Processes';
-                        $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
-                        
-                        $scope.selected = 'inProgress';
-                        
-                        $scope.newProcess = function() {
-                            $location.path('/newProcess');
-                        };
-                        
-                        $scope.inProgress = function() {
-                            $scope.selected = 'inProgress';
-                        };
-                        
-                        $scope.closed = function() {
-                            $scope.selected = 'closed';
-                        };
-                        
-                        $scope.all = function() {
-                            $scope.selected = 'all';
-                        };
-                        
-                        processesService.getProcesses(function(processes){
-                            $scope.processes = processes;
-                        });
-                        
-                    }]);
+projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope',
+    '$location', function($scope, processesService, $rootScope, $location) {
+        
+        $rootScope.subheader.title = 'Making Decision Processes';
+        $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
+        
+        $scope.selected = 'inProgress';
+        
+        $scope.newProcess = function() {
+            $location.path('/newProcess');
+        };
+        
+        $scope.inProgress = function() {
+            $scope.selected = 'inProgress';
+        };
+        
+        $scope.closed = function() {
+            $scope.selected = 'closed';
+        };
+        
+        $scope.all = function() {
+            $scope.selected = 'all';
+        };
+        
+        processesService.getProcesses().then(function (processes){
+            $scope.processes = processes;
+        });
+   
+    }]);
 
 projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService',
     function($scope, usersService, processesService) {
@@ -390,15 +382,16 @@ function NewProcessFactorsCtrl($scope, $modalInstance, factors) {
     };
 }
 
-projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', 'tagsService', '$http', '$location',
-    '$modal', function($scope, usersService, processesService, tagsService, $http, $location, $modal) {
+projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', 'tagsService', '$http',
+    '$location', '$modal',
+    function($scope, usersService, processesService, tagsService, $http, $location, $modal) {
         $scope.process = {};
         
         $scope.factors = ["Agricultura", "Ganadería", "Clima"];
         $scope.selectedTags = [];
         
         $scope.selectedTag = undefined;
-        $scope.selectedLocation =  undefined;
+        $scope.selectedLocation = undefined;
         
         $scope.addTag = function() {
             $scope.selectedTags.push($scope.selectedTag);
@@ -406,7 +399,7 @@ projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesServi
         };
         
         $scope.addTagOnIntro = function($event) {
-            if($event.keyCode === 13){
+            if ($event.keyCode === 13) {
                 $scope.addTag();
             }
         };
@@ -416,11 +409,11 @@ projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesServi
             $scope.selectedTags.splice(index, 1);
         };
         
-        $scope.getTags = function (val) {
-           return tagsService.getTags(val);
+        $scope.getTags = function(val) {
+            return tagsService.getTags(val);
         };
         
-        $scope.getLocations = function(val) {            
+        $scope.getLocations = function(val) {
             return processesService.getLocations(val);
         };
         
@@ -500,33 +493,26 @@ users.controller('UsersListCtrl', ['$scope', 'usersService', function($scope, us
     $scope.totalUsers = 0;
     $scope.currentPage = 1;
     
-    $scope.setPage = function (pageNo) {
-      $scope.currentPage = pageNo;
+    $scope.setPage = function(pageNo) {
+        $scope.currentPage = pageNo;
     };
-
-    usersService.getUsers(function(response) {
-        $scope.users = response.data;
-        $scope.totalUsers = response.data.length;
-    });
-}]);
-
-users.controller('UserLoginCtrl', ['$scope', 'usersService', function($scope, $location, usersService) {
     
-    $scope.login = function() {
-        alert("Login User :" + $scope.user.email);
-    };
+    usersService.getUsers().then(function(users) {
+        $scope.users = users;
+        $scope.totalUsers = users.length;
+    });
     
 }]);
 angular.module('services.factors', []).factory('factorsService', function($http) {
     
     return {
         
-        countFactors : function(callback) {
-            $http.get('/factors/count').then(function(response) {
-                callback(response.data);
-            }, function(response) {
-                console.log('Error counting factors ' + response);
-                throw new Error('Something went wrong counting factors' + response);
+        countFactors : function() {
+            return $http.get('/factors/count').then(function(res) {
+                return response.data;
+            }, function(err) {
+                console.log('Error counting factors ' + err);
+                throw new Error('Something went wrong counting factors' + err);
             });
         },
         
@@ -560,28 +546,25 @@ angular.module('services.processes', []).factory('processesService', function($h
     
     return {
         getLocations : function(val) {
+            
             return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
                 params : {
                     address : val,
                     sensor : false
                 }
             }).then(function(res) {
-                var addresses = [];
-                angular.forEach(res.data.results, function(item) {
-                    addresses.push(item.formatted_address);
-                });
-                return addresses;
+                return res.data.results;
             });
+            
         },
         
-        getProcesses : function(callback) {
-            $http.get('/processes/get').then(function(response) {
-                callback(response.data);
-            }, function(response) {
-                console.log('Error getting processes ' + response);
-                throw new Error('Something went wrong getting processes' + response);
+        getProcesses : function() {
+            return $http.get('/processes/get').then(function(response) {
+                console.info('Resolving processes promise ' + JSON.stringify(response.data));
+                console.info('First process is ' + response.data[0].name);
+                return response.data;
             });
-        },
+        }
     };
 });
 
@@ -591,12 +574,7 @@ angular.module('services.tags', []).factory('tagsService', function($http) {
         
         getTags : function(term) {
             return $http.get('/tags/get/' + term).then(function(response) {
-                var tags = [];
-                angular.forEach(response.data, function(item) {
-                    tags.push(item);
-                });
-                return tags;
-
+                return response.data;
             }, function(response) {
                 console.log('Error getting tags ' + response);
                 throw new Error('Something went wrong getting tags' + response);
@@ -608,9 +586,9 @@ angular.module('services.tags', []).factory('tagsService', function($http) {
 angular.module('services.users', []).factory('usersService', function($http, $rootScope) {
     
     return {
-        getUsers : function(callback) {
-            $http.get('/users/get').then(function(response) {
-                callback(response);
+        getUsers : function() {
+            return $http.get('/users/get').then(function(response) {
+                return response.data;
             }, function(response) {
                 console.log('Error getting users ' + response);
                 throw new Error('Something went wrong getting users' + response);
@@ -658,6 +636,7 @@ angular.module('services.users', []).factory('usersService', function($http, $ro
         },
         
         loadCurrentUser : function(goToLogin, checkAdmin) {
+            console.info('Calling server for currrent user');
             $http.get('/users/current').then(function(response) {
                 if (response.data && response.data.user !== false) {
                     $rootScope.currentUser = response.data;
