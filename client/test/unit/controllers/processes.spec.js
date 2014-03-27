@@ -5,7 +5,6 @@ describe("Unit: Testing Processes Controllers", function() {
     describe('ProcessesCtrl', function() {
         var scope = {};
         var rootScope = {};
-
         
         beforeEach(angular.mock.module('app'));
         

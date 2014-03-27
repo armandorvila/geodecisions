@@ -10,20 +10,18 @@ angular.module('services.users', []).factory('usersService', function($http, $ro
             });
         },
         
-        create : function(userModel, handler) {
-            var user = {};
+        create : function(userModel, error, success) {
+            var user = {
+                name : userModel.name,
+                lastname : userModel.lastname,
+                email : userModel.email,
+                password : userModel.password
+            };
             
-            user.name = userModel.name;
-            user.lastname = userModel.lastname;
-            user.email = userModel.email;
-            user.password = userModel.password;
-            
-            var usersPromise = $http.post('/users/create', user);
-            
-            usersPromise.then(function(response) {
-                handler.onSuccess();
+            $http.post('/users/create', user).then(function(response) {
+                success();
             }, function(response) {
-                handler.onError();
+                error();
                 throw new Error('Something went wrong creating user');
             });
         },

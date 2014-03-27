@@ -23,10 +23,8 @@ factors.controller('FactorsListCtrl', ['$scope', '$rootScope', 'factorsService',
             $scope.currentFactorsPage = pageNo;
         };
         
-        $scope.paginate = function(page){
-            console.log('Paginating for ' + $scope.start(page) + ' ' + $scope.end(page));
-
-            factorsService.getFactors($scope.start(page) , $scope.end(page), function(factors) {
+        $scope.paginate = function(page) {
+            factorsService.getFactors($scope.start(page), $scope.end(page)).then(function(factors) {
                 $scope.factors = factors;
             });
         };
@@ -36,7 +34,6 @@ factors.controller('FactorsListCtrl', ['$scope', '$rootScope', 'factorsService',
             $scope.paginate(1);
         });
         
-   
     }]);
 
 function NewFactorModalCtrl($scope, $modalInstance, factorsService) {

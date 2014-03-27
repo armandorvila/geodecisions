@@ -1,10 +1,6 @@
 var login = angular.module('controllers.login', ['services.users']);
 
-login.controller('LoginCtrl', [
-    '$scope',
-    'usersService',
-    '$rootScope',
-    '$location',
+login.controller('LoginCtrl', [ '$scope', 'usersService', '$rootScope', '$location',
     function($scope, usersService, $rootScope, $location) {
         
         $rootScope.subheader.title = 'Welcome to Geodecisions';
@@ -13,8 +9,14 @@ login.controller('LoginCtrl', [
         $scope.authError = null;
         $scope.credentials = {};
         
+        $scope.validateCredentials = function (){
+            var email = $scope.credentials.email;
+            var password = $scope.credentials.password;
+            return  email && password && email !== '' && password !== '';
+        };
+        
         $scope.login = function() {
-            if ($scope.credentials.email && $scope.credentials.password) {
+            if ($scope.validateCredentials()) {
                 usersService.login($scope.credentials.email, $scope.credentials.password,
                         function(loggedUser) {
                             $rootScope.currentUser = loggedUser;
@@ -24,7 +26,7 @@ login.controller('LoginCtrl', [
                             $location.path('/login');
                         });
             } else {
-                authError = 'username and password are empty.';
+                $scope.authError = 'username and password are empty.';
             }
         };
         
@@ -36,7 +38,6 @@ login.controller('LoginCtrl', [
         
         $scope.clearLogin = function() {
             $scope.credentials = {};
-            alert();
         };
         
     }]);

@@ -13,9 +13,9 @@ describe("Unit: Testing ProcessesService", function() {
     beforeEach(function() {
         // Using the templates cache system this is
         // avoided.
-        $httpBackend.expectGET('/users/current').respond(200);
-        $httpBackend.expectGET('/templates/home.html').respond(200);
-        $httpBackend.expectGET('/templates/login.html').respond(200);
+        $httpBackend.whenGET('/users/current').respond(200);
+        $httpBackend.whenGET('/templates/home.html').respond(200);
+        $httpBackend.whenGET('/templates/login.html').respond(200);
     });
     
     it('should contain a processesService', function() {

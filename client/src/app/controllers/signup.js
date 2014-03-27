@@ -5,30 +5,20 @@ login.controller('SingupCtrl', ['$scope', 'usersService', '$rootScope', '$locati
         
         $rootScope.subheader.title = 'Sign up for free';
         $rootScope.subheader.description = 'Start using Geodecisions for free now.';
-        
-        /* usersService.login($scope.user.email, $scope.user.password,
-                                function(loggedUser) {
-                                    $rootScope.currentUser = loggedUser;
-                                    $location.path('/home');
-                                }, function(message) {
-                                    $location.path('/login');
-                                });*/
+      
 
         $scope.signup = function() {
             if ($scope.user.password === $scope.user.confirmPassword) {
-                usersService.create($scope.user, {
-                    onError : function() {
+                usersService.create($scope.user,function() {
                         $scope.signupError = 'Error creating user, try it again later.';
-                    },
-                    onSuccess : function() {
+                    },function() {
                         usersService.login($scope.user.email, $scope.user.password, function(loggedUser) {
                             $rootScope.currentUser = loggedUser;
                             $location.path('/home');
                         }, function(message) {
                             $location.path('/login');
                         });
-                    }
-                });
+                    });
             } else {
                 $scope.signupError = 'Passwords must be equals';
             }

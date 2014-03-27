@@ -4,16 +4,16 @@ angular.module('services.factors', []).factory('factorsService', function($http)
         
         countFactors : function() {
             return $http.get('/factors/count').then(function(res) {
-                return response.data;
+                return res.data;
             }, function(err) {
                 console.log('Error counting factors ' + err);
                 throw new Error('Something went wrong counting factors' + err);
             });
         },
         
-        getFactors : function(start, end, callback) {
-            $http.get('/factors/get/' + start + '/' + end).then(function(response) {
-                callback(response.data);
+        getFactors : function(start, end) {
+            return $http.get('/factors/get/' + start + '/' + end).then(function(response) {
+                return response.data;
             }, function(response) {
                 console.log('Error getting factors ' + response);
                 throw new Error('Something went wrong getting factors' + response);

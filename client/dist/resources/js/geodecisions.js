@@ -111,11 +111,8 @@ angular
 var about = angular.module('controllers.about', []);
 
 about.controller('AboutCtrl',['$scope','$rootScope', function($scope, $rootScope) {
-    
     $rootScope.subheader.title = 'About Geodecisions';
     $rootScope.subheader.description = 'What is Geodecisions intended for? Can I take advantage of Geodecisions?';
-    
-		
 }]);
 var about = angular.module('controllers.admin', []);
 
@@ -184,10 +181,8 @@ factors.controller('FactorsListCtrl', ['$scope', '$rootScope', 'factorsService',
             $scope.currentFactorsPage = pageNo;
         };
         
-        $scope.paginate = function(page){
-            console.log('Paginating for ' + $scope.start(page) + ' ' + $scope.end(page));
-
-            factorsService.getFactors($scope.start(page) , $scope.end(page), function(factors) {
+        $scope.paginate = function(page) {
+            factorsService.getFactors($scope.start(page), $scope.end(page)).then(function(factors) {
                 $scope.factors = factors;
             });
         };
@@ -197,7 +192,6 @@ factors.controller('FactorsListCtrl', ['$scope', '$rootScope', 'factorsService',
             $scope.paginate(1);
         });
         
-   
     }]);
 
 function NewFactorModalCtrl($scope, $modalInstance, factorsService) {
@@ -271,11 +265,7 @@ factors.controller('NewFactorCtrl', ['$scope', '$rootScope', 'factorsService', '
 
 var login = angular.module('controllers.login', ['services.users']);
 
-login.controller('LoginCtrl', [
-    '$scope',
-    'usersService',
-    '$rootScope',
-    '$location',
+login.controller('LoginCtrl', [ '$scope', 'usersService', '$rootScope', '$location',
     function($scope, usersService, $rootScope, $location) {
         
         $rootScope.subheader.title = 'Welcome to Geodecisions';
@@ -284,8 +274,14 @@ login.controller('LoginCtrl', [
         $scope.authError = null;
         $scope.credentials = {};
         
+        $scope.validateCredentials = function (){
+            var email = $scope.credentials.email;
+            var password = $scope.credentials.password;
+            return  email && password && email !== '' && password !== '';
+        };
+        
         $scope.login = function() {
-            if ($scope.credentials.email && $scope.credentials.password) {
+            if ($scope.validateCredentials()) {
                 usersService.login($scope.credentials.email, $scope.credentials.password,
                         function(loggedUser) {
                             $rootScope.currentUser = loggedUser;
@@ -295,7 +291,7 @@ login.controller('LoginCtrl', [
                             $location.path('/login');
                         });
             } else {
-                authError = 'username and password are empty.';
+                $scope.authError = 'username and password are empty.';
             }
         };
         
@@ -307,7 +303,6 @@ login.controller('LoginCtrl', [
         
         $scope.clearLogin = function() {
             $scope.credentials = {};
-            alert();
         };
         
     }]);
@@ -317,8 +312,6 @@ pricing.controller('PricingCtrl',['$scope','$rootScope', function($scope , $root
     
     $rootScope.subheader.title = 'Pricing';
     $rootScope.subheader.description = 'Free features could be extended upgrading your account to Geodecisions Enterprise';
-    
-			
 }]);
 var projects = angular.module('controllers.processes', ['services.processes', 'services.users']);
 
@@ -448,30 +441,20 @@ login.controller('SingupCtrl', ['$scope', 'usersService', '$rootScope', '$locati
         
         $rootScope.subheader.title = 'Sign up for free';
         $rootScope.subheader.description = 'Start using Geodecisions for free now.';
-        
-        /* usersService.login($scope.user.email, $scope.user.password,
-                                function(loggedUser) {
-                                    $rootScope.currentUser = loggedUser;
-                                    $location.path('/home');
-                                }, function(message) {
-                                    $location.path('/login');
-                                });*/
+      
 
         $scope.signup = function() {
             if ($scope.user.password === $scope.user.confirmPassword) {
-                usersService.create($scope.user, {
-                    onError : function() {
+                usersService.create($scope.user,function() {
                         $scope.signupError = 'Error creating user, try it again later.';
-                    },
-                    onSuccess : function() {
+                    },function() {
                         usersService.login($scope.user.email, $scope.user.password, function(loggedUser) {
                             $rootScope.currentUser = loggedUser;
                             $location.path('/home');
                         }, function(message) {
                             $location.path('/login');
                         });
-                    }
-                });
+                    });
             } else {
                 $scope.signupError = 'Passwords must be equals';
             }
@@ -509,16 +492,16 @@ angular.module('services.factors', []).factory('factorsService', function($http)
         
         countFactors : function() {
             return $http.get('/factors/count').then(function(res) {
-                return response.data;
+                return res.data;
             }, function(err) {
                 console.log('Error counting factors ' + err);
                 throw new Error('Something went wrong counting factors' + err);
             });
         },
         
-        getFactors : function(start, end, callback) {
-            $http.get('/factors/get/' + start + '/' + end).then(function(response) {
-                callback(response.data);
+        getFactors : function(start, end) {
+            return $http.get('/factors/get/' + start + '/' + end).then(function(response) {
+                return response.data;
             }, function(response) {
                 console.log('Error getting factors ' + response);
                 throw new Error('Something went wrong getting factors' + response);
@@ -595,20 +578,18 @@ angular.module('services.users', []).factory('usersService', function($http, $ro
             });
         },
         
-        create : function(userModel, handler) {
-            var user = {};
+        create : function(userModel, error, success) {
+            var user = {
+                name : userModel.name,
+                lastname : userModel.lastname,
+                email : userModel.email,
+                password : userModel.password
+            };
             
-            user.name = userModel.name;
-            user.lastname = userModel.lastname;
-            user.email = userModel.email;
-            user.password = userModel.password;
-            
-            var usersPromise = $http.post('/users/create', user);
-            
-            usersPromise.then(function(response) {
-                handler.onSuccess();
+            $http.post('/users/create', user).then(function(response) {
+                success();
             }, function(response) {
-                handler.onError();
+                error();
                 throw new Error('Something went wrong creating user');
             });
         },
