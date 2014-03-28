@@ -6,11 +6,11 @@
 	<div class="control-group" style="margin:2%;">
 
 		<div class="controls">
-			<input placeholder="Search" type="text" data-ng-model="selectedFactor"
-				data-typeahead="factor for factor in factors | filter:$viewValue | limitTo:8"
+			<input placeholder="Search" type="text" data-ng-model="inputFactor"
+				data-typeahead="factor.name for factor in getFactors($viewValue) | filter:$viewValue | limitTo:8"
 				class="input-xlarge search-query">
 
-			<button class="btn" data-ng-click="addFactor(selectedFactor)">Add</button>
+			<button class="btn" data-ng-click="addFactor(inputFactor)">Add</button>
 		</div>
 	</div>
 
@@ -18,8 +18,8 @@
 		<thead>
 		</thead>
 		<tbody>
-			<tr data-ng-repeat="factor in selectedFactors">
-				<td data-ng-bind="factor"></td>
+			<tr data-ng-repeat="factor in process.factors">
+				<td data-ng-bind="factor.name"></td>
 				<td>Bla bla bla I am factor</td>
 				<td><a class="btn-link" data-ng-click="removeFactor(factor)">Quit <i class="icon-remove btn-link"></i>
 				</a></td>
@@ -28,6 +28,6 @@
 	</table>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="ok()">OK</button>
-	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-primary" data-ng-click="ok()">OK</button>
+	<button class="btn btn-warning" data-ng-click="cancel()">Cancel</button>
 </div>

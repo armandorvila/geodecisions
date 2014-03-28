@@ -29,6 +29,13 @@ mongoose.connection.on('error', console.error.bind(console, 'connection error:')
 
 console.log('----------- Mongo db connection ready ----------');
 
-http.createServer(app).listen(config.server.port, '0.0.0.0',511, function() {
-			console.log('Geodecisions App Server - listening on port: ' + config.server.port); 
-			});
+var server = http.createServer(app);
+
+var io = require('socket.io').listen(server);
+var context = require("rabbit.js").createContext(config.rabbitmq.url);
+
+var stream = require('./src/stream/stream')(io, context, config);
+
+server.listen(config.server.port, '0.0.0.0', 511, function() {
+    console.log('Geodecisions App Server - listening on port: ' + config.server.port);
+});

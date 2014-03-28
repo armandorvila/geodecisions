@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var shortId = require('shortid');
 
 var Schema = mongoose.Schema;
 
@@ -15,12 +16,17 @@ var processSchema = new Schema({
         type : String,
         required : true
     },
+    location : {
+        address : String,
+        lat : Number,
+        lng : Number
+    },
     user : {
-        type : Schema.Types.ObjectId,
+        type : String,
         ref : 'User'
     },
-    factors : [{ type: Schema.Types.ObjectId, ref: 'Factor' }],
-    tags : [{ type: Schema.Types.ObjectId, ref: 'Tag' }]
+    factors : [{ type: String, ref: 'Factor' }],
+    tags : [{ type: String, ref: 'Tag' }]
 });
 
 module.exports = mongoose.model('Process', processSchema, 'geodecisions_processes');

@@ -10,6 +10,15 @@ module.exports = {
         user : 'rediscloud',
         pass : 'abmIgdAH7OSFBRF3'
     },
+    rabbitmq : {
+        user: 'akceojvb',
+        password : 'sfjAF-c81u0gw6BtV1DBGIx7AQkF1NhT',
+        url : "amqp://akceojvb:sfjAF-c81u0gw6BtV1DBGIx7AQkF1NhT@bunny.cloudamqp.com/akceojvb",
+        encoding : 'utf8',
+        queues: {
+            geodecisions_stream : 'geodecisions_stream',
+        }
+    },
     security : {
         dbUser : 'heroku_app23097767',
         dbName : 'heroku_app23097767',

@@ -1,7 +1,7 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
-    'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.dashboard',
-    'controllers.factors', 'controllers.admin', 'services.users','services.factors', 'services.tags',
-    'ui.bootstrap']);
+    'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.home',
+    'controllers.factors', 'controllers.admin', 'services.users', 'services.factors', 'services.tags',
+    'ui.bootstrap','btford.socket-io']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -14,7 +14,7 @@ angular.module('app').config(
                 user : false
             }).when('/home', {
                 templateUrl : '/templates/home.html',
-                controller : 'DashboardCtrl',
+                controller : 'HomeCtrl',
                 user : true
             }).when('/login', {
                 templateUrl : '/templates/login.html',
@@ -25,7 +25,22 @@ angular.module('app').config(
                 controller : 'FactorsCtrl',
                 user : true
             }).when('/admin', {
-                templateUrl : '/templates/admin.html',
+                templateUrl : '/templates/admin/admin-factors.html',
+                controller : 'AdminCtrl',
+                user : true,
+                admin : true
+            }).when('/admin/factors', {
+                templateUrl : '/templates/admin/admin-factors.html',
+                controller : 'AdminCtrl',
+                user : true,
+                admin : true
+            }).when('/admin/users', {
+                templateUrl : '/templates/admin/admin-users.html',
+                controller : 'AdminCtrl',
+                user : true,
+                admin : true
+            }).when('/admin/tags', {
+                templateUrl : '/templates/admin/admin-tags.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
@@ -54,6 +69,17 @@ angular.module('app').config(
             });
         }]);
 
+
+angular.module('app').factory('socket', function (socketFactory) {
+    return socketFactory();
+  });
+
+angular.module('app').filter('reverse', function() {
+    return function(items) {
+      return items.slice().reverse();
+    };
+  });
+
 angular.module('app').run(
         ['$rootScope', 'usersService', '$location', '$route',
             function($rootScope, usersService, $location, $route) {
@@ -61,15 +87,19 @@ angular.module('app').run(
                 $rootScope.$on('$routeChangeStart', function(event, next, current) {
                     
                     if (!$rootScope.currentUser && next.user) {
-                        usersService.loadCurrentUser(function() {
-                            $location.path('/login'); // Exec
-                                                                                                                                                                                                                        // //
-                                                                                                                                                                                                                        // found
-                        }, function() {
-                            if (!$rootScope.currentUser.admin && next.admin) {
-                                $location.path('/home');
+                        usersService.getCurrentUser().then(function(user) {
+                            if (user) {
+                                $rootScope.currentUser = user;
+                                
+                                if (next.admin && !user.admin) {
+                                    $location.path('/home');
+                                }
+                            } else {
+                                $location.path('/login');
                             }
                         });
+                    } else if (next.admin && !$rootScope.currentUser.admin) {
+                        $location.path('/home');
                     }
                     
                 });
@@ -85,9 +115,10 @@ angular
                     '$rootScope',
                     '$location',
                     function($scope, usersService, $rootScope, $location) {
-                        $rootScope.subheader = {};
-                        $rootScope.subheader.title = 'Welcome to Geodecisions';
-                        $rootScope.subheader.description = 'Geodecisions drives your decision making processes using geographic information.';
+                        $rootScope.subheader = {
+                            title : 'Welcome to Geodecisions',
+                            description : 'Geodecisions drives your decision making processes using geographic information.'
+                        };
                         
                         $scope.isAuthenticated = function() {
                             return !!$rootScope.currentUser;

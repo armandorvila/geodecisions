@@ -25,7 +25,7 @@ describe("Unit: Testing ProcessesService", function() {
     describe("ProcessesService.getProcesses:", function() {
         
         beforeEach(function() {
-            $httpBackend.whenGET('/processes/get').respond(200, [{
+            $httpBackend.whenGET('/processes/currentUser').respond(200, [{
                 name : 'mockProcess'
             }]);
         });
@@ -36,7 +36,7 @@ describe("Unit: Testing ProcessesService", function() {
         
         it('Get processes', function() {
             
-            var promise = processesService.getProcesses();
+            var promise = processesService.getUserProcesses();
             $httpBackend.flush();
             promise.then(function(processes){
                 expect(processes.length).toBe(1);

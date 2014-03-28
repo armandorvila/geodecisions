@@ -1,20 +1,25 @@
-
-<div class="span3" style="margin-top: 2%;">
+<article class="span5 offset3" style="margin-top: 2%;">
 	
-	<ul class="well nav nav-list affix-top">
-		
-		<li data-ng-class="{active:selected==='latest'}"><a class="btn-link" data-ng-click="latest()">Latest    <i data-ng-show="selected==='latest'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
-		<li class="divider lead"></li>
-		
-		<li data-ng-class="{active:selected==='favorites'}"><a class="btn-link" data-ng-click="favorites()">Favorites    <i data-ng-show="selected==='favorites'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
-		<li class="divider lead"></li>
-		
-		<li data-ng-class="{active:selected==='stream'}"><a class="btn-link" data-ng-click="stream()">Stream    <i data-ng-show="selected==='stream'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
-		<li class="divider"></li>
-		
-		<li data-ng-class="{active:selected==='notifications'}"><a class="btn-link" data-ng-click="notifications()">Notifications    <i data-ng-show="selected==='latest'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
-		<li class="divider lead"></li>
-		
-		<li data-ng-class="{active:selected==='settings'}"><a class="btn-link" data-ng-click="settings()">Settings    <i data-ng-show="selected==='settings'" class="icon-arrow-right icon-white" style="float:right"></i></a></li>
+	<h2>Community Stream</h2>
+	
+	<input data-ng-model="newFactor">
+	<a class="btn btn-success" data-ng-click="sendNewFactor()">Send</a>
+
+	
+	<ul>
+		<li data-ng-repeat="notification in notifications | reverse | limitTo:6">{{notification}}</li>
 	</ul>
-</div>
+
+</article>
+
+
+<article class="span5 offset3" style="margin-top: 2%;">
+	
+	<input data-ng-model="newProcess">
+	<a class="btn btn-success" data-ng-click="sendNewProcess()">Send</a>
+
+	<ul>
+		<li data-ng-repeat="pnotification in processNotifications | reverse | limitTo:6">{{pnotification}}</li>
+	</ul>
+
+</article>

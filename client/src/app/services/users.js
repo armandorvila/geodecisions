@@ -48,17 +48,14 @@ angular.module('services.users', []).factory('usersService', function($http, $ro
             });
         },
         
-        loadCurrentUser : function(goToLogin, checkAdmin) {
+        getCurrentUser : function() {
             console.info('Calling server for currrent user');
-            $http.get('/users/current').then(function(response) {
-                if (response.data && response.data.user !== false) {
-                    $rootScope.currentUser = response.data;
-                    checkAdmin();
-                } else {
-                    goToLogin();
-                }
+            
+            return $http.get('/users/current').then(function(response) {
+                return (response.data && response.data.user !== false) ? response.data : null;
             }, function(response) {
                 console.log('Error getting current user');
+                throw new Error(response);
             });
         }
     };

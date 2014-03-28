@@ -1,5 +1,39 @@
 var mockServices = {
-        mockFactorsService : function() {
+    
+    mockTagsServices : function() {
+        return {
+            getTags : function(term) {
+                return {
+                    then : function(callback) {
+                        callback([{
+                            name : 'Mock Tag'
+                        }]);
+                    }
+                };
+            },
+            getTagByName : function(name) {
+                return {
+                    then : function(callback) {
+                        callback({
+                            name : 'MyTag'
+                        });
+                    }
+                };
+            },
+            createTag : function(tagName) {
+                return {
+                    then : function(callback) {
+                        callback({
+                            _id : '191',
+                            name : tagName
+                        });
+                    }
+                };
+            }
+        };
+    },
+    
+    mockFactorsService : function() {
         return {
             getFactors : function(start, end) {
                 return {
@@ -22,7 +56,7 @@ var mockServices = {
     
     mockProcessesServices : function() {
         return {
-            getProcesses : function() {
+            getUserProcesses : function() {
                 return {
                     then : function(callback) {
                         callback([{
@@ -31,6 +65,15 @@ var mockServices = {
                     }
                 };
             },
+            getLocations : function(term) {
+                return {
+                    then : function(callback) {
+                        callback([{
+                            formatted_address : 'Mock Location'
+                        }]);
+                    }
+                };
+            }
         };
     },
     mockUsersServices : function() {

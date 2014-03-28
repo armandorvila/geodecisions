@@ -13,6 +13,7 @@ var files = [
   'vendor/angular-animate/*.js',
   'vendor/angular-sanitize/*.js',
   'vendor/angular-ui/*.js',
+  'vendor/angular-socket-io/*.js',
   'test/vendor/angular/angular-mocks.js',
   'src/**/*.js',
   'test/unit/**/*.mocks.js',

@@ -1,33 +1,18 @@
 var projects = angular.module('controllers.processes', ['services.processes', 'services.users']);
 
-projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope',
-    '$location', function($scope, processesService, $rootScope, $location) {
+projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope', '$location',
+    function($scope, processesService, $rootScope, $location) {
         
         $rootScope.subheader.title = 'Making Decision Processes';
         $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
-        
-        $scope.selected = 'inProgress';
         
         $scope.newProcess = function() {
             $location.path('/newProcess');
         };
         
-        $scope.inProgress = function() {
-            $scope.selected = 'inProgress';
-        };
-        
-        $scope.closed = function() {
-            $scope.selected = 'closed';
-        };
-        
-        $scope.all = function() {
-            $scope.selected = 'all';
-        };
-        
-        processesService.getProcesses().then(function (processes){
+        processesService.getUserProcesses().then(function(processes) {
             $scope.processes = processes;
         });
-   
     }]);
 
 projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService',
@@ -35,24 +20,28 @@ projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesSe
 
     }]);
 
-function NewProcessFactorsCtrl($scope, $modalInstance, factors) {
+function NewProcessFactorsCtrl($scope, $modalInstance, factorsService) {
     
-    $scope.factors = factors;
-    $scope.selectedFactors = ['Agricultura'];
-    $scope.selectedFactor = undefined;
+    $scope.inputFactor = '';
     
-    $scope.addFactor = function(selectedFactor) {
-        $scope.selectedFactors.push(selectedFactor);
-        $scope.selectedFactor = undefined;
+    $scope.getFactors = function(val) {
+        return factorsService.getFactorsByName(val);
+    };
+    
+    $scope.addFactor = function(inputFactor) {
+        factorsService.getFactorByName(inputFactor).then(function(factor) {
+            $scope.process.factors.push(factor);
+            $scope.inputFactor = '';
+        });
     };
     
     $scope.removeFactor = function(factor) {
         var index = $scope.selectedFactors.indexOf(factor);
-        $scope.selectedFactors.splice(index, 1);
+        $scope.process.factors.splice(index, 1);
     };
     
     $scope.ok = function() {
-        $modalInstance.close($scope.selectedFactors);
+        $modalInstance.close($scope.process);
     };
     
     $scope.cancel = function() {
@@ -60,61 +49,91 @@ function NewProcessFactorsCtrl($scope, $modalInstance, factors) {
     };
 }
 
-projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', 'tagsService', '$http',
-    '$location', '$modal',
-    function($scope, usersService, processesService, tagsService, $http, $location, $modal) {
-        $scope.process = {};
+projects.controller('NewProcessCtrl', ['$scope', '$rootScope', 'processesService', 'tagsService',
+    'factorsService', '$location', '$modal',
+    function($scope, $rootScope, processesService, tagsService, factorsService, $location, $modal) {
         
-        $scope.factors = ["Agricultura", "Ganadería", "Clima"];
-        $scope.selectedTags = [];
-        
-        $scope.selectedTag = undefined;
-        $scope.selectedLocation = undefined;
-        
-        $scope.addTag = function() {
-            $scope.selectedTags.push($scope.selectedTag);
-            $scope.selectedTag = undefined;
+        $scope.process = {
+            user : $rootScope.currentUser,
+            tags : [],
+            factors : []
         };
+        $scope.inputLocation = '';
+        $scope.inputTag = '';
         
-        $scope.addTagOnIntro = function($event) {
-            if ($event.keyCode === 13) {
-                $scope.addTag();
-            }
-        };
-        
-        $scope.removeTag = function(tag) {
-            var index = $scope.selectedTags.indexOf(tag);
-            $scope.selectedTags.splice(index, 1);
+        $scope.getLocations = function(val) {
+            return processesService.getLocations(val);
         };
         
         $scope.getTags = function(val) {
             return tagsService.getTags(val);
         };
         
-        $scope.getLocations = function(val) {
-            return processesService.getLocations(val);
+        $scope.addLocation = function() {
+            processesService.getLocation($scope.inputLocation).then(function(location) {
+                $scope.process.location = location;
+                console.info('Got location for ' + location.address);
+            });
         };
         
+        $scope.checkInputTag = function() {
+            if ($scope.process.tags.indexOf($scope.inputTag) !== -1) {
+                alert('Tag is already added');
+                return false;
+            }
+            return true;
+        };
+        
+        $scope.addTag = function() {
+            if ($scope.checkInputTag()) {
+                tagsService.getTagByName($scope.inputTag).then(function(tag) {
+                    $scope.process.tags.push(tag);
+                    $scope.inputTag = '';
+                });
+            }
+        };
+        
+        $scope.addTagOnIntro = function($event) {
+            if ($event.keyCode === 13 && $scope.checkInputTag()) {
+                tagsService.createTag($scope.inputTag).then(function(newTag) {
+                    $scope.process.tags.push(newTag);
+                    console.info('Created new tag ' + newTag);
+                    $scope.inputTag = '';
+                });
+            }
+        };
+        
+        $scope.removeTag = function(tag) {
+            var index = $scope.process.tags.indexOf(tag);
+            $scope.process.tags.splice(index, 1);
+        };
+        
+        // Dialog for factors
         $scope.opts = {
             keyboard : true,
             backdrop : false,
+            scope : $scope,
             resolve : {
-                factors : function() {
-                    return $scope.factors;
-                }
+                factorsService : function() {
+                    return factorsService;
+                },
             },
-            templateUrl : '/templates/processes/new-process-factors-dialog.html',
+            templateUrl : '/templates/processes/new-process-factors.html',
             controller : NewProcessFactorsCtrl
         };
         
-        $scope.continueToFactors = function() {
-            $modal.open($scope.opts).result.then(function(result) {
-                if (result) {
-                    alert('dialog closed with result: ' + result);
-                }
+        $scope.factorsPopup = function() {
+            $modal.open($scope.opts).result.then(function(process) {
+                processesService.createProcess(process).then(function(process) {
+                    alert(process.name + ' Created !!!');
+                });
             }, function() {
-                $log.info('Modal dismissed at: ' + new Date());
+                console.log('Modal dismissed at: ' + new Date());
             });
+        };
+        
+        $scope.cancel = function() {
+            $location.path('/processes');
         };
         
     }]);

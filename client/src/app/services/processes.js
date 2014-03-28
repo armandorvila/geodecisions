@@ -2,7 +2,6 @@ angular.module('services.processes', []).factory('processesService', function($h
     
     return {
         getLocations : function(val) {
-            
             return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
                 params : {
                     address : val,
@@ -11,13 +10,32 @@ angular.module('services.processes', []).factory('processesService', function($h
             }).then(function(res) {
                 return res.data.results;
             });
-            
         },
         
-        getProcesses : function() {
-            return $http.get('/processes/get').then(function(response) {
-                console.info('Resolving processes promise ' + JSON.stringify(response.data));
-                console.info('First process is ' + response.data[0].name);
+        getLocation : function(formattedAddress) {
+            return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
+                params : {
+                    address : formattedAddress,
+                    sensor : false
+                }
+            }).then(function(res) {
+                var loc = res.data.results[0];
+                return {
+                    address : loc.formatted_address,
+                    lat : loc.geometry.location.lat,
+                    lng : loc.geometry.location.lng
+                };
+            });
+        },
+        
+        createProcess : function(process) {
+            return $http.post('/processes/create', process).then(function(response) {
+                return response.data;
+            });
+        },
+        
+        getUserProcesses : function() {
+            return $http.get('/processes/currentUser').then(function(response) {
                 return response.data;
             });
         }

@@ -3,6 +3,7 @@ var usersService = require('../services/usersService');
 
 var filterUser = function(user) {
     return {
+        _id : user._id,
         name : user.name,
         lastname : user.lastname,
         email : user.email,

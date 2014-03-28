@@ -1,0 +1,45 @@
+<article class="span8 offset1" style="margin-top: 2%;">
+	<div class="row" data-ng-controller="UsersListCtrl">
+		<div class="modal-header">
+			<h2 id="users">Users</h2>
+		</div>
+		
+		<table class="table" style="margin-top: 4%;">
+			<thead>
+				<tr>
+					<td><strong>Name</strong></td>
+					<td><strong>Lastname</strong></td>
+					<td><strong>E-Mail</strong></td>
+					<td><strong>Actions</strong></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="user in users">
+					<td data-ng-show="user.admin"><i class="icon-wrench"></i> {{user.name}}</td>
+
+					<td data-ng-hide="user.admin"><i class="icon-user"></i> {{user.name}}</td>
+
+					<td data-ng-bind="user.lastname"></td>
+					<td data-ng-bind="user.email"></td>
+					<td>
+						<div class="btn-group span1">
+							<a class="btn  btn-primary dropdown-toggle" data-toggle="dropdown" href="#"> <strong>
+									Options </strong> <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="btn-link">Send mail</a></li>
+								<li><a class="btn-link">Modify</a></li>
+								<li><a class="btn-link">Delete</a></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="pagination btn-link offset1">
+			<pagination boundary-links="true" total-items="totalUsers" max-size="7" page="currentPage"
+				class="pagination-sm" previous-text="Prev" next-text="Next" first-text="First" last-text="Last"></pagination>
+		</div>
+	</div>
+</article>

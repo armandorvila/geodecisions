@@ -12,6 +12,18 @@ exports.findProcesses = function(callback) {
     });
 };
 
+exports.findProcessesByUser = function(userId, callback) {
+    var criteria = JSON.parse(JSON.stringify({
+        user : userId
+    }));
+    Process.find(criteria).populate('factors').populate('tags').exec(function(err, processes) {
+        if (err) {
+            throw new Error(err);
+        }
+        callback(err,processes);
+    });
+};
+
 exports.findProcessByName = function(nameToFind, callback) {
     var criteria = JSON.parse(JSON.stringify({
         name : nameToFind
@@ -37,5 +49,13 @@ exports.findProcessById= function(_idToFind, callback) {
 };
     
 exports.createProcess = function(process, callback) {
+    var newProcess = new Process(process);
+    console.log('Creating process ' + newProcess._id);
     
+    newProcess.save(function(err) {
+        if (err) {
+            console.log('Error creating process :' + err);
+        }
+        callback(err, newProcess);
+    });
 };

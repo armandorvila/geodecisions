@@ -17,6 +17,13 @@ var factorSchema = mongoose.Schema({
         required : true
     },
     
+    boudningBox : {
+        minLat: Number,
+        maxLat : Number,
+        minLong : Number,
+        maxLong: Number
+    },
+    
     layers : [{
         type : String
     }],

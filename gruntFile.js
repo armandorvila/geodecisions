@@ -194,6 +194,10 @@ module.exports = function(grunt) {
             jquery : {
                 src : ['client/vendor/jquery/*.js'],
                 dest : '<%= distdir %>/resources/js/jquery.js'
+            },
+            angularsocketio : {
+                src : ['client/vendor/angular-socket-io/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-socket-io.js'
             }
         },
         
@@ -224,6 +228,10 @@ module.exports = function(grunt) {
             jquery : {
                 src : ['client/vendor/jquery/*.js'],
                 dest : '<%= distdir %>/resources/js/jquery.js'
+            },
+            angularsocketio : {
+                src : ['client/vendor/angular-socket-io/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-socket-io.js'
             }
         },
         recess : {

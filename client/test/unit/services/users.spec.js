@@ -41,16 +41,19 @@ describe("Unit: Testing usersService", function() {
         });
     });
     
-    describe("usersService loadCurrentUser", function() {
+    describe("usersService getCurrentUser", function() {
         
         beforeEach(function() {
-            $httpBackend.expectGET('/users/current').respond(200, [{
+            $httpBackend.expectGET('/users/current').respond(200, {
                 name : 'Armando'
-            }]);
+            });
         });
         
         it('load current user must return Armando', function() {
-            usersService.loadCurrentUser(function() {}, function() {});
+            usersService.getCurrentUser().then(function(user) {
+                expect(user).not.toBe(null);
+                expect(user.name).toBe('Armando');
+            });
             $httpBackend.flush(); // Important
         });
     });

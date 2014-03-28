@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var shortId = require('shortid');
 
+var ObjectId = mongoose.Schema.Types.ObjectId;
+
 var userSchema = mongoose.Schema({
     _id : {
         type : String,

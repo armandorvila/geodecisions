@@ -35,19 +35,17 @@
 		<div class="control-group">
 			<label class="control-label" for="inputLocation">Location</label>
 			<div class="controls">
-				<input type="text" data-ng-model="selectedLocation"
+				<input type="text" data-ng-model="inputLocation"
 					placeholder="Type your location"
 					data-typeahead="address.formatted_address for address in getLocations($viewValue) | filter:$viewValue"
-					data-typeahead-loading="loadingLocations" class="input-xlarge">
-				<i data-ng-show="loadingLocations"
-					class="glyphicon glyphicon-refresh"></i>
+					data-typeahead-on-select="addLocation()" class="input-xlarge">
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label" for="inputPassword">Tags</label>
 			<div class="controls">
-				<input type="text" data-ng-model="selectedTag" data-ng-keypress="addTagOnIntro($event)"
+				<input type="text" data-ng-model="inputTag" data-ng-keypress="addTagOnIntro($event)"
 					data-typeahead-on-select="addTag()"
 					data-typeahead="tag.name for tag in getTags($viewValue) | filter:$viewValue | limitTo:8"
 					class="input-xlarge">
@@ -56,16 +54,16 @@
 
 		<div class="control-group">
 			<div class="well well-large span4 offset2">
-				<a data-ng-repeat="tag in selectedTags" class="btn-link"
+				<a data-ng-repeat="tag in process.tags" class="btn-link"
 					data-ng-click="removeTag(tag)"><span
-					class="label label-success"> {{tag}} <i class="icon-remove"></i></span></a>
+					class="label label-success"> {{tag.name}} <i class="icon-remove"></i></span></a>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<div class="controls">
-				<button class="btn btn-primary" data-ng-click="continueToFactors()"
-					data-ng-disabled='form.$invalid'>Start</button>
+				<button class="btn btn-primary" data-ng-click="factorsPopup()"
+					data-ng-disabled='form.$invalid'>Ok</button>
 				<button class="btn btn-warning" data-ng-click="cancel()">Cancel</button>
 			</div>
 		</div>

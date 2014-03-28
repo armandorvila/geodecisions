@@ -15,6 +15,43 @@ exports.addRoutes = function(app, config) {
             res.json(processes);
         });        
     });
+   
+    
+    app.get('/processes/currentUser', function(req, res, next) {
+        console.log('Getting processes for ' + req.user._id);
+        
+        processesService.findProcessesByUser(req.user._id,function(err, processes) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+            res.json(processes);
+        });        
+    });
+    
+    app.get('/processes/getByUser/:userId', function(req, res, next) {
+        console.log('Getting processes for ' + req.params.userId);
+        
+        processesService.findProcessesByUser(req.params.userId,function(err, processes) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+            res.json(processes);
+        });        
+    });
+    
+    app.post('/processes/create', function(req, res, next) {
+        console.log('Creating process ');
+        
+        processesService.createProcess(req.body,function(err, process) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+            res.json(process);
+        });        
+    });
     
     app.get('/processes/getByName/:name', function(req, res, next) {
         console.log('Getting processes');

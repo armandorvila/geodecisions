@@ -1,7 +1,7 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
-    'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.dashboard',
-    'controllers.factors', 'controllers.admin', 'services.users','services.factors', 'services.tags',
-    'ui.bootstrap']);
+    'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.home',
+    'controllers.factors', 'controllers.admin', 'services.users', 'services.factors', 'services.tags',
+    'ui.bootstrap','btford.socket-io']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -14,7 +14,7 @@ angular.module('app').config(
                 user : false
             }).when('/home', {
                 templateUrl : '/templates/home.html',
-                controller : 'DashboardCtrl',
+                controller : 'HomeCtrl',
                 user : true
             }).when('/login', {
                 templateUrl : '/templates/login.html',
@@ -25,7 +25,22 @@ angular.module('app').config(
                 controller : 'FactorsCtrl',
                 user : true
             }).when('/admin', {
-                templateUrl : '/templates/admin.html',
+                templateUrl : '/templates/admin/admin-factors.html',
+                controller : 'AdminCtrl',
+                user : true,
+                admin : true
+            }).when('/admin/factors', {
+                templateUrl : '/templates/admin/admin-factors.html',
+                controller : 'AdminCtrl',
+                user : true,
+                admin : true
+            }).when('/admin/users', {
+                templateUrl : '/templates/admin/admin-users.html',
+                controller : 'AdminCtrl',
+                user : true,
+                admin : true
+            }).when('/admin/tags', {
+                templateUrl : '/templates/admin/admin-tags.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
@@ -54,6 +69,17 @@ angular.module('app').config(
             });
         }]);
 
+
+angular.module('app').factory('socket', function (socketFactory) {
+    return socketFactory();
+  });
+
+angular.module('app').filter('reverse', function() {
+    return function(items) {
+      return items.slice().reverse();
+    };
+  });
+
 angular.module('app').run(
         ['$rootScope', 'usersService', '$location', '$route',
             function($rootScope, usersService, $location, $route) {
@@ -61,15 +87,19 @@ angular.module('app').run(
                 $rootScope.$on('$routeChangeStart', function(event, next, current) {
                     
                     if (!$rootScope.currentUser && next.user) {
-                        usersService.loadCurrentUser(function() {
-                            $location.path('/login'); // Exec
-                                                                                                                                                                                                                        // //
-                                                                                                                                                                                                                        // found
-                        }, function() {
-                            if (!$rootScope.currentUser.admin && next.admin) {
-                                $location.path('/home');
+                        usersService.getCurrentUser().then(function(user) {
+                            if (user) {
+                                $rootScope.currentUser = user;
+                                
+                                if (next.admin && !user.admin) {
+                                    $location.path('/home');
+                                }
+                            } else {
+                                $location.path('/login');
                             }
                         });
+                    } else if (next.admin && !$rootScope.currentUser.admin) {
+                        $location.path('/home');
                     }
                     
                 });
@@ -85,9 +115,10 @@ angular
                     '$rootScope',
                     '$location',
                     function($scope, usersService, $rootScope, $location) {
-                        $rootScope.subheader = {};
-                        $rootScope.subheader.title = 'Welcome to Geodecisions';
-                        $rootScope.subheader.description = 'Geodecisions drives your decision making processes using geographic information.';
+                        $rootScope.subheader = {
+                            title : 'Welcome to Geodecisions',
+                            description : 'Geodecisions drives your decision making processes using geographic information.'
+                        };
                         
                         $scope.isAuthenticated = function() {
                             return !!$rootScope.currentUser;
@@ -125,36 +156,6 @@ about.controller('AdminCtrl', ['$scope', '$rootScope', '$location', function($sc
         return $location.hash() ? $location.hash() : 'factors';
     };
     
-}]);
-var dashboard = angular.module('controllers.dashboard', ['services.processes', 'services.users']);
-
-dashboard.controller('DashboardCtrl', ['$scope', 'usersService', 'processesService', '$rootScope',
-    function($scope, usersService, processesService, $rootScope) {
-        
-        $rootScope.subheader.title = 'Geodecisions Dashboard';
-        $rootScope.subheader.description = 'Check your latest and favorite processes and take a look to the latest decisions in the community.';
-   
-        $scope.selected='latest';
-        
-        $scope.latest = function(){
-            $scope.selected='latest';
-        };
-        
-        $scope.favorites = function(){
-            $scope.selected='favorites';
-        };
-        
-        $scope.stream = function(){
-            $scope.selected='stream';
-        };
-        
-        $scope.notifications = function(){
-            $scope.selected='notifications';
-        };
-        
-        $scope.settings = function(){
-            $scope.selected='settings';
-        };
 }]);
 var factors = angular.module('controllers.factors', ['services.factors']);
 
@@ -263,6 +264,40 @@ factors.controller('NewFactorCtrl', ['$scope', '$rootScope', 'factorsService', '
         
     }]);
 
+var dashboard = angular.module('controllers.home', ['services.processes', 'services.users']);
+
+dashboard.controller('HomeCtrl', ['$scope', 'factorsService', 'processesService', '$rootScope', 'socket',
+    function($scope, factorsService, processesService, $rootScope, socket) {
+        
+        $rootScope.subheader.title = 'Welcome to Geodecisions';
+        $rootScope.subheader.description = 'Our community stream will help you to be up to date.';
+        
+        $scope.notifications = [];
+        $scope.processNotifications = [];
+        
+        $scope.newFactor = '';
+        $scope.sendNewFactor = function() {
+            socket.emit('client:newFactor', $scope.newFactor);
+        };
+        
+        socket.on('server:newFactor', function(data) {
+            if ($scope.notifications.indexOf(data) === -1) {
+                $scope.notifications.push(data);
+            }
+        });
+        
+        $scope.newProcess = '';
+        $scope.sendNewProcess = function() {
+            socket.emit('client:newProcess', $scope.newProcess);
+        };
+        
+        socket.on('server:newProcess', function(data) {
+            if ($scope.processNotifications.indexOf(data) === -1) {
+                $scope.processNotifications.push(data);
+            }
+        });
+        
+    }]);
 var login = angular.module('controllers.login', ['services.users']);
 
 login.controller('LoginCtrl', [ '$scope', 'usersService', '$rootScope', '$location',
@@ -315,34 +350,19 @@ pricing.controller('PricingCtrl',['$scope','$rootScope', function($scope , $root
 }]);
 var projects = angular.module('controllers.processes', ['services.processes', 'services.users']);
 
-projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope',
-    '$location', function($scope, processesService, $rootScope, $location) {
+projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope', '$location',
+    function($scope, processesService, $rootScope, $location) {
         
         $rootScope.subheader.title = 'Making Decision Processes';
         $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
-        
-        $scope.selected = 'inProgress';
         
         $scope.newProcess = function() {
             $location.path('/newProcess');
         };
         
-        $scope.inProgress = function() {
-            $scope.selected = 'inProgress';
-        };
-        
-        $scope.closed = function() {
-            $scope.selected = 'closed';
-        };
-        
-        $scope.all = function() {
-            $scope.selected = 'all';
-        };
-        
-        processesService.getProcesses().then(function (processes){
+        processesService.getUserProcesses().then(function(processes) {
             $scope.processes = processes;
         });
-   
     }]);
 
 projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService',
@@ -350,24 +370,28 @@ projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesSe
 
     }]);
 
-function NewProcessFactorsCtrl($scope, $modalInstance, factors) {
+function NewProcessFactorsCtrl($scope, $modalInstance, factorsService) {
     
-    $scope.factors = factors;
-    $scope.selectedFactors = ['Agricultura'];
-    $scope.selectedFactor = undefined;
+    $scope.inputFactor = '';
     
-    $scope.addFactor = function(selectedFactor) {
-        $scope.selectedFactors.push(selectedFactor);
-        $scope.selectedFactor = undefined;
+    $scope.getFactors = function(val) {
+        return factorsService.getFactorsByName(val);
+    };
+    
+    $scope.addFactor = function(inputFactor) {
+        factorsService.getFactorByName(inputFactor).then(function(factor) {
+            $scope.process.factors.push(factor);
+            $scope.inputFactor = '';
+        });
     };
     
     $scope.removeFactor = function(factor) {
         var index = $scope.selectedFactors.indexOf(factor);
-        $scope.selectedFactors.splice(index, 1);
+        $scope.process.factors.splice(index, 1);
     };
     
     $scope.ok = function() {
-        $modalInstance.close($scope.selectedFactors);
+        $modalInstance.close($scope.process);
     };
     
     $scope.cancel = function() {
@@ -375,61 +399,91 @@ function NewProcessFactorsCtrl($scope, $modalInstance, factors) {
     };
 }
 
-projects.controller('NewProcessCtrl', ['$scope', 'usersService', 'processesService', 'tagsService', '$http',
-    '$location', '$modal',
-    function($scope, usersService, processesService, tagsService, $http, $location, $modal) {
-        $scope.process = {};
+projects.controller('NewProcessCtrl', ['$scope', '$rootScope', 'processesService', 'tagsService',
+    'factorsService', '$location', '$modal',
+    function($scope, $rootScope, processesService, tagsService, factorsService, $location, $modal) {
         
-        $scope.factors = ["Agricultura", "Ganadería", "Clima"];
-        $scope.selectedTags = [];
-        
-        $scope.selectedTag = undefined;
-        $scope.selectedLocation = undefined;
-        
-        $scope.addTag = function() {
-            $scope.selectedTags.push($scope.selectedTag);
-            $scope.selectedTag = undefined;
+        $scope.process = {
+            user : $rootScope.currentUser,
+            tags : [],
+            factors : []
         };
+        $scope.inputLocation = '';
+        $scope.inputTag = '';
         
-        $scope.addTagOnIntro = function($event) {
-            if ($event.keyCode === 13) {
-                $scope.addTag();
-            }
-        };
-        
-        $scope.removeTag = function(tag) {
-            var index = $scope.selectedTags.indexOf(tag);
-            $scope.selectedTags.splice(index, 1);
+        $scope.getLocations = function(val) {
+            return processesService.getLocations(val);
         };
         
         $scope.getTags = function(val) {
             return tagsService.getTags(val);
         };
         
-        $scope.getLocations = function(val) {
-            return processesService.getLocations(val);
+        $scope.addLocation = function() {
+            processesService.getLocation($scope.inputLocation).then(function(location) {
+                $scope.process.location = location;
+                console.info('Got location for ' + location.address);
+            });
         };
         
+        $scope.checkInputTag = function() {
+            if ($scope.process.tags.indexOf($scope.inputTag) !== -1) {
+                alert('Tag is already added');
+                return false;
+            }
+            return true;
+        };
+        
+        $scope.addTag = function() {
+            if ($scope.checkInputTag()) {
+                tagsService.getTagByName($scope.inputTag).then(function(tag) {
+                    $scope.process.tags.push(tag);
+                    $scope.inputTag = '';
+                });
+            }
+        };
+        
+        $scope.addTagOnIntro = function($event) {
+            if ($event.keyCode === 13 && $scope.checkInputTag()) {
+                tagsService.createTag($scope.inputTag).then(function(newTag) {
+                    $scope.process.tags.push(newTag);
+                    console.info('Created new tag ' + newTag);
+                    $scope.inputTag = '';
+                });
+            }
+        };
+        
+        $scope.removeTag = function(tag) {
+            var index = $scope.process.tags.indexOf(tag);
+            $scope.process.tags.splice(index, 1);
+        };
+        
+        // Dialog for factors
         $scope.opts = {
             keyboard : true,
             backdrop : false,
+            scope : $scope,
             resolve : {
-                factors : function() {
-                    return $scope.factors;
-                }
+                factorsService : function() {
+                    return factorsService;
+                },
             },
-            templateUrl : '/templates/processes/new-process-factors-dialog.html',
+            templateUrl : '/templates/processes/new-process-factors.html',
             controller : NewProcessFactorsCtrl
         };
         
-        $scope.continueToFactors = function() {
-            $modal.open($scope.opts).result.then(function(result) {
-                if (result) {
-                    alert('dialog closed with result: ' + result);
-                }
+        $scope.factorsPopup = function() {
+            $modal.open($scope.opts).result.then(function(process) {
+                processesService.createProcess(process).then(function(process) {
+                    alert(process.name + ' Created !!!');
+                });
             }, function() {
-                $log.info('Modal dismissed at: ' + new Date());
+                console.log('Modal dismissed at: ' + new Date());
             });
+        };
+        
+        $scope.cancel = function() {
+            $location.path('/processes');
         };
         
     }]);
@@ -508,6 +562,24 @@ angular.module('services.factors', []).factory('factorsService', function($http)
             });
         },
         
+        getFactorsByName : function(term) {
+            return $http.get('/factors/getFactorsByName/' + term).then(function(response) {
+                return response.data;
+            }, function(response) {
+                console.log('Error getting factors ' + response);
+                throw new Error('Something went wrong getting factors' + response);
+            });
+        },
+        
+        getFactorByName : function(name) {
+            return $http.get('/factors/getFactorByName/' + name).then(function(response) {
+                return response.data;
+            }, function(response) {
+                console.log('Error getting factor ' + name);
+                throw new Error('Something went wrong getting factor' + name);
+            });
+        },
+        
         createFactor : function(factorModel, success, error) {
             var factor = {
                 name : factorModel.name,
@@ -529,7 +601,6 @@ angular.module('services.processes', []).factory('processesService', function($h
     
     return {
         getLocations : function(val) {
-            
             return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
                 params : {
                     address : val,
@@ -538,13 +609,32 @@ angular.module('services.processes', []).factory('processesService', function($h
             }).then(function(res) {
                 return res.data.results;
             });
-            
         },
         
-        getProcesses : function() {
-            return $http.get('/processes/get').then(function(response) {
-                console.info('Resolving processes promise ' + JSON.stringify(response.data));
-                console.info('First process is ' + response.data[0].name);
+        getLocation : function(formattedAddress) {
+            return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
+                params : {
+                    address : formattedAddress,
+                    sensor : false
+                }
+            }).then(function(res) {
+                var loc = res.data.results[0];
+                return {
+                    address : loc.formatted_address,
+                    lat : loc.geometry.location.lat,
+                    lng : loc.geometry.location.lng
+                };
+            });
+        },
+        
+        createProcess : function(process) {
+            return $http.post('/processes/create', process).then(function(response) {
+                return response.data;
+            });
+        },
+        
+        getUserProcesses : function() {
+            return $http.get('/processes/currentUser').then(function(response) {
                 return response.data;
             });
         }
@@ -563,6 +653,24 @@ angular.module('services.tags', []).factory('tagsService', function($http) {
                 throw new Error('Something went wrong getting tags' + response);
             });
         },
+        
+        getTagByName : function(name) {
+            return $http.get('/tags/getByName/' + name).then(function(response) {
+                return response.data;
+            }, function(response) {
+                console.log('Error getting tag ' + name);
+                throw new Error('Error getting tag ' + name);
+            });
+        },
+        
+        createTag : function (tagName) {
+            return $http.post('/tags/create', { name : tagName}).then(function(response) {
+                return response.data;
+            }, function(response) {
+                console.log('Error creating tag ' + tagName);
+                throw new Error('Something went wrong creating tag ' + tagName + ' - ' + response);
+            });
+        }
     };
 });
 
@@ -616,17 +724,14 @@ angular.module('services.users', []).factory('usersService', function($http, $ro
             });
         },
         
-        loadCurrentUser : function(goToLogin, checkAdmin) {
+        getCurrentUser : function() {
             console.info('Calling server for currrent user');
-            $http.get('/users/current').then(function(response) {
-                if (response.data && response.data.user !== false) {
-                    $rootScope.currentUser = response.data;
-                    checkAdmin();
-                } else {
-                    goToLogin();
-                }
+            
+            return $http.get('/users/current').then(function(response) {
+                return (response.data && response.data.user !== false) ? response.data : null;
             }, function(response) {
                 console.log('Error getting current user');
+                throw new Error(response);
             });
         }
     };

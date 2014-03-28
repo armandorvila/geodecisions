@@ -25,7 +25,7 @@ describe("Unit: Testing tagsService", function() {
     describe("tagsService getTags", function() {
         
         beforeEach(function() {
-            $httpBackend.whenGET('/tags/get/MyT').respond(200, [{
+            $httpBackend.expectGET('/tags/get/MyT').respond(200, [{
                 name : 'MyTag'
             }, {
                 name : 'MyTog'
@@ -41,7 +41,50 @@ describe("Unit: Testing tagsService", function() {
                 expect(tags[1]).not.toBe(null);
                 expect(tags[1].name).toBe('MyTog');
             });
-            $httpBackend.flush(); //Important to resolve the promise.
+            $httpBackend.flush(); // Important
+            // to
+            // resolve
+            // the
+            // promise.
+        });
+    });
+    
+    describe("tagsService getTagByName", function() {
+        
+        beforeEach(function() {
+            $httpBackend.expectGET('/tags/getByName/MyTag').respond(200, {
+                name : 'MyTag'
+            });
+        });
+        
+        it('Get tags must return 2 tags', function() {
+            tagsService.getTagByName('MyTag').then(function(tag) {
+                expect(tag).not.toBe(null);
+                expect(tag.name).toBe('MyTag');
+            });
+            $httpBackend.flush(); 
+        });
+    });
+    
+    describe("tagsService createTag", function() {
+        
+        beforeEach(function() {
+            $httpBackend.expectPOST('/tags/create', {
+                name : 'MyTag'
+            }).respond(200, {
+                _id : '129',
+                name : 'MyTag'
+            });
+        });
+        
+        it('Create a tag should return the tag', function() {
+            tagsService.createTag('MyTag').then(function(tag) {
+                expect(tag).not.toBe(null);
+                expect(tag._id).toBe('129');
+                expect(tag.name).toBe('MyTag');
+            });
+            $httpBackend.flush();
+            // to // promise.
         });
     });
 });

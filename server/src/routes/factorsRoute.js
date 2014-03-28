@@ -40,10 +40,21 @@ exports.addRoutes = function(app, config) {
         });
     });
     
-    app.get('/factors/getByName/:name', function(req, res, next) {
+    app.get('/factors/getFactorsByName/:name', function(req, res, next) {
         console.log('Getting factors');
         
         factorsService.findFactorsByName(req.params.name, function(err, factors) {
+            if (err) {
+                res.send(err);
+            }
+            res.json(factors);
+        });        
+    });
+    
+    app.get('/factors/getFactorByName/:name', function(req, res, next) {
+        console.log('Getting factors');
+        
+        factorsService.findFactorByName(req.params.name, function(err, factors) {
             if (err) {
                 res.send(err);
             }

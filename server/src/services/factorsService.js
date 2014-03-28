@@ -3,15 +3,15 @@ var Factor = require('../../src/models/factorsModel');
 exports.findFactors = function(from, to, callback) {
     console.log('Getting factors from ' + from + ' ' + to);
     
-    var fromZero = from -1;
+    var fromZero = from - 1;
     
     Factor.find().sort({
         name : 'asc'
     }).limit(to - fromZero).skip(fromZero).exec(function(err, factors) {
-            if (err) {
-                console.log(err);
-            }
-            callback(err, factors);
+        if (err) {
+            console.log(err);
+        }
+        callback(err, factors);
     });
 };
 
@@ -35,6 +35,18 @@ exports.findFactorsByName = function(term, callback) {
             throw new Error(err);
         }
         callback(err, factors);
+    });
+};
+
+exports.findFactorByName = function(nameToFind, callback) {
+    var criteria = JSON.parse(JSON.stringify({
+        name : nameToFind
+    }));
+    Factor.findOne(criteria).exec(function(err, process) {
+        if (err) {
+            throw new Error(err);
+        }
+        callback(err, process);
     });
 };
 
