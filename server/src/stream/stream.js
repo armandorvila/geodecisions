@@ -1,50 +1,52 @@
 /*
- * Serve content over a socket
+ * This module listen web sockeet and send it to rabbit and listen rabbit and send rabbit messages to
+ * web sockets.
  */
 module.exports = function(io, context, config) {
     
-    var queue = config.rabbitmq.queues.geodecisions_stream;
-    var newProcessQueue = 'geodecisions_new_process';
+    var newFactorQueue = config.rabbitmq.queues.geodecisions_new_factor;
+    var newProcessQueue = config.rabbitmq.queues.geodecisions_new_process;
     
     var encoding = config.rabbitmq.queues.encoding;
 
-    io.sockets.on('connection', function(connection) {
-        var pub = context.socket('PUB');
-        var pub2 = context.socket('PUB');
+    io.sockets.on('connection', function(socket) {
+        var newFactorPub = context.socket('PUB');
+        var newProcessPub = context.socket('PUB');
         
-        var sub = context.socket('SUB');
-        var sub2 = context.socket('SUB');
+        var newFactorSub = context.socket('SUB');
+        var newProcessSub = context.socket('SUB');
         
-        sub.setEncoding('utf8');
+        newFactorSub.setEncoding(encoding);
+        newProcessSub.setEncoding(encoding);
         
-        connection.on('client:newFactor', function(msg) {
+        socket.on('client:newFactor', function(msg) {
             console.log("Got " + msg + ' from browser.');
-            pub.connect(queue, function() {
+            newFactorPub.connect(newFactorQueue, function() {
                 console.log("Sending " + msg + ' to rabbit.');
-                pub.write(JSON.stringify(msg), encoding);
+                newFactorPub.write(JSON.stringify(msg), encoding);
             });
         });
         
-        connection.on('client:newProcess', function(msg) {
+        socket.on('client:newProcess', function(msg) {
             console.log("Got " + msg + ' from browser.');
-            pub2.connect(newProcessQueue, function() {
+            newProcessPub.connect(newProcessQueue, function() {
                 console.log("Sending " + msg + ' to rabbit.newProcessQueue');
-                pub2.write(JSON.stringify(msg), encoding);
+                newProcessPub.write(JSON.stringify(msg), encoding);
             });
         });
         
-        sub.connect(queue, function() {
-            sub.on("data", function(data) {
+        newFactorSub.connect(newFactorQueue, function() {
+            newFactorSub.on("data", function(data) {
                 console.log(" [x] Received new_factor data: %s", data);
-                connection.emit('server:newFactor', data);
+                socket.emit('server:newFactor', data);
                 console.log("Sent " + data + ' to browser.');
             });
         });
         
-        sub2.connect(newProcessQueue, function() {
-            sub2.on("data", function(data) {
+        newProcessSub.connect(newProcessQueue, function() {
+            newProcessSub.on("data", function(data) {
                 console.log(" [x] Received newProcessQueue data: %s", data);
-                connection.emit('server:newProcess', '' + data);
+                socket.emit('server:newProcess', '' + data);
                 console.log("Sent " + data + ' to browser.');
             });
         });

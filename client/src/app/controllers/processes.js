@@ -7,7 +7,7 @@ projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope'
         $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
         
         $scope.newProcess = function() {
-            $location.path('/newProcess');
+            $location.path('/newProcess/');
         };
         
         processesService.getUserProcesses().then(function(processes) {
@@ -15,9 +15,24 @@ projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope'
         });
     }]);
 
-projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService',
-    function($scope, usersService, processesService) {
-
+projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService', '$routeParams',
+    function($scope, usersService, processesService, $routeParams) {
+        
+        $scope.map = {
+            center : {
+                latitude : 45,
+                longitude : -73
+            },
+            zoom : 8
+        };
+        
+        processesService.getProcessById($routeParams.processId).then(function(process) {
+            $scope.process = process;
+            $scope.map.latitude = process.location.lat;
+            $scope.map.longitude = process.location.lng;
+            $scope.map.refresh = true;
+        });
+        
     }]);
 
 function NewProcessFactorsCtrl($scope, $modalInstance, factorsService) {

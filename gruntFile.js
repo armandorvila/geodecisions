@@ -191,9 +191,25 @@ module.exports = function(grunt) {
                 src : ['client/vendor/angular-sanitize/*.js'],
                 dest : '<%= distdir %>/resources/js/angular-sanitize.js'
             },
+            angulargooglemaps : {
+                src : ['client/vendor/angular-google-maps/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-google-maps.js'
+            },
+            underscore : {
+                src : ['client/vendor/underscore-js/*.js'],
+                dest : '<%= distdir %>/resources/js/underscore.js'
+            },
+            underscoreminmap : {
+                src : ['client/vendor/underscore-js/*.map'],
+                dest : '<%= distdir %>/resources/js/underscore-min.map'
+            },
             jquery : {
                 src : ['client/vendor/jquery/*.js'],
                 dest : '<%= distdir %>/resources/js/jquery.js'
+            },
+            socketio : {
+                src : ['client/vendor/socket-io/*.js'],
+                dest : '<%= distdir %>/resources/js/socket-io.js'
             },
             angularsocketio : {
                 src : ['client/vendor/angular-socket-io/*.js'],
@@ -225,9 +241,21 @@ module.exports = function(grunt) {
                 src : ['client/vendor/angular-sanitize/*.js'],
                 dest : '<%= distdir %>/resources/js/angular-sanitize.js'
             },
+            angulargooglemaps : {
+                src : ['client/vendor/angular-google-maps/*.js'],
+                dest : '<%= distdir %>/resources/js/angular-google-maps.js'
+            },
+            underscore : {
+                src : ['client/vendor/underscore-js/*.js'],
+                dest : '<%= distdir %>/resources/js/underscore.js'
+            },
             jquery : {
                 src : ['client/vendor/jquery/*.js'],
                 dest : '<%= distdir %>/resources/js/jquery.js'
+            },
+            socketio : {
+                src : ['client/vendor/socket-io/*.js'],
+                dest : '<%= distdir %>/resources/js/socket-io.js'
             },
             angularsocketio : {
                 src : ['client/vendor/angular-socket-io/*.js'],

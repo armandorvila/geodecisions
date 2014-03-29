@@ -16,7 +16,8 @@ module.exports = {
         url : "amqp://akceojvb:sfjAF-c81u0gw6BtV1DBGIx7AQkF1NhT@bunny.cloudamqp.com/akceojvb",
         encoding : 'utf8',
         queues: {
-            geodecisions_stream : 'geodecisions_stream',
+            geodecisions_new_process : 'geodecisions_new_process',
+            geodecisions_new_factor : 'geodecisions_new_factor',
         }
     },
     security : {

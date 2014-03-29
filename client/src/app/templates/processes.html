@@ -1,16 +1,15 @@
 
 <article class="span5 offset3" style="margin-top: 2%;">
 
-	<h4>My Processes</h4>
+	<h3>My Processes</h3>
 
-	<table class="table row" style="margin-top: 4%;">
+	<table class="table" style="margin-top: 4%;">
 		<tbody>
 			<tr data-ng-repeat="process in processes">
-				<td data-ng-bind="process.name"></td>
-				<td><a data-popover="{{process.description}}" data-popover-title="{{process.name}}" class="btn-link">Description</a></td>
-				<td><ul style="display: inline">
-						<li data-ng-repeat="tag in process.tags"><span class="label label-success">{{tag.name}}</span></li>
-					</ul></td>
+				<td class="btn-link"><strong><a data-popover="{{process.description}}"
+						data-popover-trigger="mouseenter" data-popover-title="{{process.name}}" class="btn-link"
+						href="/process/{{process._id}}/">{{process.name}}</a></strong></td>
+				<td><span data-ng-repeat="tag in process.tags" class="label label-success">{{tag.name}}</span></td>
 			</tr>
 		</tbody>
 	</table>

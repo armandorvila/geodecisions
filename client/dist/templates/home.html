@@ -1,25 +1,44 @@
-<article class="span5 offset3" style="margin-top: 2%;">
-	
-	<h2>Community Stream</h2>
-	
-	<input data-ng-model="newFactor">
-	<a class="btn btn-success" data-ng-click="sendNewFactor()">Send</a>
+<article class="span12 offset3" style="margin-top: 2%;">
 
-	
-	<ul>
-		<li data-ng-repeat="notification in notifications | reverse | limitTo:6">{{notification}}</li>
-	</ul>
+	<h3>Community Stream</h3>
 
-</article>
+	<div class="span4">
+		<table class="table ">
+			<thead>
+				<tr>
+					<td><h4>Current activity</h4></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-show="communityStream.length==0">
+					<td>There is not activity at the moment</td>
+				</tr>
+				<tr data-ng-repeat="notification in communityStream | reverse | limitTo:10">
+					<td class="lead"><i class="icon-info-sign"></i> <a data-popover="{{notification.description}}"
+						popover-trigger="mouseenter" data-popover-title="{{notification.name}}" class="btn-link">{{notification.name}} created</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-
-<article class="span5 offset3" style="margin-top: 2%;">
-	
-	<input data-ng-model="newProcess">
-	<a class="btn btn-success" data-ng-click="sendNewProcess()">Send</a>
-
-	<ul>
-		<li data-ng-repeat="pnotification in processNotifications | reverse | limitTo:6">{{pnotification}}</li>
-	</ul>
+	<div class="offset2 span2" style="margin-top: 2%;">
+		<h4>Simulate activity</h4>
+		<form>
+			<div class="control-group">
+				<input data-ng-model="name">
+			</div>
+			<div class="control-group">
+				<div class="btn-group span1">
+					<a class="btn  btn-primary dropdown-toggle" data-toggle="dropdown" href="#"> <strong>
+							Simulate </strong> <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a class="btn-link" data-ng-click="simulateNewFactor()">New Factor</a></li>
+						<li><a class="btn-link" data-ng-click="simulateNewProcess()">New Process</a></li>
+					</ul>
+				</div>
+			</div>
+		</form>
+	</div>
 
 </article>

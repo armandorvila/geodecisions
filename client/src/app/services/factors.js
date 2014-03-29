@@ -1,4 +1,4 @@
-angular.module('services.factors', []).factory('factorsService', function($http) {
+angular.module('services.factors', []).factory('factorsService', function($http, socket) {
     
     return {
         
@@ -46,6 +46,10 @@ angular.module('services.factors', []).factory('factorsService', function($http)
             };
             
             $http.post('/factors/create', factor).then(function(response) {
+                socket.emit('client:newFactor', {
+                    name : factor.name,
+                    description : factor.description
+                });
                 success();
             }, function(response) {
                 error();

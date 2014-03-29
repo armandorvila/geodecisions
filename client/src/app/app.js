@@ -1,62 +1,66 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
     'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.home',
     'controllers.factors', 'controllers.admin', 'services.users', 'services.factors', 'services.tags',
-    'ui.bootstrap','btford.socket-io']);
+    'ui.bootstrap', 'btford.socket-io','google-maps']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
             
             $locationProvider.html5Mode(true);
             
-            $routeProvider.when('/signup', {
+            $routeProvider.when('/signup/', {
                 templateUrl : '/templates/signup.html',
                 controller : 'SingupCtrl',
                 user : false
-            }).when('/home', {
+            }).when('/home/', {
                 templateUrl : '/templates/home.html',
                 controller : 'HomeCtrl',
                 user : true
-            }).when('/login', {
+            }).when('/login/', {
                 templateUrl : '/templates/login.html',
                 controller : 'LoginCtrl',
                 user : false
-            }).when('/factors', {
+            }).when('/factors/', {
                 templateUrl : '/templates/factors.html',
                 controller : 'FactorsCtrl',
                 user : true
-            }).when('/admin', {
+            }).when('/admin/', {
                 templateUrl : '/templates/admin/admin-factors.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/admin/factors', {
+            }).when('/admin/factors/', {
                 templateUrl : '/templates/admin/admin-factors.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/admin/users', {
+            }).when('/admin/users/', {
                 templateUrl : '/templates/admin/admin-users.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/admin/tags', {
+            }).when('/admin/tags/', {
                 templateUrl : '/templates/admin/admin-tags.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/processes', {
+            }).when('/processes/', {
                 templateUrl : '/templates/processes.html',
                 controller : 'ProcessesCtrl',
                 user : true
-            }).when('/newProcess', {
+            }).when('/process/:processId/', {
+                templateUrl : '/templates/processes/process-detail.html',
+                controller : 'ProcessDetailCtrl',
+                user : true
+            }).when('/newProcess/', {
                 templateUrl : '/templates/processes/new-process.html',
                 controller : 'NewProcessCtrl',
                 user : true
-            }).when('/pricing', {
+            }).when('/pricing/', {
                 templateUrl : '/templates/pricing.html',
                 controller : 'PricingCtrl',
                 user : false
-            }).when('/about', {
+            }).when('/about/', {
                 templateUrl : '/templates/about.html',
                 controller : 'AboutCtrl',
                 user : false
@@ -65,20 +69,19 @@ angular.module('app').config(
                 controller : 'ProcessDetailCtrl',
                 user : true
             }).otherwise({
-                redirectTo : '/home'
+                redirectTo : '/home/'
             });
         }]);
 
-
-angular.module('app').factory('socket', function (socketFactory) {
+angular.module('app').factory('socket', function(socketFactory) {
     return socketFactory();
-  });
+});
 
 angular.module('app').filter('reverse', function() {
     return function(items) {
-      return items.slice().reverse();
+        return items.slice().reverse();
     };
-  });
+});
 
 angular.module('app').run(
         ['$rootScope', 'usersService', '$location', '$route',

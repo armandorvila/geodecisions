@@ -1,62 +1,66 @@
 angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 'controllers.about',
     'controllers.pricing', 'controllers.login', 'controllers.signup', 'controllers.home',
     'controllers.factors', 'controllers.admin', 'services.users', 'services.factors', 'services.tags',
-    'ui.bootstrap','btford.socket-io']);
+    'ui.bootstrap', 'btford.socket-io','google-maps']);
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
             
             $locationProvider.html5Mode(true);
             
-            $routeProvider.when('/signup', {
+            $routeProvider.when('/signup/', {
                 templateUrl : '/templates/signup.html',
                 controller : 'SingupCtrl',
                 user : false
-            }).when('/home', {
+            }).when('/home/', {
                 templateUrl : '/templates/home.html',
                 controller : 'HomeCtrl',
                 user : true
-            }).when('/login', {
+            }).when('/login/', {
                 templateUrl : '/templates/login.html',
                 controller : 'LoginCtrl',
                 user : false
-            }).when('/factors', {
+            }).when('/factors/', {
                 templateUrl : '/templates/factors.html',
                 controller : 'FactorsCtrl',
                 user : true
-            }).when('/admin', {
+            }).when('/admin/', {
                 templateUrl : '/templates/admin/admin-factors.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/admin/factors', {
+            }).when('/admin/factors/', {
                 templateUrl : '/templates/admin/admin-factors.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/admin/users', {
+            }).when('/admin/users/', {
                 templateUrl : '/templates/admin/admin-users.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/admin/tags', {
+            }).when('/admin/tags/', {
                 templateUrl : '/templates/admin/admin-tags.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/processes', {
+            }).when('/processes/', {
                 templateUrl : '/templates/processes.html',
                 controller : 'ProcessesCtrl',
                 user : true
-            }).when('/newProcess', {
+            }).when('/process/:processId/', {
+                templateUrl : '/templates/processes/process-detail.html',
+                controller : 'ProcessDetailCtrl',
+                user : true
+            }).when('/newProcess/', {
                 templateUrl : '/templates/processes/new-process.html',
                 controller : 'NewProcessCtrl',
                 user : true
-            }).when('/pricing', {
+            }).when('/pricing/', {
                 templateUrl : '/templates/pricing.html',
                 controller : 'PricingCtrl',
                 user : false
-            }).when('/about', {
+            }).when('/about/', {
                 templateUrl : '/templates/about.html',
                 controller : 'AboutCtrl',
                 user : false
@@ -65,20 +69,19 @@ angular.module('app').config(
                 controller : 'ProcessDetailCtrl',
                 user : true
             }).otherwise({
-                redirectTo : '/home'
+                redirectTo : '/home/'
             });
         }]);
 
-
-angular.module('app').factory('socket', function (socketFactory) {
+angular.module('app').factory('socket', function(socketFactory) {
     return socketFactory();
-  });
+});
 
 angular.module('app').filter('reverse', function() {
     return function(items) {
-      return items.slice().reverse();
+        return items.slice().reverse();
     };
-  });
+});
 
 angular.module('app').run(
         ['$rootScope', 'usersService', '$location', '$route',
@@ -264,38 +267,60 @@ factors.controller('NewFactorCtrl', ['$scope', '$rootScope', 'factorsService', '
         
     }]);
 
-var dashboard = angular.module('controllers.home', ['services.processes', 'services.users']);
+var home = angular.module('controllers.home', ['services.processes', 'services.users']);
 
-dashboard.controller('HomeCtrl', ['$scope', 'factorsService', 'processesService', '$rootScope', 'socket',
+home.controller('HomeCtrl', ['$scope', 'factorsService', 'processesService', '$rootScope', 'socket',
     function($scope, factorsService, processesService, $rootScope, socket) {
-        
         $rootScope.subheader.title = 'Welcome to Geodecisions';
-        $rootScope.subheader.description = 'Our community stream will help you to be up to date.';
+        $rootScope.subheader.description = 'Our community stream will help you to be up to date and have fresh ideas.';
         
-        $scope.notifications = [];
-        $scope.processNotifications = [];
+        $scope.communityStream = [];
         
-        $scope.newFactor = '';
-        $scope.sendNewFactor = function() {
-            socket.emit('client:newFactor', $scope.newFactor);
+        $scope.addNotification = function(notification) {
+            
+            var duplicated = false;
+            
+            angular.forEach($scope.communityStream, function(value, key) {
+                if ($scope.communityStream[key].name === notification.name) {
+                    duplicated = true;
+                }
+            });
+            
+            if (!duplicated) {
+                $scope.communityStream.push(notification);
+                if ($scope.communityStream.length > 10) {
+                    $scope.communityStream.shift();
+                }
+            }
         };
         
-        socket.on('server:newFactor', function(data) {
-            if ($scope.notifications.indexOf(data) === -1) {
-                $scope.notifications.push(data);
+        socket.on('server:newFactor', function(notification) {
+            if ($scope.communityStream.indexOf(notification) === -1) {
+                console.log('Received server:newFactor' + JSON.stringify(notification));
+                $scope.addNotification(JSON.parse(notification));
             }
         });
         
-        $scope.newProcess = '';
-        $scope.sendNewProcess = function() {
-            socket.emit('client:newProcess', $scope.newProcess);
+        socket.on('server:newProcess', function(notification) {
+            console.log('Received server:newProcess' + JSON.stringify(notification));
+            $scope.addNotification(JSON.parse(notification));
+        });
+        
+        $scope.name = '';
+        
+        $scope.simulateNewFactor = function() {
+            socket.emit('client:newFactor', {
+                name : $scope.name,
+                description : 'Mock factor sent from home to test the stream'
+            });
         };
         
-        socket.on('server:newProcess', function(data) {
-            if ($scope.processNotifications.indexOf(data) === -1) {
-                $scope.processNotifications.push(data);
-            }
-        });
+        $scope.simulateNewProcess = function() {
+            socket.emit('client:newProcess', {
+                name : $scope.name,
+                description : 'Mock Process sent from home to test the stream'
+            });
+        };
         
     }]);
 var login = angular.module('controllers.login', ['services.users']);
@@ -357,7 +382,7 @@ projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope'
         $rootScope.subheader.description = 'Create, continue and close your making decision processes.';
         
         $scope.newProcess = function() {
-            $location.path('/newProcess');
+            $location.path('/newProcess/');
         };
         
         processesService.getUserProcesses().then(function(processes) {
@@ -365,9 +390,24 @@ projects.controller('ProcessesCtrl', ['$scope', 'processesService', '$rootScope'
         });
     }]);
 
-projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService',
-    function($scope, usersService, processesService) {
-
+projects.controller('ProcessDetailCtrl', ['$scope', 'usersService', 'processesService', '$routeParams',
+    function($scope, usersService, processesService, $routeParams) {
+        
+        $scope.map = {
+            center : {
+                latitude : 45,
+                longitude : -73
+            },
+            zoom : 8
+        };
+        
+        processesService.getProcessById($routeParams.processId).then(function(process) {
+            $scope.process = process;
+            $scope.map.latitude = process.location.lat;
+            $scope.map.longitude = process.location.lng;
+            $scope.map.refresh = true;
+        });
+        
     }]);
 
 function NewProcessFactorsCtrl($scope, $modalInstance, factorsService) {
@@ -540,7 +580,7 @@ users.controller('UsersListCtrl', ['$scope', 'usersService', function($scope, us
     });
     
 }]);
-angular.module('services.factors', []).factory('factorsService', function($http) {
+angular.module('services.factors', []).factory('factorsService', function($http, socket) {
     
     return {
         
@@ -588,6 +628,10 @@ angular.module('services.factors', []).factory('factorsService', function($http)
             };
             
             $http.post('/factors/create', factor).then(function(response) {
+                socket.emit('client:newFactor', {
+                    name : factor.name,
+                    description : factor.description
+                });
                 success();
             }, function(response) {
                 error();
@@ -597,7 +641,7 @@ angular.module('services.factors', []).factory('factorsService', function($http)
     };
 });
 
-angular.module('services.processes', []).factory('processesService', function($http) {
+angular.module('services.processes', []).factory('processesService', function($http, socket) {
     
     return {
         getLocations : function(val) {
@@ -629,6 +673,18 @@ angular.module('services.processes', []).factory('processesService', function($h
         
         createProcess : function(process) {
             return $http.post('/processes/create', process).then(function(response) {
+                
+                socket.emit('client:newFactor', {
+                    name : process.name,
+                    description : process.description
+                });
+                
+                return response.data;
+            });
+        },
+        
+        getProcessById : function(id) {
+            return $http.get('/processes/getById/' + id).then(function(response) {
                 return response.data;
             });
         },

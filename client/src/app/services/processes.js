@@ -1,4 +1,4 @@
-angular.module('services.processes', []).factory('processesService', function($http) {
+angular.module('services.processes', []).factory('processesService', function($http, socket) {
     
     return {
         getLocations : function(val) {
@@ -30,6 +30,18 @@ angular.module('services.processes', []).factory('processesService', function($h
         
         createProcess : function(process) {
             return $http.post('/processes/create', process).then(function(response) {
+                
+                socket.emit('client:newFactor', {
+                    name : process.name,
+                    description : process.description
+                });
+                
+                return response.data;
+            });
+        },
+        
+        getProcessById : function(id) {
+            return $http.get('/processes/getById/' + id).then(function(response) {
                 return response.data;
             });
         },
