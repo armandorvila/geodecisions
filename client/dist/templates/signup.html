@@ -1,79 +1,66 @@
-<article class="span6" style="margin-top: 2%;">
+<article class="col-xs-7 col-md-6 col-lg-5">
+		
+	<form name="form" novalidate role="form">
 
-	<form name="form" novalidate class="form-horizontal span6">
-
-		<div class="modal-header offset1">
+		<div class="modal-header">
 			<h4>Please enter your user details</h4>
 		</div>
 		
-		<div class="control-group">
+		<div class="form-group">
 			<div class="alert alert-error" data-ng-show="signupError"
 				data-ng-bind="signupError"></div>
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="inputName">Name</label>
-			<div class="controls">
-				<input class="input-xlarge" name="inputName" type="text" data-ng-model="user.name"
-					required data-ng-minlength="2" autofocus>
-			</div>
+		<div class="form-group">
+			<label class="sr-only" for="inputName">Name</label>
+			<input class="form-control" name="inputName" type="text" data-ng-model="user.name"
+					required data-ng-minlength="2" autofocus placeholder="Name">
 			<span class="error" data-ng-show="form.name.$error.minlength">Too
 				short!</span>
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="inputLastname">Lastname</label>
-			<div class="controls">
-				<input class="input-xlarge" name="inputLastname" type="text"
+		<div class="form-group">
+			<label class="sr-only" for="inputLastname">Lastname</label>
+				<input class="form-control" name="inputLastname" type="text"
 					data-ng-model="user.lastname" data-ng-minlength="2" required
-					autofocus>
-			</div>
+					autofocus placeholder="Lastname">
 			<span class="error" data-ng-show="form.lastname.$error.minlength">Too
 				short!</span>
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="emailLastname">E-mail</label>
-			<div class="controls">
-				<input class="input-xlarge" name="emailLastname" type="email" data-ng-model="user.email" required
-					data-ng-minlength="5" autofocus>
-			</div>
+		<div class="form-group">
+			<label class="sr-only" for="emailLastname">E-mail</label>
+				<input class="form-control" name="emailLastname" type="email" data-ng-model="user.email" required
+					data-ng-minlength="5" autofocus placeholder="E-mail">
 			<span class="error" data-ng-show="form.email.$error.minlength">Too
 				short!</span>
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="inputPassword">Password</label>
-
-			<div class="controls">
-				<input class="input-xlarge" name="inputPassword" type="password" data-ng-model="user.password"
-					required autofocus data-ng-minlength="4" data-ng-maxlength="10">
-			</div>
+		<div class="form-group">
+			<label class="sr-only" for="inputPassword">Password</label>
+			<input class="form-control" name="inputPassword" type="password" data-ng-model="user.password"
+					required autofocus data-ng-minlength="4" data-ng-maxlength="10" placeholder="Password">
 			<span class="error" data-ng-show="form.password.$error.minlength">Too
 				short! Password must be between 4 and 10.</span>
 
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="inputConfirmPassword">Confirm Password</label>
+		<div class="form-group">
+			<label class="sr-only" for="inputConfirmPassword">Confirm Password</label>
 
-			<div class="controls">
-				<input class="input-xlarge" name="inputConfirmPassword" type="password"
+			<input class="form-control" name="inputConfirmPassword" type="password"
 					data-ng-model="user.confirmPassword" required autofocus
-					data-ng-minlength="4" data-ng-maxlength="10">
-			</div>
+					data-ng-minlength="4" data-ng-maxlength="10" placeholder="Confirm Password">
+
 			<span class="error"
 				data-ng-show="form.confirmPassword.$error.minlength">Too
 				short! Password must be between 4 and 10.</span>
 		</div>
 
-		<div class="control-group">
-			<div class="controls">
-				<button class="btn btn-primary login" data-ng-click="signup()"
-					data-ng-disabled='form.$invalid'>Sign up</button>
-				<button class="btn clear" data-ng-click="clear()">Clear</button>
-				<button class="btn btn-warning cancel" data-ng-click="cancel()">Cancel</button>
-			</div>
+		<div class="modal-footer">
+				<button class="btn btn-primary" data-ng-click="signup()" data-ng-disabled='form.$invalid'>Sign up</button>
+				<button class="btn btn-default" data-ng-click="clear()">Clear</button>
+				<button class="btn btn-warning" data-ng-click="cancel()">Cancel</button>
 		</div>
 	</form>
 

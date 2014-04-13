@@ -2,51 +2,14 @@
 .angular-google-map-container { height: 400px; }
 
 .subhead {
-	padding: 6% 0% 2% 8%;
-	background: linear-gradient(-20deg, #020031   0%, #A0E1E8 100%);
-	color: #fff;
+	padding: 6% 0% 2% 2%;
+	background: linear-gradient(-15deg, #428bca -30%, #C8F7EC 100%);
 }
 
 
 .privateSubhead {
-    padding: 6% 0% 2% 6%;
-	background: linear-gradient(-15deg, #A0E1E8   0%, #020031 100%);
-	color: #fff;
+	padding: 6% 0% 2% 2%;
+	background: linear-gradient(-15deg, #428bca -30%, #FFFFFF 100%);
 }
-/*
-.subhead {
-		padding: 3%;
-		background: linear-gradient(45deg, #020031 0%, #46a546 100%);
-		color: #fff;
-	}
-	.privateSubhead {
-		padding: 3%;
-		background: linear-gradient(45deg, #020031 0%, #46a546 100%);
-		color: #fff;
-	}
 
-@media ( max-width : 979px) {
-	.subhead {
-		margin-top: -3%;
-	}
-	.privateSubhead {
-		
-	}
-}
-@media (max-width : 760px) {
-	.subhead {
-		margin-top: -5.5%;
-		margin-left: -8.5%;
-		margin-right: -8.5%;
-	}
-}
-@media ( max-width : 385px) {
-	.subhead {
-		margin-top: -10%;
-		margin-left: -8.5%;
-		margin-right: -8.5%;
-	}
-	.privateSubhead {
-		
-	}*/
 }
