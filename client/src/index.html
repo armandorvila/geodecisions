@@ -37,43 +37,43 @@
     								Home</a></li>
 
     				<li class="dropdown navbar-text" data-ng-show="isAuthenticated()"><a
-    							class="dropdown-toggle btn-link" data-toggle="dropdown"> <i class="icon-list"></i> Processes</a>
+    							class="dropdown-toggle btn-link" data-toggle="dropdown"> <i class="glyphicon glyphicon-list"></i> Processes</a>
     					<ul class="dropdown-menu">
-    						<li><a href="/newProcess" class="btn-link"> <i class="icon-plus-sign"></i> New process
+    						<li><a href="/newProcess" class="btn-link"> <i class="glyphicon glyphicon-plus-sign"></i> New process
     						</a></li>
-    						<li><a href="/processes" class="btn-link"> <i class="icon-list"></i> My processes
+    						<li><a href="/processes" class="btn-link"> <i class="glyphicon glyphicon-list"></i> My processes
     						</a></li>
-    						<li><a href="/favorites" class="btn-link"> <i class="icon-star"></i> Favorites
+    						<li><a href="/favorites" class="btn-link"> <i class="glyphicon glyphicon-star"></i> Favorites
     							</a></li>
     					</ul></li>
 
     				<li class="navbar-text"><a href="/pricing" data-ng-hide="isAuthenticated()"><i
-    								class="icon-shopping-cart"></i> Pricing</a></li>
+    								class="glyphicon glyphicon-shopping-cart"></i> Pricing</a></li>
 
     				<li class="navbar-text"><a href="/factors" data-ng-show="isAuthenticated()"><i
-    								class="icon-folder-open"></i> Factors</a></li>
+    								class="glyphicon glyphicon-folder-open"></i> Factors</a></li>
 
     				<li class="navbar-text"><a href="/about" data-ng-hide="isAuthenticated()"><i
-    								class="icon-question-sign"></i> About</a></li>
+    								class="glyphicon glyphicon-question-sign"></i> About</a></li>
 
     				<li class="dropdown navbar-text" data-ng-show="isAdmin()"><a class="dropdown-toggle btn-link"
-    							data-toggle="dropdown"> <i class="icon-wrench"></i> Admin
+    							data-toggle="dropdown"> <i class="glyphicon glyphicon-wrench"></i> Admin
     						</a>
 						<ul class="dropdown-menu">
     						<li><a href="/admin/factors" class="btn-link"> <i class="glyphicon glyphicon-folder-open"></i> Factors
 								</a></li>
-    						<li><a href="/admin/users" class="btn-link"> <i class="icon-user"></i> Users
+    						<li><a href="/admin/users" class="btn-link"> <i class="glyphicon glyphicon-user"></i> Users
     							</a></li>
-    						<li><a href="/admin/tags" class="btn-link"> <i class="icon-tags"></i> Tags
+    						<li><a href="/admin/tags" class="btn-link"> <i class="glyphicon glyphicon-tags"></i> Tags
     							</a></li>
     					</ul></li>
     			</ul>
 
     			<ul class="nav navbar-right">
-    				<li class="pull-right" data-ng-show="isAuthenticated()"><a class="navbar-link href="/home"><i class="glyphicon glyphicon-user"></i>
+    				<li class="pull-right" data-ng-show="isAuthenticated()"><a class="navbar-link" href="/home"><i class="glyphicon glyphicon-user"></i>
     								{{currentUser.email}}</a></li>
     				<li class="pull-right"><a class="navbar-link" href="/signup" data-ng-hide="isAuthenticated()"><i class="glyphicon glyphicon-user"></i> Sign up</a></li>
-    				<li class="pull-right" data-ng-click="logout()"><a class="navbar-link href="#" data-ng-show="isAuthenticated()"><i class=" icon-share-alt"></i> Logout</a></li>
+    				<li class="pull-right" data-ng-click="logout()"><a class="navbar-link" href="#" data-ng-show="isAuthenticated()"><i class=" icon-share-alt"></i> Logout</a></li>
     			</ul>
 			</div><!-- /.navbar-collapse -->
 		</nav>
