@@ -5,31 +5,31 @@ angular.module('app', ['ngRoute', 'controllers.users', 'controllers.processes', 
 
 angular.module('app').config(
         ['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-            
+
             $locationProvider.html5Mode(true);
-            
-            $routeProvider.when('/signup/', {
+
+            $routeProvider.when('/signup', {
                 templateUrl : '/templates/signup.html',
                 controller : 'SingupCtrl',
                 user : false
-            }).when('/home/', {
+            }).when('/home', {
                 templateUrl : '/templates/home.html',
                 controller : 'HomeCtrl',
                 user : true
-            }).when('/login/', {
+            }).when('/login', {
                 templateUrl : '/templates/login.html',
                 controller : 'LoginCtrl',
                 user : false
-            }).when('/factors/', {
+            }).when('/factors', {
                 templateUrl : '/templates/factors.html',
                 controller : 'FactorsCtrl',
                 user : true
-            }).when('/admin/', {
+            }).when('/admin', {
                 templateUrl : '/templates/admin/admin-factors.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/admin/factors/', {
+            }).when('/admin/factors', {
                 templateUrl : '/templates/admin/admin-factors.html',
                 controller : 'AdminCtrl',
                 user : true,
@@ -39,28 +39,28 @@ angular.module('app').config(
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/admin/tags/', {
+            }).when('/admin/tags', {
                 templateUrl : '/templates/admin/admin-tags.html',
                 controller : 'AdminCtrl',
                 user : true,
                 admin : true
-            }).when('/processes/', {
+            }).when('/processes', {
                 templateUrl : '/templates/processes.html',
                 controller : 'ProcessesCtrl',
                 user : true
-            }).when('/process/:processId/', {
+            }).when('/process/:processId', {
                 templateUrl : '/templates/processes/process-detail.html',
                 controller : 'ProcessDetailCtrl',
                 user : true
-            }).when('/newProcess/', {
+            }).when('/newProcess', {
                 templateUrl : '/templates/processes/new-process.html',
                 controller : 'NewProcessCtrl',
                 user : true
-            }).when('/pricing/', {
+            }).when('/pricing', {
                 templateUrl : '/templates/pricing.html',
                 controller : 'PricingCtrl',
                 user : false
-            }).when('/about/', {
+            }).when('/about', {
                 templateUrl : '/templates/about.html',
                 controller : 'AboutCtrl',
                 user : false
@@ -86,14 +86,14 @@ angular.module('app').filter('reverse', function() {
 angular.module('app').run(
         ['$rootScope', 'usersService', '$location', '$route',
             function($rootScope, usersService, $location, $route) {
-                
+
                 $rootScope.$on('$routeChangeStart', function(event, next, current) {
-                    
+
                     if (!$rootScope.currentUser && next.user) {
                         usersService.getCurrentUser().then(function(user) {
                             if (user) {
                                 $rootScope.currentUser = user;
-                                
+
                                 if (next.admin && !user.admin) {
                                     $location.path('/home');
                                 }
@@ -104,7 +104,7 @@ angular.module('app').run(
                     } else if (next.admin && !$rootScope.currentUser.admin) {
                         $location.path('/home');
                     }
-                    
+
                 });
             }]);
 
@@ -122,22 +122,22 @@ angular
                             title : 'Welcome to Geodecisions',
                             description : 'Geodecisions drives your decision making processes using geographic information.'
                         };
-                        
+
                         $scope.isAuthenticated = function() {
                             return !!$rootScope.currentUser;
                         };
-                        
+
                         $scope.isAdmin = function() {
                             if (!$rootScope.currentUser) {
                                 return false;
                             }
                             return $rootScope.currentUser.admin;
                         };
-                        
+
                         $scope.logout = function() {
                             usersService.logout(function() {
                                 $location.path('/login');
                             });
                         };
-                        
+
                     }]);

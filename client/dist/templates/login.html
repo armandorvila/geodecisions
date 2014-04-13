@@ -1,41 +1,36 @@
 
 <!-- <div data-ng-include="'templates/subheader.html'"></div> -->
 
-<article class="span6" style="margin-top:2%;">
+<article class="col-xs-7 col-md-6 col-lg-5">
 		
-	<form name="form" novalidate class="form-horizontal" >
+	<form name="form" novalidate role="form">
 
 		<div class="modal-header">
 			<h4>Please enter your login details</h4>
 		</div>
 
-		<div class="control-group">
+		<div class="form-group">
 			<div class="alert alert-error" data-ng-show="authError">
 				{{authError}}</div>
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="inputEmail">E-mail</label>
-			<div class="controls">
-				<input class="input-xlarge" type="email" id="inputEmail" placeholder="Email"
+		<div class="form-group">
+			<label class="sr-only"  for="inputEmail">E-mail</label>
+			<input class="form-control" type="email" id="inputEmail" placeholder="Email"
 					data-ng-model="credentials.email" required autofocus>
-			</div>
 		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="inputPassword">Password</label>
-			<div class="controls">
-				<input class="input-xlarge" type="password" id="inputPassword" placeholder="Password"
+		<div class="form-group">
+			<label  class="sr-only" for="inputPassword">Password</label>
+		
+			<input class="form-control" type="password" id="inputPassword" placeholder="Password"
 					data-ng-model="credentials.password" required>
-			</div>
 		</div>
 
-		<div class="control-group">
-			<div class="controls">
+		<div class="form-group">
 				<button class="btn btn-primary login" data-ng-click="login()"
 					data-ng-disabled='form.$invalid'>Sign in</button>
 				<button class="btn btn-warning" data-ng-click="clearLogin()">Clear</button>
-			</div>
 		</div>
 
 	</form>

@@ -1,7 +1,7 @@
 /* global module */
 
 module.exports = function(grunt) {
-    
+
     /* ********************* Load required tasks******************* */
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-recess');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks("grunt-supervisor");
-    
+
     /*
      * ********************* Register required
      * tasks*******************
@@ -21,15 +21,15 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['build', 'release']);
     grunt.registerTask('build', ['clean', 'uglify', 'concat', 'recess:build', 'copy', 'jshint', 'nodeunit' , 'karma:unit']);
     grunt.registerTask('refresh', ['clean', 'concat', 'recess:build', 'copy', 'jshint']);
-    grunt.registerTask('release', ['clean', 'uglify', 'concat', 'jshint', 'concat:index', 'recess:min', 'copy']);
-    
+    grunt.registerTask('release', ['clean', 'uglify', 'concat', 'jshint', 'concat:index', 'recess:build', 'copy']);
+
     grunt.registerTask('test-watch', ['karma:watch']);
     grunt.registerTask('start', ['supervisor']);
-    
+
     grunt.registerTask('timestamp', function() {
         grunt.log.subhead(Date());
     });
-    
+
     var karmaConfig = function(configFile, customOptions) {
         var options = {
             configFile : configFile,
@@ -41,13 +41,13 @@ module.exports = function(grunt) {
         };
         return grunt.util._.extend(options, customOptions, travisOptions);
     };
-    
+
     /* ********************* Configure tasks ******************* */
     grunt.initConfig({
         distdir : 'client/dist',
-        
+
         pkg : grunt.file.readJSON('package.json'),
-        
+
         nodeunit : {
             all : ['server/test/**/*.js'],
             options : {
@@ -64,10 +64,10 @@ module.exports = function(grunt) {
             scenarios : ['client/test/**/*.scenario.js'],
             html : ['client/src/index.html'],
             templates : ['client/src/app/templates/**/*.html'],
-            less : ['client/src/less/stylesheet.less'],
+            less : ['client/src/less/bootstrap.less'],
             lessWatch : ['client/src/less/**/*.less']
         },
-        
+
         jshint : {
             files : ['gruntFile.js', 'server/server.js', 'server/src/**/*.js', 'server/test/**/*.js',
                 '<%= src.js %>', '<%= src.jsTpl %>', '<%= src.specs %>', '<%= src.scenarios %>'],
@@ -140,7 +140,7 @@ module.exports = function(grunt) {
                 }]
             }
         },
-        
+
         karma : {
             unit : {
                 options : karmaConfig('client/test/config/unit.js')
@@ -169,54 +169,46 @@ module.exports = function(grunt) {
             },
             geodecisions : {
                 src : ['client/src/css/*.css'],
-                dest : '<%= distdir %>/resources/css/geodecisions-custom.css'
+                dest : '<%= distdir %>/resources/css/geodecisions.css'
             },
             bootstrap : {
-                src : ['client/vendor/bootstrap-js/*.js'],
+                src : ['bower_components/bootstrap/dist/js/bootstrap.js'],
                 dest : '<%= distdir %>/resources/js/bootstrap.js'
             },
             angular : {
-                src : ['client/vendor/angular/angular.js', 'client/vendor/angular/angular-route.js'],
+                src : ['bower_components/angular/angular.js', 'bower_components/angular-route/angular-route.js'],
                 dest : '<%= distdir %>/resources/js/angular.js'
             },
             angularui : {
-                src : ['client/vendor/angular-ui/*.js'],
+                src : ['bower_components/angular-bootstrap/ui-bootstrap-tpls.js'],
                 dest : '<%= distdir %>/resources/js/angular-ui.js'
             },
             angularanimate : {
-                src : ['client/vendor/angular-animate/*.js'],
+                src : ['bower_components/angular-animate/angular-animate.js'],
                 dest : '<%= distdir %>/resources/js/angular-animate.js'
             },
             angularsanitize : {
-                src : ['client/vendor/angular-sanitize/*.js'],
+                src : ['bower_components/angular-sanitize/angular-sanitize.js'],
                 dest : '<%= distdir %>/resources/js/angular-sanitize.js'
             },
             angulargooglemaps : {
-                src : ['client/vendor/angular-google-maps/*.js'],
+                src : ['bower_components/angular-google-maps/dist/angular-google-maps.js'],
                 dest : '<%= distdir %>/resources/js/angular-google-maps.js'
             },
             underscore : {
-                src : ['client/vendor/underscore-js/*.js'],
+                src : ['bower_components/underscore/underscore.js'],
                 dest : '<%= distdir %>/resources/js/underscore.js'
             },
-            underscoreminmap : {
-                src : ['client/vendor/underscore-js/*.map'],
-                dest : '<%= distdir %>/resources/js/underscore-min.map'
-            },
             jquery : {
-                src : ['client/vendor/jquery/*.js'],
+                src : ['bower_components/jquery/jquery.js'],
                 dest : '<%= distdir %>/resources/js/jquery.js'
             },
-            socketio : {
-                src : ['client/vendor/socket-io/*.js'],
-                dest : '<%= distdir %>/resources/js/socket-io.js'
-            },
             angularsocketio : {
-                src : ['client/vendor/angular-socket-io/*.js'],
+                src : ['bower_components/angular-socket-io/socket.js'],
                 dest : '<%= distdir %>/resources/js/angular-socket-io.js'
             }
         },
-        
+
         uglify : {
             dist : {
                 options : {
@@ -224,48 +216,12 @@ module.exports = function(grunt) {
                 },
                 src : ['<%= src.js %>', '<%= src.jsTpl %>'],
                 dest : '<%= distdir %>/resources/js/<%= pkg.name %>.js'
-            },
-            angular : {
-                src : ['<%= concat.angular.src %>'],
-                dest : '<%= distdir %>/resources/js/angular.js'
-            },
-            angularui : {
-                src : ['client/vendor/angular-ui/*.js'],
-                dest : '<%= distdir %>/resources/js/angular-ui.js'
-            },
-            angularanimate : {
-                src : ['client/vendor/angular-animate/*.js'],
-                dest : '<%= distdir %>/resources/js/angular-animate.js'
-            },
-            angularsanitize : {
-                src : ['client/vendor/angular-sanitize/*.js'],
-                dest : '<%= distdir %>/resources/js/angular-sanitize.js'
-            },
-            angulargooglemaps : {
-                src : ['client/vendor/angular-google-maps/*.js'],
-                dest : '<%= distdir %>/resources/js/angular-google-maps.js'
-            },
-            underscore : {
-                src : ['client/vendor/underscore-js/*.js'],
-                dest : '<%= distdir %>/resources/js/underscore.js'
-            },
-            jquery : {
-                src : ['client/vendor/jquery/*.js'],
-                dest : '<%= distdir %>/resources/js/jquery.js'
-            },
-            socketio : {
-                src : ['client/vendor/socket-io/*.js'],
-                dest : '<%= distdir %>/resources/js/socket-io.js'
-            },
-            angularsocketio : {
-                src : ['client/vendor/angular-socket-io/*.js'],
-                dest : '<%= distdir %>/resources/js/angular-socket-io.js'
             }
         },
         recess : {
             build : {
                 files : {
-                    '<%= distdir %>/resources/css/<%= pkg.name %>.css' : ['<%= src.less %>']
+                    '<%= distdir %>/resources/css/bootstrap.css' : ['<%= src.less %>']
                 },
                 options : {
                     compile : true
@@ -273,7 +229,7 @@ module.exports = function(grunt) {
             },
             min : {
                 files : {
-                    '<%= distdir %>/resources/css/<%= pkg.name %>.css' : ['<%= src.less %>']
+                    '<%= distdir %>/resources/css/bootstrap.css' : ['<%= src.less %>']
                 },
                 options : {
                     compress : true
@@ -297,6 +253,6 @@ module.exports = function(grunt) {
             client : {
                 src : 'client-coverage/test/lcov.info'
             }
-        },
+        }
     });
 };
